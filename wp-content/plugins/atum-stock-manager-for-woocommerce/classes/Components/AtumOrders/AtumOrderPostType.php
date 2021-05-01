@@ -14,6 +14,11 @@ namespace Atum\Components\AtumOrders;
 
 defined( 'ABSPATH' ) || die;
 
+/**
+ * // For WC navigation system.
+ * use Automattic\WooCommerce\Admin\Features\Navigation\Screen;
+ * use Automattic\WooCommerce\Admin\Features\Navigation\Menu;
+ */
 use Atum\Components\AtumCapabilities;
 use Atum\Components\AtumMarketingPopup;
 use Atum\Components\AtumOrders\Models\AtumOrderModel;
@@ -187,6 +192,15 @@ abstract class AtumOrderPostType {
 		// Register the ATUM Order post type.
 		register_post_type( $post_type, $args );
 
+		/**
+		// Add inventory log and purchase order post type on wc navigation system.
+		// Check if the WC method are availables.
+		if ( class_exists( 'Automattic\WooCommerce\Admin\Features\Navigation\Screen' ) && method_exists( Screen::class, 'register_post_type' ) ) {
+			Screen::register_post_type( $post_type );
+			add_action( 'atum/after_adding_menu', array( $this, 'add_order_post_type_wcmenu' ), 10, 0 );
+		}
+		*/
+
 		// Register the post statuses.
 		$atum_statuses = [];
 		foreach ( static::get_statuses() as $status => $label ) {
@@ -244,6 +258,34 @@ abstract class AtumOrderPostType {
 		}
 
 	}
+
+	/**
+	 * Add supplier post type to the new wc navigation system
+	 *
+	 * @since 1.8.9
+	public function add_order_post_type_wcmenu() {
+		$post_type_items = Menu::get_post_type_items(
+			'atum_purchase_order',
+			array(
+				'title'  => __( 'Purchase Orders', ATUM_TEXT_DOMAIN ),
+				'parent' => 'ATUM',
+			)
+		);
+
+		Menu::add_plugin_item( $post_type_items['all'] );
+
+		$post_type_items = Menu::get_post_type_items(
+			'atum_inventory_log',
+			array(
+				'title'  => __( 'Inventory Logs', ATUM_TEXT_DOMAIN ),
+				'parent' => 'ATUM',
+			)
+		);
+
+		Menu::add_plugin_item( $post_type_items['all'] );
+	}
+	 */
+
 
 	/**
 	 * Method for recounting order terms (types)
@@ -886,11 +928,13 @@ abstract class AtumOrderPostType {
 					wp_enqueue_script( 'es6-promise' );
 				}
 
-				// Switchery.
-				wp_register_style( 'switchery', ATUM_URL . 'assets/css/vendor/switchery.min.css', FALSE, ATUM_VERSION );
-
-				wp_register_style( 'atum-orders', ATUM_URL . 'assets/css/atum-orders.css', array( 'sweetalert2', 'switchery' ), ATUM_VERSION );
+				wp_register_style( 'atum-orders', ATUM_URL . 'assets/css/atum-orders.css', array( 'sweetalert2' ), ATUM_VERSION );
 				wp_enqueue_style( 'atum-orders' );
+
+				if ( is_rtl() ) {
+					wp_register_style( 'atum-orders-rtl', ATUM_URL . 'assets/css/atum-orders-rtl.css', array( 'atum-orders' ), ATUM_VERSION );
+					wp_enqueue_style( 'atum-orders-rtl' );
+				}
 
 				// Enqueue the script with the required WooCommerce dependencies.
 				$wc_dependencies = (array) apply_filters('atum/order_post_type/scripts/woocommerce_dependencies', array(
@@ -899,6 +943,7 @@ abstract class AtumOrderPostType {
 					'jquery-blockui',
 					'stupidtable',
 					'sweetalert2',
+					'wp-hooks',
 				));
 
 				wp_register_script( 'atum-orders', ATUM_URL . 'assets/js/build/atum-orders.js', $wc_dependencies, ATUM_VERSION, TRUE );
@@ -953,7 +998,7 @@ abstract class AtumOrderPostType {
 			elseif ( 'edit.php' === $hook ) {
 
 				$css_dependencies = array();
-				$js_dependencies  = array( 'jquery', 'jquery-tiptip' );
+				$js_dependencies  = array( 'jquery', 'jquery-tiptip', 'wp-hooks' );
 
 				if ( $show_marketing_popup ) {
 					$css_dependencies[] = 'sweetalert2';
@@ -975,6 +1020,11 @@ abstract class AtumOrderPostType {
 
 				// Load the ATUM colors.
 				Helpers::enqueue_atum_colors( 'atum-orders-list' );
+
+				if ( is_rtl() ) {
+					wp_register_style( 'atum-orders-list-rtl', ATUM_URL . 'assets/css/atum-orders-list-rtl.css', array( 'atum-orders-list' ), ATUM_VERSION );
+					wp_enqueue_style( 'atum-orders-list-rtl' );
+				}
 
 			}
 

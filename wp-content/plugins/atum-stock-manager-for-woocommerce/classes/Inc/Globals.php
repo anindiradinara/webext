@@ -35,6 +35,13 @@ final class Globals {
 	private static $inheritable_product_types = [ 'variable', 'grouped' ];
 
 	/**
+	 * The product types that allow children
+	 *
+	 * @var array
+	 */
+	private static $simple_product_types = [ 'simple' ];
+
+	/**
 	 * The child product types
 	 *
 	 * @var array
@@ -49,6 +56,19 @@ final class Globals {
 	private static $order_types = [
 		ATUM_PREFIX . 'purchase_order',
 		ATUM_PREFIX . 'inventory_log',
+	];
+
+	/**
+	 * WC_Order statuses that allow changing the product stock
+	 *
+	 * @since 1.8.7
+	 *
+	 * @var array
+	 */
+	private static $order_statuses_change_stock = [
+		'wc-completed',
+		'wc-processing',
+		'wc-on-hold',
 	];
 
 	/**
@@ -208,6 +228,29 @@ final class Globals {
 	}
 
 	/**
+	 * Getter for the simple_product_types property
+	 *
+	 * @since 1.8.5
+	 *
+	 * @return array
+	 */
+	public static function get_simple_product_types() {
+
+		$cache_key            = AtumCache::get_cache_key( 'simple_product_types' );
+		$simple_product_types = AtumCache::get_cache( $cache_key, ATUM_TEXT_DOMAIN, FALSE, $has_cache );
+
+		if ( $has_cache ) {
+			return $simple_product_types;
+		}
+
+		$simple_product_types = (array) apply_filters( 'atum/simple_product_types', self::$simple_product_types );
+		AtumCache::set_cache( $cache_key, $simple_product_types );
+
+		return $simple_product_types;
+
+	}
+
+	/**
 	 * Getter for the child_product_types property
 	 *
 	 * @since 1.1.4.2
@@ -271,6 +314,18 @@ final class Globals {
 	public static function get_order_types() {
 		
 		return (array) apply_filters( 'atum/order_types', self::$order_types );
+	}
+
+	/**
+	 * Get the WC_Order statuses that allow changing the stock
+	 *
+	 * @since 1.8.7
+	 *
+	 * @return array
+	 */
+	public static function get_order_statuses_change_stock() {
+
+		return (array) apply_filters( 'atum/order_statuses_allow_change_stock', self::$order_statuses_change_stock );
 	}
 
 	/**
@@ -486,10 +541,10 @@ final class Globals {
 	 *
 	 * @since 1.8.4
 	 *
-	 * @return integer
+	 * @return integer|boolean
 	 */
 	public static function get_prices_decimals() {
 
-		return apply_filters( 'atum/price_decimals', 6 );
+		return apply_filters( 'atum/price_decimals', FALSE );
 	}
 }

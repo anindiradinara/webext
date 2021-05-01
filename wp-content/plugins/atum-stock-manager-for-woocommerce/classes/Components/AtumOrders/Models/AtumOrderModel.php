@@ -177,11 +177,14 @@ abstract class AtumOrderModel {
 	 */
 	protected function load_post() {
 		
-		$this->post      = get_post( $this->id );
-		$this->db_status = $this->post->post_status;
+		$this->post = get_post( $this->id );
 
-		// Load the order meta data.
-		$this->read_meta();
+		if ( $this->post ) {
+			$this->db_status = $this->post->post_status;
+
+			// Load the order meta data.
+			$this->read_meta();
+		}
 
 	}
 
@@ -861,6 +864,8 @@ abstract class AtumOrderModel {
 
 				}
 
+				$this->clear_caches();
+
 			}
 
 		}
@@ -895,7 +900,12 @@ abstract class AtumOrderModel {
 				
 				/* translators: 1: old order status 2: new order status */
 				$transition_note = sprintf( __( 'Order status changed from %1$s to %2$s.', ATUM_TEXT_DOMAIN ), $statuses[ $old_status ], $statuses[ $new_status ] );
-				$this->add_order_note( $transition_note );
+				$note_id         = $this->add_order_note( $transition_note );
+				Helpers::save_order_note_meta( $note_id, [
+					'action'     => 'order_status_change',
+					'old_status' => $old_status,
+					'new_status' => $new_status,
+				] );
 				
 			}
 		}
@@ -936,6 +946,7 @@ abstract class AtumOrderModel {
 
 			if ( $id && ! is_wp_error( $id ) ) {
 				$this->id = $id;
+				$this->load_post();
 				$this->clear_caches();
 			}
 
@@ -1046,6 +1057,7 @@ abstract class AtumOrderModel {
 		if ( $force_delete ) {
 
 			// Delete all associated the order items + meta.
+			do_action( 'atum/orders/delete_order_items', $this->id );
 			$this->delete_items();
 
 			wp_delete_post( $this->id );
@@ -1311,12 +1323,14 @@ abstract class AtumOrderModel {
 
 		if ( is_callable( array( $item, 'get_total' ) ) ) {
 
+			$qty = ! empty( $item->get_quantity() ) ? $item->get_quantity() : 1;
+
 			if ( $inc_tax ) {
 				/* @noinspection PhpWrongStringConcatenationInspection */
-				$total = ( $item->get_total() + $item->get_total_tax() ) / max( 1, $item->get_quantity() );
+				$total = ( $item->get_total() + $item->get_total_tax() ) / $qty;
 			}
 			else {
-				$total = floatval( $item->get_total() ) / max( 1, $item->get_quantity() );
+				$total = floatval( $item->get_total() ) / $qty;
 			}
 
 			$total = $round ? round( $total, wc_get_price_decimals() ) : $total;
@@ -1463,7 +1477,7 @@ abstract class AtumOrderModel {
 	public function is_editable() {
 		$status = $this->get_status();
 		
-		return apply_filters( 'atum/orders/is_editable', ! $status || array_key_exists( $status, Helpers::get_atum_order_post_type_statuses( $this->get_post_type(), TRUE ) ) );
+		return apply_filters( 'atum/orders/is_editable', ! $status || 'auto-draft' === $status || array_key_exists( $status, Helpers::get_atum_order_post_type_statuses( $this->get_post_type(), TRUE ) ) );
 	}
 
 	/**
@@ -1979,6 +1993,15 @@ abstract class AtumOrderModel {
 		return $this->block_message;
 	}
 
+	/**
+	 * Check whether the post for the current ATUM order does exist
+	 *
+	 * @since 1.8.8
+	 */
+	public function exists() {
+		return $this->id && $this->post;
+	}
+
 	/**********
 	 * SETTERS
 	 **********/
@@ -2007,13 +2030,37 @@ abstract class AtumOrderModel {
 		$date_created = $date_created instanceof \WC_DateTime ? $date_created->date_i18n( 'Y-m-d H:i:s' ) : wc_clean( $date_created );
 
 		// Only register the change if it was manually changed.
-		if ( $date_created !== $this->date_created && $this->post && $this->post->post_date !== $date_created ) {
+		if ( $date_created !== $this->date_created || ( $this->post && $this->post->post_date !== $date_created ) ) {
 
 			if ( ! $skip_change ) {
 				$this->register_change( 'date_created' );
 			}
 
 			$this->set_meta( 'date_created', $date_created );
+		}
+
+	}
+
+	/**
+	 * Set the ATUM Order completion date
+	 *
+	 * @since 1.8.7
+	 *
+	 * @param string|\WC_DateTime $date_completed
+	 * @param bool                $skip_change
+	 */
+	public function set_date_completed( $date_completed, $skip_change = FALSE ) {
+
+		$date_completed = $date_completed instanceof \WC_DateTime ? $date_completed->date_i18n( 'Y-m-d H:i:s' ) : wc_clean( $date_completed );
+
+		// Only register the change if it was manually changed.
+		if ( $date_completed !== $this->date_completed ) {
+
+			if ( ! $skip_change ) {
+				$this->register_change( 'date_completed' );
+			}
+
+			$this->set_meta( 'date_completed', $date_completed );
 		}
 
 	}

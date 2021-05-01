@@ -17,6 +17,9 @@ export default class DateTimePicker {
 		private settings: Settings,
 	) {
 
+		const langs: string[] = [ 'haz', 'as', 'ar', 'as', 'azb', 'bo', 'dz', 'fa', 'gu', 'he', 'hi', 'hy', 'ka', 'kk', 'km', 'kn', 'ko', 'ku', 'lo', 'ml', 'mr', 'my', 'ne', 'pa', 'ps', 'sd', 'si', 'skr', 'ta', 'ur' ];
+		const mylang: string  = langs.includes( this.settings.get( 'calendarLocale' ) ) ? 'en' : this.settings.get( 'calendarLocale' );
+
 		this.defaults = {
 			format           : this.settings.get( 'dateFormat' ),
 			useCurrent       : false,
@@ -64,7 +67,7 @@ export default class DateTimePicker {
 				pickSecond     : this.settings.get( 'pickSecond' ),
 				decrementSecond: this.settings.get( 'decrementSecond' ),
 			},
-			locale           : this.settings.get( 'calendarLocale' ) || 'en',
+			locale           : mylang || 'en',
 		};
 
 	}
@@ -104,7 +107,7 @@ export default class DateTimePicker {
 
 			if ( $fieldLabel.length ) {
 
-				const currentLabel: string = $fieldLabel.text(),
+				const currentLabel: string = $fieldLabel.text().trim(),
 				      newLabel: string     = typeof evt.date === 'object' ? evt.date.format( this.settings.get( 'dateFormat' ) ) : this.settings.get( 'none' );
 
 				// Only update it if changed.
@@ -139,6 +142,11 @@ export default class DateTimePicker {
 		
 	}
 
+	/**
+	 * Destroy the datepickers
+	 *
+	 * @param {JQuery} $selector
+	 */
 	destroyDateTimePickers( $selector: JQuery ) {
 
 		$selector.each( ( index: number, elem: Element ) => {

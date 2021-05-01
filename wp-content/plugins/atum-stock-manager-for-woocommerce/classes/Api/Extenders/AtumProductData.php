@@ -67,6 +67,7 @@ class AtumProductData {
 		'atum_locations'      => [ 'get', 'update' ],
 		'atum_stock_status'   => [ 'get', 'update' ],
 		'low_stock'           => [ 'get', 'update' ],
+		'low_stock_amount'    => [ 'get', 'update' ],
 
 	);
 
@@ -139,16 +140,21 @@ class AtumProductData {
 		// Exclude internal meta keys from the product's meta_data.
 		add_filter( 'woocommerce_data_store_wp_post_read_meta', array( $this, 'filter_product_meta' ), 10, 3 );
 
-		// Add extra data to the products' query.
 		foreach ( [ 'product', 'product_variation' ] as $post_type ) {
+
+			// Add extra data to the products' query.
 			add_filter( "woocommerce_rest_{$post_type}_object_query", array( $this, 'prepare_objects_query' ), 10, 2 );
+
+			// Add extra filtering params to products.
+			add_filter( "rest_{$post_type}_collection_params", array( $this, 'add_collection_params' ), 10, 2 );
+
 		}
 
 		// Alter some of the WC fields before sending the response.
 		add_filter( 'woocommerce_rest_prepare_product_object', array( $this, 'prepare_rest_response' ), 10, 3 );
 
 		// Update ATUM calc properties after saving.
-		add_filter( 'woocommerce_rest_insert_product_object', array( $this, 'after_rest_product_save'), 10, 3 );
+		add_filter( 'woocommerce_rest_insert_product_object', array( $this, 'after_rest_product_save' ), 10, 3 );
 
 	}
 
@@ -397,10 +403,9 @@ class AtumProductData {
 				elseif ( is_callable( array( $product, $getter ) ) ) {
 					$data = call_user_func( array( $product, $getter ) );
 				}
+
 				// Allow to handle some fields externally.
-				else {
-					$data = apply_filters( 'atum/api/product_data/get_field_value', $data, $response, $field_name, $product );
-				}
+				$data = apply_filters( 'atum/api/product_data/get_field_value', $data, $response, $field_name, $product );
 
 				$schema = $this->get_extended_product_schema();
 
@@ -597,6 +602,18 @@ class AtumProductData {
 
 		}
 
+		// Before modification date filter.
+		if ( isset( $request['modified_before'] ) && ! isset( $request['before'] ) ) {
+			$args['date_query'][0]['before'] = $request['modified_before'];
+			$args['date_query'][0]['column'] = 'post_modified';
+		}
+
+		// After modification date filter.
+		if ( isset( $request['modified_after'] ) && ! isset( $request['after'] ) ) {
+			$args['date_query'][0]['after']  = $request['modified_after'];
+			$args['date_query'][0]['column'] = 'post_modified';
+		}
+
 		$this->atum_query_data = apply_filters( 'atum/api/product_data/atum_query_args', $this->atum_query_data, $request );
 
 		if ( ! empty( $this->atum_query_data ) ) {
@@ -678,7 +695,42 @@ class AtumProductData {
 
 		Helpers::update_atum_product_calc_props( $product );
 
+		// Save low_stock_amount since Woocommerce missed it...
+		if ( ! is_null( $request->get_param( 'low_stock_amount' ) ) ) {
+
+			$product->set_low_stock_amount( floatval( $request->get_param( 'low_stock_amount' ) ) );
+			$product->save();
+		}
 	}
+
+	/**
+	 * Add extra filtering params to the products endpoint.
+	 *
+	 * @since 1.8.9
+	 *
+	 * @param array  $params
+	 * @param string $post_type
+	 *
+	 * @return array
+	 */
+	public function add_collection_params( $params, $post_type ) {
+
+		$params['modified_before'] = [
+			'description' => __( 'Limit response to products modified before a given ISO8601 compliant date.', ATUM_TEXT_DOMAIN ),
+			'type'        => 'string',
+			'format'      => 'date-time',
+		];
+
+		$params['modified_after'] = [
+			'description' => __( 'Limit response to products modified after a given ISO8601 compliant date.', ATUM_TEXT_DOMAIN ),
+			'type'        => 'string',
+			'format'      => 'date-time',
+		];
+
+		return $params;
+
+	}
+
 
 	/****************************
 	 * Instance methods

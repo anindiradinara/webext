@@ -14,6 +14,12 @@ namespace Atum\Suppliers;
 
 defined( 'ABSPATH' ) || die;
 
+/**
+// For WC navigation system.
+use Automattic\WooCommerce\Admin\Features\Navigation\Menu;
+use Automattic\WooCommerce\Admin\Features\Navigation\Screen;
+ */
+
 use Atum\Components\AtumCache;
 use Atum\Components\AtumCapabilities;
 use Atum\Components\AtumMarketingPopup;
@@ -184,6 +190,15 @@ class Suppliers {
 
 		// Register the Suppliers post type.
 		register_post_type( self::POST_TYPE, $args );
+
+		/**
+		// Add suppliers post type on wc navigation system.
+		// Check if the WC method are availables.
+		if ( class_exists( 'Automattic\WooCommerce\Admin\Features\Navigation\Screen' ) && method_exists( Screen::class, 'register_post_type' ) ) {
+			Screen::register_post_type( self::POST_TYPE );
+			add_action( 'atum/after_adding_menu', array( $this, 'add_supplier_post_type_wcmenu' ), 10, 0 );
+		}
+		*/
 
 	}
 
@@ -380,14 +395,19 @@ class Suppliers {
 			if ( in_array( $hook, [ 'post.php', 'post-new.php', 'edit.php' ] ) ) {
 
 				// Sweet Alert 2.
-				wp_register_style( 'sweetalert2', ATUM_URL . 'assets/css/vendor/sweetalert2.min.css', array(), ATUM_VERSION );
-				wp_register_script( 'sweetalert2', ATUM_URL . 'assets/js/vendor/sweetalert2.min.js', array(), ATUM_VERSION, TRUE );
+				wp_register_style( 'sweetalert2', ATUM_URL . 'assets/css/vendor/sweetalert2.min.css', [], ATUM_VERSION );
+				wp_register_script( 'sweetalert2', ATUM_URL . 'assets/js/vendor/sweetalert2.min.js', [], ATUM_VERSION, TRUE );
 
 				// ATUM marketing popup.
 				AtumMarketingPopup::maybe_enqueue_scripts();
 
-				wp_register_style( 'atum-suppliers', ATUM_URL . 'assets/css/atum-suppliers.css', array( 'sweetalert2' ), ATUM_VERSION );
+				wp_register_style( 'atum-suppliers', ATUM_URL . 'assets/css/atum-suppliers.css', [ 'sweetalert2' ], ATUM_VERSION );
 				wp_enqueue_style( 'atum-suppliers' );
+
+				if ( is_rtl() ) {
+					wp_register_style( 'atum-suppliers-rtl', ATUM_URL . 'assets/css/atum-suppliers-rtl.css', array( 'atum-suppliers' ), ATUM_VERSION );
+					wp_enqueue_style( 'atum-suppliers-rtl' );
+				}
 
 				// Load the ATUM colors.
 				Helpers::enqueue_atum_colors( 'atum-suppliers' );
@@ -398,7 +418,7 @@ class Suppliers {
 				}
 				elseif ( 'edit.php' === $hook ) {
 
-					wp_register_script( 'atum-suppliers-table', ATUM_URL . 'assets/js/build/atum-post-type-list.js', array( 'jquery' ), ATUM_VERSION, TRUE );
+					wp_register_script( 'atum-suppliers-table', ATUM_URL . 'assets/js/build/atum-post-type-list.js', [ 'jquery', 'wp-hooks' ], ATUM_VERSION, TRUE );
 
 					wp_localize_script( 'atum-suppliers-table', 'atumPostTypeListVars', array(
 						'placeholderSearch' => __( 'Search...', ATUM_TEXT_DOMAIN ),
@@ -427,10 +447,10 @@ class Suppliers {
 	 *
 	 * @since 1.3.0
 	 *
-	 * @param int          $supplier_id   The supplier ID.
-	 * @param array|string $post_type     Optional. The product post types to get.
-	 * @param bool         $type_filter   Optional. Whether to filter the retrieved suppliers by product type or not.
-	 * @param array        $extra_filters Optional. Any other extra filter needed to reduce the returned results.
+	 * @param int      $supplier_id   The supplier ID.
+	 * @param string[] $post_type     Optional. The product post types to get.
+	 * @param bool     $type_filter   Optional. Whether to filter the retrieved suppliers by product type or not.
+	 * @param array    $extra_filters Optional. Any other extra filter needed to reduce the returned results.
 	 *
 	 * @return array|bool
 	 */
@@ -512,6 +532,29 @@ class Suppliers {
 		return FALSE;
 
 	}
+
+	/**
+	 * Get all the product IDs with no supplier assigned
+	 *
+	 * @since 1.8.8
+	 *
+	 * @return array
+	 */
+	public static function get_no_supplier_products() {
+
+		global $wpdb;
+
+		$atum_product_data_table = $wpdb->prefix . Globals::ATUM_PRODUCT_DATA_TABLE;
+
+		$sql = "
+			SELECT product_id FROM $atum_product_data_table	
+		 	WHERE supplier_id = 0 OR supplier_id IS NULL
+		";
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		return $wpdb->get_col( $sql );
+		
+	}
 	
 	/**
 	 * Add the Suppliuers link to the ATUM's admin bar menu
@@ -591,6 +634,23 @@ class Suppliers {
 
 		return $found_product_id;
 
+	}
+
+	/**
+	 * Add supplier post type to the new wc navigation system
+	 *
+	 * @since 1.8.9
+	 */
+	public function add_supplier_post_type_wcmenu() {
+		$post_type_items = Menu::get_post_type_items(
+			'atum_supplier',
+			array(
+				'title'  => __( 'Suppliers', ATUM_TEXT_DOMAIN ),
+				'parent' => 'ATUM',
+			)
+		);
+
+		Menu::add_plugin_item( $post_type_items['all'] );
 	}
 
 

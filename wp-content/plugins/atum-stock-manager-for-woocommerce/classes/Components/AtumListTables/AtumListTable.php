@@ -64,7 +64,7 @@ abstract class AtumListTable extends \WP_List_Table {
 	 *
 	 * @var array
 	 */
-	protected $default_searchable_columns = array();
+	protected $searchable_columns = array();
 
 	/**
 	 * Set up the ATUM columns and types for correct sorting
@@ -460,8 +460,8 @@ abstract class AtumListTable extends \WP_List_Table {
 		}
 
 		// Allow adding searchable columns externally.
-		if ( ! empty( $this->default_searchable_columns ) ) {
-			$this->default_searchable_columns = (array) apply_filters( 'atum/list_table/default_serchable_columns', $this->default_searchable_columns );
+		if ( ! empty( $this->searchable_columns ) ) {
+			$this->searchable_columns = (array) apply_filters( 'atum/list_table/default_serchable_columns', $this->searchable_columns );
 		}
 
 		// Custom image placeholder.
@@ -754,8 +754,8 @@ abstract class AtumListTable extends \WP_List_Table {
 
 			// Check if it's a numeric cell.
 			if (
-				! empty( $this->default_searchable_columns['numeric'] ) && is_array( $this->default_searchable_columns['numeric'] ) &&
-				in_array( $column_name, $this->default_searchable_columns['numeric'], TRUE )
+				! empty( $this->searchable_columns['numeric'] ) && is_array( $this->searchable_columns['numeric'] ) &&
+				in_array( $column_name, $this->searchable_columns['numeric'], TRUE )
 			) {
 				$classes .= ' numeric';
 			}
@@ -873,7 +873,7 @@ abstract class AtumListTable extends \WP_List_Table {
 
 		$title       = '';
 		$product_id  = $this->get_current_product_id();
-		$child_arrow = $this->is_child ? '<span class="child-arrow">&#8629;</span>' : '';
+		$child_arrow = $this->is_child ? '<i class="atum-icon atmi-arrow-child"></i>' : '';
 
 		if ( Helpers::is_child_type( $this->product->get_type() ) ) {
 
@@ -1227,7 +1227,7 @@ abstract class AtumListTable extends \WP_List_Table {
 						'value'       => $date_on_sale_from,
 						'maxlength'   => 10,
 						'pattern'     => '[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])',
-						'class'       => 'bs-datepicker from',
+						'class'       => 'atum-datepicker from',
 					),
 					array(
 						'name'        => '_sale_price_dates_to',
@@ -1236,7 +1236,7 @@ abstract class AtumListTable extends \WP_List_Table {
 						'value'       => $date_on_sale_to,
 						'maxlength'   => 10,
 						'pattern'     => '[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])',
-						'class'       => 'bs-datepicker to',
+						'class'       => 'atum-datepicker to',
 					),
 				),
 			), $this->product );
@@ -1311,6 +1311,15 @@ abstract class AtumListTable extends \WP_List_Table {
 
 			$purchase_price = (float) $this->product->get_purchase_price();
 			$regular_price  = (float) $this->product->get_regular_price();
+
+			// Exclude rates if prices includes them.
+			if ( 'yes' === get_option( 'woocommerce_prices_include_tax' ) ) {
+				$base_tax_rates = \WC_Tax::get_base_tax_rates( $this->product->get_tax_class() );
+				$base_pur_taxes = \WC_Tax::calc_tax( $purchase_price, $base_tax_rates, true );
+				$base_reg_taxes = \WC_Tax::calc_tax( $regular_price, $base_tax_rates, true );
+				$purchase_price = round( $purchase_price - array_sum( $base_pur_taxes ), absint( get_option( 'woocommerce_price_num_decimals' ) ) );
+				$regular_price  = round( $regular_price - array_sum( $base_reg_taxes ), absint( get_option( 'woocommerce_price_num_decimals' ) ) );
+			}
 
 			if ( $purchase_price > 0 && $regular_price > 0 ) {
 
@@ -1688,9 +1697,9 @@ abstract class AtumListTable extends \WP_List_Table {
 
 		$result = array();
 
-		foreach ( self::$table_columns as $table => $slug ) {
-			$group            = $this->search_group_columns( $table );
-			$result[ $table ] = $group ? "<span class='col-$group'>$slug</span>" : $slug;
+		foreach ( self::$table_columns as $column_name => $column_label ) {
+			$group                  = $this->search_group_columns( $column_name );
+			$result[ $column_name ] = $group ? "<span class='col-$group'>$column_label</span>" : $column_label;
 		}
 
 		return apply_filters( 'atum/list_table/columns', $result );
@@ -1723,7 +1732,7 @@ abstract class AtumListTable extends \WP_List_Table {
 	 *      @type string $input_type        The input type field to use to edit the column value.
 	 *      @type array  $extra_meta        Any extra fields will be appended to the popover (as JSON array).
 	 *      @type string $tooltip_position  Where to place the tooltip.
-	 *      @type string $currency          Product prices currency.
+	 *      @type string $cell_name         The display name for the cell.
 	 *      @type array  $extra_data        Any other array of data that should be added to the element.
 	 * }
 	 *
@@ -1741,7 +1750,6 @@ abstract class AtumListTable extends \WP_List_Table {
 		 * @var string $input_type
 		 * @var array  $extra_meta
 		 * @var string $tooltip_position
-		 * @var string $currency
 		 * @var string $cell_name
 		 * @var array  $extra_data
 		 */
@@ -1753,7 +1761,6 @@ abstract class AtumListTable extends \WP_List_Table {
 			'input_type'       => 'number',
 			'extra_meta'       => array(),
 			'tooltip_position' => 'top',
-			'currency'         => self::$default_currency,
 			'cell_name'        => '',
 			'extra_data'       => array(),
 		) ) );
@@ -1765,9 +1772,9 @@ abstract class AtumListTable extends \WP_List_Table {
 		// phpcs:disable Generic.WhiteSpace.DisallowSpaceIndent.SpacesUsed
 		ob_start(); ?>
 		<span class="atum-tooltip" title="<?php echo esc_attr( $tooltip ) ?>" data-bs-placement="<?php echo esc_attr( $tooltip_position ) ?>">
-			<span class="set-meta" data-meta="<?php echo esc_attr( $meta_key ) ?>" <?php echo $symbol_data . $extra_meta_data . $extra_data; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-				data-input-type="<?php echo esc_attr( $input_type ) ?>" data-currency="<?php echo esc_attr( $currency ) ?>"
-				data-cell-name="<?php echo esc_attr( $cell_name ) ?>"
+			<span class="set-meta" data-meta="<?php echo esc_attr( $meta_key ) ?>"
+				<?php echo $symbol_data . $extra_meta_data . $extra_data; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				data-input-type="<?php echo esc_attr( $input_type ) ?>" data-cell-name="<?php echo esc_attr( $cell_name ) ?>"
 			>
 				<?php echo $value; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</span>
@@ -2215,39 +2222,8 @@ abstract class AtumListTable extends \WP_List_Table {
 
 		if ( ! empty( $_REQUEST['orderby'] ) ) {
 
-			$order                 = ( isset( $_REQUEST['order'] ) && 'asc' === $_REQUEST['order'] ) ? 'ASC' : 'DESC';
-			$atum_sortable_columns = apply_filters( 'atum/list_table/atum_sortable_columns', $this->atum_sortable_columns );
-
-			// Columns starting by underscore are based in meta keys, so can be sorted.
-			if ( '_' === substr( $_REQUEST['orderby'], 0, 1 ) ) {
-
-				if ( array_key_exists( $_REQUEST['orderby'], $atum_sortable_columns ) ) {
-
-					$this->atum_query_data['order']          = $atum_sortable_columns[ $_REQUEST['orderby'] ];
-					$this->atum_query_data['order']['order'] = $order;
-
-				}
-				// All the meta key based columns are numeric except the SKU.
-				else {
-
-					if ( '_sku' === $_REQUEST['orderby'] ) {
-						$args['orderby'] = 'meta_value';
-					}
-					else {
-						$args['orderby'] = 'meta_value_num';
-					}
-
-					$args['meta_key'] = $_REQUEST['orderby'];
-					$args['order']    = $order;
-
-				}
-
-			}
-			// Standard Fields.
-			else {
-				$args['orderby'] = $_REQUEST['orderby'];
-				$args['order']   = $order;
-			}
+			// Add the orderby args.
+			$args = $this->parse_orderby_args( $args );
 
 		}
 
@@ -2392,11 +2368,13 @@ abstract class AtumListTable extends \WP_List_Table {
 			global $wp_query;
 
 			// Pass through the ATUM query data and WC query data filters.
+			do_action( 'atum/list_table/before_query_data' );
 			add_filter( 'posts_clauses', array( $this, 'wc_product_data_query_clauses' ) );
 			add_filter( 'posts_clauses', array( $this, 'atum_product_data_query_clauses' ) );
 			$wp_query = new \WP_Query( $args );
 			remove_filter( 'posts_clauses', array( $this, 'wc_product_data_query_clauses' ) );
 			remove_filter( 'posts_clauses', array( $this, 'atum_product_data_query_clauses' ) );
+			do_action( 'atum/list_table/after_query_data' );
 
 			$posts = $wp_query->posts;
 
@@ -2404,11 +2382,13 @@ abstract class AtumListTable extends \WP_List_Table {
 				$args['paged']     = 1;
 				$_REQUEST['paged'] = $args['paged'];
 				// Pass through the ATUM query data filter.
+				do_action( 'atum/list_table/before_query_data' );
 				add_filter( 'posts_clauses', array( $this, 'wc_product_data_query_clauses' ) );
 				add_filter( 'posts_clauses', array( $this, 'atum_product_data_query_clauses' ) );
 				$wp_query = new \WP_Query( $args );
 				remove_filter( 'posts_clauses', array( $this, 'wc_product_data_query_clauses' ) );
 				remove_filter( 'posts_clauses', array( $this, 'atum_product_data_query_clauses' ) );
+				do_action( 'atum/list_table/after_query_data' );
 
 				$posts = $wp_query->posts;
 			}
@@ -2659,9 +2639,11 @@ abstract class AtumListTable extends \WP_List_Table {
 			global $wp_query;
 
 			// Pass through the ATUM query data filter.
+			do_action( 'atum/list_table/set_views_data/before_query_data' );
 			add_filter( 'posts_clauses', array( $this, 'atum_product_data_query_clauses' ) );
 			$wp_query = new \WP_Query( apply_filters( 'atum/list_table/set_views_data/all_products_args', $args ) );
 			remove_filter( 'posts_clauses', array( $this, 'atum_product_data_query_clauses' ) );
+			do_action( 'atum/list_table/set_views_data/after_query_data' );
 
 			$products = $wp_query->posts;
 
@@ -2984,8 +2966,8 @@ abstract class AtumListTable extends \WP_List_Table {
 
 			// Check if it's a numeric column.
 			if (
-				! empty( $this->default_searchable_columns['numeric'] ) && is_array( $this->default_searchable_columns['numeric'] ) &&
-				in_array( $column_key, $this->default_searchable_columns['numeric'], TRUE )
+				! empty( $this->searchable_columns['numeric'] ) && is_array( $this->searchable_columns['numeric'] ) &&
+				in_array( $column_key, $this->searchable_columns['numeric'], TRUE )
 			) {
 				$class[] = 'numeric';
 			}
@@ -3116,7 +3098,8 @@ abstract class AtumListTable extends \WP_List_Table {
 
 				$class[] = 'totals-heading';
 
-				if ( 'cb' === $first_column ) {
+				// Set a colspan of 2 if the checkbox column is present and the second column isn't hidden.
+				if ( 'cb' === $first_column && ! in_array( $second_column, $hidden ) ) {
 					$colspan = 'colspan="2"';
 				}
 
@@ -3215,44 +3198,44 @@ abstract class AtumListTable extends \WP_List_Table {
 
 		// Prepare JS vars.
 		$vars = array(
+			'ajaxFilter'                     => Helpers::get_option( 'enable_ajax_filter', 'yes' ),
+			'apply'                          => __( 'Apply', ATUM_TEXT_DOMAIN ),
+			'applyAction'                    => __( 'Apply Action', ATUM_TEXT_DOMAIN ),
+			'applyBulkAction'                => __( 'Apply Bulk Action', ATUM_TEXT_DOMAIN ),
+			'currencyFormat'                 => esc_attr( str_replace( array( '%1$s', '%2$s' ), array( '%s', '%v' ), get_woocommerce_price_format() ) ),
+			'currencyFormatDecimalSeparator' => wc_get_price_decimal_separator(),
+			'currencyFormatNumDecimals'      => wc_get_price_decimals(),
+			'dateSelectorFilters'            => [ 'best_seller', 'worst_seller' ],
+			'done'                           => __( 'Done!', ATUM_TEXT_DOMAIN ),
+			'emptyCol'                       => self::EMPTY_COL,
+			'editLocations'                  => __( 'Edit Locations', ATUM_TEXT_DOMAIN ),
+			'editLocationsInfo'              => __( 'Click on the location icons to switch the states. Locations marked with blue icons will be set and with gray icons will be unset.', ATUM_TEXT_DOMAIN ),
+			'editProductLocations'           => __( 'Edit Product Locations', ATUM_TEXT_DOMAIN ),
+			'from'                           => __( 'From', ATUM_TEXT_DOMAIN ),
+			'hideFilters'                    => __( 'Hide', ATUM_TEXT_DOMAIN ),
 			'listUrl'                        => esc_url( add_query_arg( 'page', $plugin_page, admin_url() ) ),
-			'perPage'                        => $this->per_page,
-			'showCb'                         => $this->show_cb,
+			'locationsSaved'                 => __( 'Locations saved successfully', ATUM_TEXT_DOMAIN ),
+			'noItemsSelected'                => __( 'No Items Selected', ATUM_TEXT_DOMAIN ),
+			'noActions'                      => __( 'No actions', ATUM_TEXT_DOMAIN ),
+			'nonce'                          => wp_create_nonce( 'atum-list-table-nonce' ),
+			'ok'                             => __( 'OK', ATUM_TEXT_DOMAIN ),
 			'order'                          => isset( $this->_pagination_args['order'] ) ? $this->_pagination_args['order'] : '',
 			'orderby'                        => isset( $this->_pagination_args['orderby'] ) ? $this->_pagination_args['orderby'] : '',
-			'nonce'                          => wp_create_nonce( 'atum-list-table-nonce' ),
-			'stickyColumnsNonce'             => wp_create_nonce( 'atum-sticky-columns-button-nonce' ),
-			'ajaxFilter'                     => Helpers::get_option( 'enable_ajax_filter', 'yes' ),
-			'setValue'                       => __( 'Set the %% value', ATUM_TEXT_DOMAIN ),
-			'setButton'                      => __( 'Set', ATUM_TEXT_DOMAIN ),
-			'saveButton'                     => __( 'Save Data', ATUM_TEXT_DOMAIN ),
-			'ok'                             => __( 'OK', ATUM_TEXT_DOMAIN ),
-			'noItemsSelected'                => __( 'No Items Selected', ATUM_TEXT_DOMAIN ),
-			'selectItems'                    => __( 'Please, check the boxes for all the products you want to change in bulk', ATUM_TEXT_DOMAIN ),
-			'applyBulkAction'                => __( 'Apply Bulk Action', ATUM_TEXT_DOMAIN ),
-			'showFilters'                    => __( 'Show', ATUM_TEXT_DOMAIN ),
-			'hideFilters'                    => __( 'Hide', ATUM_TEXT_DOMAIN ),
-			'applyAction'                    => __( 'Apply Action', ATUM_TEXT_DOMAIN ),
+			'perPage'                        => $this->per_page,
 			'productLocations'               => __( 'Product Locations', ATUM_TEXT_DOMAIN ),
-			'editProductLocations'           => __( 'Edit Product Locations', ATUM_TEXT_DOMAIN ),
-			'editLocationsInfo'              => __( 'Click on the location icons you want to set for this product. Locations marked with blue icons will be set and with grey icons will be unset.', ATUM_TEXT_DOMAIN ),
-			'textToShow'                     => __( 'Text to show?', ATUM_TEXT_DOMAIN ),
-			'locationsSaved'                 => __( 'Values Saved', ATUM_TEXT_DOMAIN ),
-			'done'                           => __( 'Done!', ATUM_TEXT_DOMAIN ),
-			'searchableColumns'              => $this->default_searchable_columns,
-			'stickyColumns'                  => $this->sticky_columns,
-			'dateSelectorFilters'            => [ 'best_seller', 'worst_seller' ],
-			'setTimeWindow'                  => __( 'Set Time Window', ATUM_TEXT_DOMAIN ),
-			'selectDateRange'                => __( 'Select the date range to filter the products.', ATUM_TEXT_DOMAIN ),
-			'from'                           => __( 'From', ATUM_TEXT_DOMAIN ),
-			'to'                             => __( 'To', ATUM_TEXT_DOMAIN ),
-			'apply'                          => __( 'Apply', ATUM_TEXT_DOMAIN ),
-			'emptyCol'                       => self::EMPTY_COL,
-			'currencyFormatNumDecimals'      => wc_get_price_decimals(),
-			'currencyFormatDecimalSeparator' => wc_get_price_decimal_separator(),
-			'currencyFormat'                 => esc_attr( str_replace( array( '%1$s', '%2$s' ), array( '%s', '%v' ), get_woocommerce_price_format() ) ),
 			'rowActions'                     => self::$row_actions,
-			'noActions'                      => __( 'No actions', ATUM_TEXT_DOMAIN ),
+			'saveButton'                     => __( 'Save', ATUM_TEXT_DOMAIN ),
+			'searchableColumns'              => $this->searchable_columns,
+			'selectDateRange'                => __( 'Select the date range to filter the products.', ATUM_TEXT_DOMAIN ),
+			'selectItems'                    => __( 'Please, check the boxes for all the products you want to change in bulk', ATUM_TEXT_DOMAIN ),
+			'setButton'                      => __( 'Set', ATUM_TEXT_DOMAIN ),
+			'setTimeWindow'                  => __( 'Set Time Window', ATUM_TEXT_DOMAIN ),
+			'setValue'                       => __( 'Set the %% value', ATUM_TEXT_DOMAIN ),
+			'showCb'                         => $this->show_cb,
+			'showFilters'                    => __( 'Show', ATUM_TEXT_DOMAIN ),
+			'stickyColumns'                  => $this->sticky_columns,
+			'stickyColumnsNonce'             => wp_create_nonce( 'atum-sticky-columns-button-nonce' ),
+			'to'                             => __( 'To', ATUM_TEXT_DOMAIN ),
 		);
 
 		$vars = array_merge( $vars, Globals::get_date_time_picker_js_vars() );
@@ -3685,7 +3668,7 @@ abstract class AtumListTable extends \WP_List_Table {
 		}
 		else {
 
-			if ( Helpers::in_multi_array( $search_column, $this->default_searchable_columns ) ) {
+			if ( Helpers::in_multi_array( $search_column, $this->searchable_columns ) ) {
 
 				$column_name = ltrim( $search_column, '_' );
 
@@ -3765,7 +3748,7 @@ abstract class AtumListTable extends \WP_List_Table {
 					$supplier_products = array();
 
 					// Avoid endless loops.
-					remove_filter( 'posts_search', array( $this, 'product_search' ), 10 );
+					remove_filter( 'posts_search', array( $this, 'product_search' ) );
 
 					foreach ( $search_supplier_ids as $supplier_id ) {
 						$supplier_products = array_merge( $supplier_products, Suppliers::get_supplier_products( $supplier_id ) );
@@ -3805,7 +3788,7 @@ abstract class AtumListTable extends \WP_List_Table {
 					/**
 					 *  Numeric fields.
 					 */
-					elseif ( in_array( $search_column, $this->default_searchable_columns['numeric'] ) ) {
+					elseif ( in_array( $search_column, $this->searchable_columns['numeric'] ) ) {
 
 						// Search by ATUM product data columns.
 						if ( in_array( $search_column, $this->get_searchable_atum_columns() ) ) {
@@ -4236,6 +4219,11 @@ abstract class AtumListTable extends \WP_List_Table {
 
 		wp_enqueue_style( 'atum-list' );
 
+		if ( is_rtl() ) {
+			wp_register_style( 'atum-list-rtl', ATUM_URL . 'assets/css/atum-list-rtl.css', array( 'atum-list' ), ATUM_VERSION );
+			wp_enqueue_style( 'atum-list-rtl' );
+		}
+
 		// Load the ATUM colors.
 		Helpers::enqueue_atum_colors( 'atum-list' );
 
@@ -4247,7 +4235,7 @@ abstract class AtumListTable extends \WP_List_Table {
 		}
 
 		// List Table script.
-		wp_register_script( 'atum-list', ATUM_URL . 'assets/js/build/atum-list-tables.js', [ 'jquery', 'jquery-blockui', 'sweetalert2', 'wc-enhanced-select' ], ATUM_VERSION, TRUE );
+		wp_register_script( 'atum-list', ATUM_URL . 'assets/js/build/atum-list-tables.js', [ 'jquery', 'jquery-blockui', 'sweetalert2', 'wc-enhanced-select', 'wp-hooks' ], ATUM_VERSION, TRUE );
 		wp_enqueue_script( 'atum-list' );
 
 		do_action( 'atum/list_table/after_enqueue_scripts', $this );
@@ -4453,6 +4441,9 @@ abstract class AtumListTable extends \WP_List_Table {
 			else {
 				$children_args['post_parent__in'] = $parents;
 			}
+
+			// Apply the same order and orderby args than their parent.
+			$children_args = $this->parse_orderby_args( $children_args );
 
 			// Sometimes with the general cache for this function is not enough to avoid duplicated queries.
 			$query_cache_key = AtumCache::get_cache_key( 'get_children_query', $children_args );
@@ -4697,4 +4688,68 @@ abstract class AtumListTable extends \WP_List_Table {
 		return self::$is_report;
 	}
 
+	/**
+	 * Apply order and orderby args by $_REQUEST options.
+	 *
+	 * @since 1.8.6
+	 *
+	 * @param array $args
+	 *
+	 * @return array
+	 */
+	protected function parse_orderby_args( $args ) {
+
+		if ( ! isset( $_REQUEST['orderby'] ) || empty( $_REQUEST['orderby'] ) || 'date' === $_REQUEST['orderby'] ) {
+			return $args;
+		}
+
+		$order                 = ( isset( $_REQUEST['order'] ) && 'asc' === $_REQUEST['order'] ) ? 'ASC' : 'DESC';
+		$atum_sortable_columns = apply_filters( 'atum/list_table/atum_sortable_columns', $this->atum_sortable_columns );
+
+		// Columns starting by underscore are based in meta keys, so can be sorted.
+		if ( '_' === substr( $_REQUEST['orderby'], 0, 1 ) ) {
+
+			if ( array_key_exists( $_REQUEST['orderby'], $atum_sortable_columns ) ) {
+
+				$this->atum_query_data['order']          = $atum_sortable_columns[ $_REQUEST['orderby'] ];
+				$this->atum_query_data['order']['order'] = $order;
+
+			}
+			// All the meta key based columns are numeric except the SKU.
+			else {
+
+				if ( '_sku' === $_REQUEST['orderby'] ) {
+					$args['orderby'] = 'meta_value';
+				}
+				else {
+					$args['orderby'] = 'meta_value_num';
+				}
+
+				$args['meta_query']['relation'] = 'OR';
+				$args['meta_query'][] = array(
+					'meta_key' => $_REQUEST['orderby'],
+				);
+				$args['meta_query'][] = array(
+					'key'     => $_REQUEST['orderby'],
+					'compare' => 'EXISTS'
+				);
+				$args['meta_query'][] = array(
+					'key'     => $_REQUEST['orderby'],
+					'compare' => 'NOT EXISTS'
+				);
+
+				//$args['meta_key'] = $_REQUEST['orderby'];
+				$args['order']    = $order;
+
+			}
+
+		}
+		// Standard Fields.
+		else {
+			$args['orderby'] = $_REQUEST['orderby'];
+			$args['order']   = $order;
+		}
+
+		return $args;
+	}
 }

@@ -1,13 +1,13 @@
 === ATUM Inventory Management for WooCommerce ===
 
-Contributors: stockmanagementlabs, salvamb, japiera, agimeno82, dorquium
+Contributors: stockmanagementlabs, salvamb, japiera, agimeno82, dorquium, janberebel, danielberebel
 Tags: woocommerce inventory management, suppliers, purchase orders, inbound stock, woocommerce statistics, decimals in stock quantities, full woocommerce stock manager, stock management, woocommerce, inventory logs, purchase orders, inbound stock, woocommerce stock control, stock for woocommerce, woocommerce products, woocommerce inventory, woocommerce for business, woocommerce shop organiser, woocommerce shop, inventory for woocommerce
 Requires at least: 5.0
-Tested up to: 5.6.0
+Tested up to: 5.7.1
 Requires PHP: 5.6
-WC requires at least: 3.1.0
-WC tested up to: 4.9.2
-Stable tag: 1.8.5
+WC requires at least: 3.6.0
+WC tested up to: 5.2.2
+Stable tag: 1.8.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,9 +17,9 @@ WooCommerce Full Inventory Management, Purchase Orders, Suppliers, Inbound Stock
 
 **With an Online Selling Boost Comes [ATUM Action Logs Premium Add-on](https://www.stockmanagementlabs.com/addons/atum-action-logs/)** - keeping track of any changes happening in your shop has never been easier. The Action Logs add-on supports all ATUM premium add-ons and all WooCommerce actions.
 
-**NEW IMPROVED ATUM 1.8**
+**✨ NEW IMPROVED ATUM 1.8**
 
-**NEW ATUM REST API**
+**💻 NEW ATUM REST API**
 
 = FREE VERSION DESCRIPTION =
 
@@ -37,7 +37,7 @@ In addition, in the preparation process for the development stage, we have teste
 
 = AVAILABLE PREMIUM ADD-ONS =
 
-[ATUM Product Levels - Bill Of Materials Management](https://www.stockmanagementlabs.com/addons/atum-product-levels/)
+🚀 [ATUM Product Levels - Bill Of Materials Management](https://www.stockmanagementlabs.com/addons/atum-product-levels/)
 
 A **bill of materials** (also known as a BOM or bill of material) is a broad list of items, product parts, raw materials, assemblies, and other components mandatory to create a product. Even the guidance or direction needed for preparation is understood to be part of BOM. We interpret the bill of materials as the recipe for creating a final product. To start a manufacturing process, every entrepreneur no matter what trade has to start by establishing a bill of materials (BOM).
 
@@ -45,13 +45,13 @@ The current version of Product Levels introduces the first two levels of BOM. AT
 
 [The usefulness of Product Levels](http://demo.productlevels.stockmanagementlabs.com/) add-on for any online store owner is indisputable. Being able to **manage the stock by levels** allows a better organization of the materials necessary to produce the final products that are sold to the user. In addition, it presents an interface so simple that it is very easy to manage.
 
-[ATUM Multi-Inventory](https://www.stockmanagementlabs.com/addons/atum-multi-inventory/)
+🚀 [ATUM Multi-Inventory](https://www.stockmanagementlabs.com/addons/atum-multi-inventory/)
 
 WooCommerce, as the most popular WordPress e-commerce solution, did not include an option for business **selling from different warehouses** or using several suppliers. Up until now, shop owners have had a choice to either find a 3rd party solution or to have one built specifically for their site. Neither solution is ideal unless the shop has a significant budget to cover the cost. As experts in stock management, we needed to provide a solution here.
 
 ATUM’s Multi-Inventory premium add-on is trying to remove the above issues and brings advanced features for a fracture of the cost charged by 3rd party service. Now you, as a shop owner have the option to **add as many inventory records per product** as your business needs. What is even better, the system is trying to push the editing boundaries far beyond the usual standard. Scroll below to find out about all existing and soon to come features or even try the [demo FREE](http://demo.multi-inventory.stockmanagementlabs.com/) of charge.
 
-[ATUM Export PRO](https://www.stockmanagementlabs.com/addons/atum-export-pro/)
+🚀 [ATUM Export PRO](https://www.stockmanagementlabs.com/addons/atum-export-pro/)
 
 Generate **manual or automated exports** of almost any data in your stores. We believe the most advanced tool of its kind with XML, CSV, and JSON exports to be available at launch. If it was not enough, we are adding an import tool as a bonus.
 
@@ -59,14 +59,14 @@ Exports of data are done automatically instead of copying and pasting manually. 
 
 In addition, with the import feature of the [Export Pro add-on](https://demo.export-pro.stockmanagementlabs.com/), you will be able to save a lot of time by importing data in a bulk.
 
-[ATUM Action Logs](https://www.stockmanagementlabs.com/addons/atum-action-logs/)
+🚀 [ATUM Action Logs](https://www.stockmanagementlabs.com/addons/atum-action-logs/)
 
 ATUM Action Logs aims to bring complete control into the WooCommerce inventory management. Every action or everyday task users take within the process needs to be recorded. These **recordings** we call action logs. Lots of outsides and inside factors are involved in fulfilling the inventory management process.
 
 We equipped the [ATUM Action Logs](https://demo.action-logs.stockmanagementlabs.com/) with a complete set of recording tools to avoid any capital loss. Keeping track of any changes happening in your shop has never been easier. The Action Logs add-on supports all ATUM premium add-ons and all WooCommerce actions. If you want to have your **online business under control**, you need ATUM Action Logs Add-on.
 
 
-**[FOR ANY QUESTIONS OR TUTORIALS VISIT OUR FORUM](https://forum.stockmanagementlabs.com "Visit the official ATUM forum")**
+**💬 [FOR ANY QUESTIONS OR TUTORIALS VISIT OUR FORUM](https://forum.stockmanagementlabs.com "Visit the official ATUM forum")**
 
 = AVAILABLE FEATURES =
 
@@ -238,6 +238,175 @@ We do not plan any support for older PHP and version 5.6 is the minimum.
 
 
 == Changelog ==
+
+---
+
+`1.8.9`
+
+*2021-04-30*
+
+**Features**
+
+* Added hooks to handle the supplier filter at ListTables.
+* Add ATUM post types to the new WC navigation system (work in progress).
+* Added full RTL languages compatibility.
+* Added filters for including only real stock in Stock Value widget.
+* Added new API endpoint to get all product variations.
+* Collect data when creating order notes and save it through a Helper function.
+* Added WC order notes extender to the rest API.
+* Added the site icon to ATUM settings API response.
+* Allow filtering post types by modification date when using the ATUM API.
+
+**Changes**
+
+* Refactoring.
+* Check remote request before making assynchronous request when filling calculated fields.
+* Changes to dark mode colours.
+* Use the ATUM's font icon for child arrows everywhere.
+* Changed ATUM App's CORS origin name.
+* Do not show the marketing popup to users that cannot install plugins.
+* Disabled the marketing popup until we have a new one to display.
+
+**Fixes**
+
+* CSS fix.
+* Fixed regexp to find IDs in order notes.
+* Fixed missing array index error when creating orders through the API.
+* Fixed upload_dir url protocol if siteurl is not properly configurated.
+* Fixed hook names.
+* Fix restoring widgets and layouts to default on ATUM's dashboard.
+* Fix some colors on settings values (dark mode).
+* Fixed Suppliers' API image handling.
+* Fixed error calculating item_total on ATUM order items for decimal quantities.
+* Fixed conflict with AutomateWoo when returning an empty comment.
+
+---
+
+`1.8.8`
+
+*2021-04-08*
+
+**Features**
+
+* Added a new option to ATUM settings to be enable/disable the orders searching by SKU.
+* Added new method to check whether any ATUM order still exists in the database.
+* Added auto-update functionality for ATUM add-ons.
+* Added the ATUM menus to the new WC navigation system.
+* Added new helper to get all the products that have no supplier assigned.
+* Added new utility to merge 2 arrays in javascript (with unique values).
+* Added new utility to restrict allowed values in any input number field.
+* Show an admin notice when a license is expired or disabled.
+
+**Changes**
+
+* get_order_note_ids now also resolves the product SKU.
+* Clear ATUM order caches after deleting items.
+* Apply the filter for product data props in API, always.
+* Avoid sorting children by date in ListTables.
+* Added missing check in upgrade process.
+* Updated dependencies + use WebPack 4.
+* Refactoring.
+* Allow addons adding its own posts_clauses filters.
+
+**Fixes**
+
+* Added missing text domain.
+* Fixed special CORS origin when calling to the API from the ATUM's App.
+* Fixed missed products in listtables when ordering by metadata.
+* Fixed upgrade process when is a fresh install.
+* Removed console.log.
+* Prevent WPML delete meta when updating from Stock Central.
+* Added missing non-legacy actions.
+* Fixed edit popover auto-closing in some cases.
+* Fixed CSS for add-ons with invalid licenses.
+* Fixed invalid license key text not showing on add-ons page.
+
+---
+
+`1.8.7`
+
+*2021-03-12*
+
+**Features**
+
+* Added the ability of searching WC orders by inner products' SKU or Supplier SKU.
+* Added new hook to be able to delete order item inventories when deleting an ATUM order.
+* Add helper to get a WC Order status properly formatted.
+* Allow passing ATUM order dates as GMT through ATUM API.
+* Allow handling the increase/decrease stocks in ILs externally.
+* Added low_stock_amount to product_data endpoint in ATUM REST API.
+* Save the WC low_stock_amount through ATUM API.
+* Allow adding items to an IL without having to create the order first.
+* Save the stock_changed meta for ATUM order items when appropriate.
+* Allow the 'stock_changed' prop to be sent in API requests within ATUM order items.
+* Added a security check to avoid changing the stock multiple times for the same PO.
+* Added button to fix order prices.
+* Reapply any discount proportionally when fixing order prices.
+* Added searchable columns to uncontroled List Table.
+* Fix order prices through a bulk action.
+
+**Changes**
+
+* Added global variable for WC_Order statuses that change the stock.
+* Apply to children products the same order than parents in List Tables.
+* Do not change the PO items' stock for any item that has the 'stock_changed' prop set to 'yes'.
+* Removed supplier from the "Search In Column" dropdown as it already has its own filter.
+* Remove an active addon if it couldn't be bootsrapped.
+
+**Fixes**
+
+* Fixed ghost tooltips showing in some cases (possible Bootstrap 5 bug).
+* Fixed icon column names not shown in the export report.
+* Minor CSS fixes.
+* Fixed ATUM control switch not being changed after saving the product.
+* Fixed wrong titles and dates being set to POs when created through API calls.
+* Fixed duplicated results in statistics when existing variations are sold.
+* Fixed gross profit when prices include taxes.
+* Avoid columns misalignment when showing/hiding columns in Stock Central.
+* Fixed menuPopover component's title parameter not optional.
+
+---
+
+`1.8.6`
+
+*2021-02-19*
+
+**Features**
+
+* Added option to settings to let the user updating the stock only when the order status changes to "completed".
+* Added support for datepicker fields on List tables' editable fields.
+* Added support for inventory locations (display and edit) to Stock Central.
+* Added CheckOrderPrices component.
+* Added button to WC orders list to check mismatching prices in editable orders.
+
+**Changes**
+
+* Added antialiasing for all the ATUM font icons everywhere.
+* Avoid localising datetimepickers with eastern languages.
+* Do not use WMPL-specific meta when not needed.
+* Refactoring.
+* Modified order change statuses hooks.
+* Updated sweetalert2 dependency.
+* Auto-expand the location trees with at least one of its nodes checked.
+* Added the ATUM Modal styling to locations tree modal.
+* Splitted general settings into 2 separated sections.
+* Format purchase price as WooCommerce does in the backend (6 decimals max).
+* Replaced switchery by a 100% CSS switcher.
+
+**Fixes**
+
+* Fixed API error notice when using object as an array.
+* Fixed blank spaces being added when editing a text field in Stock Central.
+* CSS fixes.
+* Fixed jquery.easytree conflicts with jQuery 3.0.
+* Fixed multiple binding issue in jquery.easytree.
+* Fixed popover closing when removing an item from a multi-select.
+* Close other edit popovers when opening a new one.
+* Make simple products types available in all the add-ons.
+* Added the wp-hooks dependency to ensure they are loaded by WordPress.
+* Fixed wrong dependency added to the Dashboard's CSS.
+* Fixed sale price's edit popover in Stock Central.
+* Fixed error when checking order prices if a product no longer exists.
 
 ---
 

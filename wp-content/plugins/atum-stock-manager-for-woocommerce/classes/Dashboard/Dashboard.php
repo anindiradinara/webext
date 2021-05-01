@@ -296,18 +296,13 @@ class Dashboard {
 			/*
 			 * Dependencies.
 			 */
-			$script_deps = array( 'gridstack', 'gridstack-jquery-ui', 'sweetalert2', 'jquery-nice-scroll', 'jquery-blockui', 'jquery-ui-sortable' );
+			$script_deps = array( 'gridstack', 'gridstack-jquery-ui', 'sweetalert2', 'jquery-nice-scroll', 'jquery-blockui', 'jquery-ui-sortable', 'wp-hooks' );
 			$style_deps  = array( 'sweetalert2', 'owl.carousel', 'owl.carousel.theme' );
 
 			/*
 			 * Widgets scripts
 			 */
 			$widget_keys = array_keys( $user_widgets_layout );
-
-			if ( in_array( ATUM_PREFIX . 'statistics_widget', $widget_keys ) ) {
-				wp_register_style( 'switchery', ATUM_URL . 'assets/css/vendor/switchery.min.css', FALSE, ATUM_VERSION );
-				$style_deps[] = 'switchery';
-			}
 
 			if ( in_array( ATUM_PREFIX . 'current_stock_value_widget', $widget_keys ) ) {
 				$script_deps[] = 'jquery-blockui';
@@ -318,6 +313,11 @@ class Dashboard {
 			 */
 			wp_register_style( 'atum-dashboard', ATUM_URL . 'assets/css/atum-dashboard.css', $style_deps, ATUM_VERSION );
 			wp_enqueue_style( 'atum-dashboard' );
+
+			if ( is_rtl() ) {
+				wp_register_style( 'atum-dashboard-rtl', ATUM_URL . 'assets/css/atum-dashboard-rtl.css', array( 'atum-dashboard' ), ATUM_VERSION );
+				wp_enqueue_style( 'atum-dashboard-rtl' );
+			}
 
 			// Load the ATUM colors.
 			Helpers::enqueue_atum_colors( 'atum-dashboard' );

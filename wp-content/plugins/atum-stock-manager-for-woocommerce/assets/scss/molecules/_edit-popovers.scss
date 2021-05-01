@@ -9,10 +9,6 @@
 			display: flex;
 			flex-wrap: nowrap;
 			min-height: 34px;
-			
-			button {
-				height: 35px;
-			}
 		}
 		
 		input, select {
@@ -42,6 +38,10 @@
 					line-height: 1.5;
 				}
 				
+				.select2-search {
+					padding-top: 3px;
+				}
+				
 				.select2-search__field {
 					background: none !important;
 					margin-top: 0;
@@ -61,7 +61,8 @@
 		
 		.set {
 			margin-left: 4px;
-			max-height: 36px;
+			height: 38px;
+			max-height: 38px;
 		}
 		
 	}

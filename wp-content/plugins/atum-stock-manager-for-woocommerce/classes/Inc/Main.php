@@ -14,9 +14,12 @@ namespace Atum\Inc;
 
 defined( 'ABSPATH' ) || die;
 
+/**
+* For WC navigation system.
+* use Automattic\WooCommerce\Admin\Features\Navigation\Menu;
+*/
 use Atum\Addons\Addons;
 use Atum\Api\AtumApi;
-use Atum\Components\AtumAdminNotices;
 use Atum\Components\AtumCapabilities;
 use Atum\Components\AtumColors;
 use Atum\Components\AtumQueues;
@@ -27,6 +30,7 @@ use Atum\Integrations\Wpml;
 use Atum\MetaBoxes\FileAttachment;
 use Atum\MetaBoxes\ProductDataMetaBoxes;
 use Atum\Modules\ModuleManager;
+use Atum\Orders\CheckOrderPrices;
 use Atum\PurchaseOrders\PurchaseOrders;
 use Atum\Settings\Settings;
 use Atum\StockCentral\StockCentral;
@@ -35,7 +39,7 @@ use Atum\Suppliers\Suppliers;
 
 
 class Main {
-	
+
 	/**
 	 * The singleton instance holder
 	 *
@@ -243,6 +247,7 @@ class Main {
 		FileAttachment::get_instance();
 		AtumQueues::get_instance();
 		AtumApi::get_instance();
+		CheckOrderPrices::get_instance();
 		
 		//
 		// Enable WPML module if needed
@@ -293,14 +298,14 @@ class Main {
 		}
 
 	}
-	
+
 	/**
 	 * Generate the ATUM menu
 	 *
 	 * @since 0.0.1
 	 */
 	public function create_menu() {
-		
+
 		// Add the main menu item.
 		add_menu_page(
 			self::$main_menu_item['title'],
@@ -312,10 +317,27 @@ class Main {
 			58 // Add the menu just after the WC Products.
 		);
 
+		// Atum category on wc navigation system.
+		// Check if the WC method are availables.
+		/** Next
+		if ( class_exists( 'Automattic\WooCommerce\Admin\Features\Navigation\Menu' ) && method_exists( Menu::class, 'add_plugin_category' ) ) {
+
+			Menu::add_plugin_category(
+				array(
+					'id'     => 'ATUM',
+					'title'  => __( 'ATUM Inventory', ATUM_TEXT_DOMAIN ),
+					'url'    => self::$main_menu_item['slug'],
+					'parent' => 'woocommerce',
+				)
+			);
+
+		}
+		 */
+
 		// Overwrite the main menu item hook name set by add_menu_page to avoid conflicts with translations.
 		global $admin_page_hooks;
 		$admin_page_hooks[ self::$main_menu_item['slug'] ] = Globals::ATUM_UI_HOOK; // phpcs:ignore WordPress.Variables.GlobalVariables.OverrideProhibited
-		
+
 		// Build the submenu items.
 		if ( ! empty( $this->menu_items ) ) {
 
@@ -335,12 +357,32 @@ class Main {
 					$slug,
 					$menu_item['callback']
 				);
+
+				// Addonds & atum submenú items on wc navigation system.
+				// Check if the WC method are availables.
+				/**  Next
+				if ( class_exists( 'Automattic\WooCommerce\Admin\Features\Navigation\Menu' ) && method_exists( Menu::class, 'add_plugin_item' ) ) {
+
+					Menu::add_plugin_item(
+						array(
+							'id'         => $menu_item['title'],
+							'title'      => $menu_item['title'],
+							'capability' => 'manage_woocommerce',
+							'url'        => $slug,
+							'order'      => $menu_item['menu_order'],
+							'parent'     => 'ATUM',
+						)
+					);
+
+				}
+				*/
+
 			}
 
 		}
 
 		do_action( 'atum/after_adding_menu' );
-		
+
 	}
 
 	/**

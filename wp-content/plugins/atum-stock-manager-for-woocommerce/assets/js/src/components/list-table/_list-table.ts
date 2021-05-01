@@ -329,19 +329,16 @@ export default class ListTable {
 	/**
 	 * Every time a cell is edited, update the input value
 	 *
-	 * @param {JQuery} $metaCell  The table cell that is being edited.
-	 * @param {JQuery} $popover   The popover attached to the above cell.
+	 * @param {JQuery} $metaCell The table cell that is being edited.
+	 * @param {JQuery} $popover  The popover attached to the above cell.
 	 */
 	updateEditedColsInput( $metaCell: JQuery, $popover: JQuery ) {
 
-		let editedCols: any  = this.globals.$editInput.val(),
-		    itemId: number   = $metaCell.closest( 'tr' ).data( 'id' ),
-		    meta: string     = $metaCell.data( 'meta' ),
-		    symbol: string   = $metaCell.data( 'symbol' ) || '',
-		    custom: string   = $metaCell.data( 'custom' ) || 'no',
-		    currency: string = $metaCell.data( 'currency' ) || '',
-		    value: any       = symbol ? $metaCell.text().replace( symbol, '' ) : $metaCell.text(),
-		    newValue: any    = $popover.find( '.meta-value' ).val();
+		let editedCols: any  = this.globals.$editInput.val();
+
+		const itemId: number = $metaCell.closest( 'tr' ).data( 'id' ),
+		      meta: string   = $metaCell.data( 'meta' ),
+		      newValue: any  = $popover.find( '.meta-value' ).val();
 
 		// Update the cell value.
 		this.setCellValue( $metaCell, newValue );
@@ -363,8 +360,16 @@ export default class ListTable {
 
 		// Add the meta value to the object.
 		editedCols[ itemId ][ meta ] = newValue;
-		editedCols[ itemId ][ meta + '_custom' ] = custom;
-		editedCols[ itemId ][ meta + '_currency' ] = currency;
+
+		// WPML compatibility.
+		if ( typeof $metaCell.data( 'custom' ) !== 'undefined' ) {
+			editedCols[ itemId ][ `${ meta }_custom` ] = $metaCell.data( 'custom' ) || 'no';
+		}
+
+		// WPML compatibility.
+		if ( typeof $metaCell.data( 'currency' ) !== 'undefined' ) {
+			editedCols[ itemId ][ `${ meta }_currency` ] = $metaCell.data( 'currency' );
+		}
 
 		// Add the extra meta data (if any).
 		if ( $popover.hasClass( 'with-meta' ) ) {
@@ -640,32 +645,49 @@ export default class ListTable {
 	 */
 	calculateCompoundedStocks() {
 
-		this.globals.$atumTable.find( '.compounded' ).each( ( index: number, elem: Element ) => {
+		this.globals.$atumTable.find( '.compounded, .compounded-available' ).each( ( index: number, elem: Element ) => {
 
 			let $compoundedCell: JQuery = $( elem ),
 			    $row: JQuery            = $compoundedCell.closest( 'tr' ),
 			    $nextRow: JQuery        = $row.next( '.has-compounded' ),
-			    compoundedAmt: number   = 0;
+				compoundedAmt: number = 0;
 
 			if ( $row.hasClass( 'expandable' ) ) {
 				return;
 			}
 
 			while ( $nextRow.length ) {
+				
+				if ( $compoundedCell.hasClass( 'compounded-available' ) ) {
 
-				const $stockCell = $nextRow.find( '._stock .set-meta, ._stock .calculated span' ),
-				      stockValue = ! $stockCell.length ? '0' : $stockCell.text();
+					const $availableStockCell = $nextRow.find( '.calc_available_to_produce .set-meta, .calc_available_to_produce .calculated span' ),
+					      availableStockValue = ! $availableStockCell.length ? '0' : $availableStockCell.text().trim();
 
-				compoundedAmt += parseFloat( stockValue ) || 0;
+					compoundedAmt += parseFloat( availableStockValue ) || 0;
+				}
+				else {
+
+					const $stockCell = $nextRow.find( '._stock .set-meta, ._stock .calculated span' ),
+					      stockValue = ! $stockCell.length ? '0' : $stockCell.text().trim();
+
+					compoundedAmt += parseFloat( stockValue ) || 0;
+
+				}
+
+				if ( 0 === compoundedAmt && $compoundedCell.attr( 'class' ).includes( 'compounded-available' ) ) {
+					$compoundedCell.text( '-' );
+				}
+				else {
+					$compoundedCell.text( compoundedAmt );
+				}
+
 				$nextRow = $nextRow.next( '.has-compounded' );
 
 			}
 
-			$compoundedCell.text( compoundedAmt );
-		
-		});
-		
+		} );
+
 	}
-	
+
 }
 

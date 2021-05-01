@@ -21,7 +21,7 @@ export default class MenuPopover extends PopoverBase{
 
 		super();
 
-		if ( $menuButton.length && typeof menu.items !== 'undefined' && menu.items.length ) {
+		if ( $menuButton.length && typeof menu.items !== 'undefined' && menu.items.length && ! this.getInstance( $menuButton ) ) {
 			this.$menuButton.addClass( this.popoverButtonClassName );
 			this.bindPopovers();
 			this.bindEvents();
@@ -56,7 +56,7 @@ export default class MenuPopover extends PopoverBase{
 
 		// Add the popover to the menu button.
 		new BsPopover( this.$menuButton.get(0), {
-			title    : this.menu.title,
+			title    : this.menu.title || '',
 			content  : $( '<div />' ).append( $menuHtml ).get( 0 ), // It supports one element only.
 			html     : true,
 			customClass: this.popoverClassName,
@@ -108,9 +108,13 @@ export default class MenuPopover extends PopoverBase{
 			.off( 'click.atumMenuPopover', '#wpbody-content' )
 			.on( 'click.atumMenuPopover', '#wpbody-content', ( evt: JQueryEventObject ) => {
 
+				if ( ! $( '.popover' ).length ) {
+					return;
+				}
+
 				const $target: JQuery = $( evt.target );
 
-				if ( $target.hasClass( this.popoverButtonClassName ) || $target.hasClass( '.popover' ) || $target.closest( '.popover' ).length ) {
+				if ( ! $target.length || $target.hasClass( this.popoverButtonClassName ) || $target.hasClass( '.popover' ) || $target.closest( '.popover' ).length ) {
 					return;
 				}
 

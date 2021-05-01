@@ -61,11 +61,18 @@ class PurchaseOrders extends AtumOrderPostType {
 	const MENU_ORDER = 3;
 	
 	/**
-	 * Will hold the current purchase order object
+	 * Will store the current purchase order object
 	 *
 	 * @var PurchaseOrder
 	 */
 	private $po;
+
+	/**
+	 * Will store the orders that are processed on a single requests to avoid changing stocks multiple times
+	 *
+	 * @var int[]
+	 */
+	private $processed_orders = [];
 
 	/**
 	 * The capabilities used when registering the post type
@@ -843,7 +850,7 @@ class PurchaseOrders extends AtumOrderPostType {
 	}
 
 	/**
-	 * Maybe increase stock Levels
+	 * Maybe decrease stock Levels
 	 *
 	 * @since 1.5.0
 	 *
@@ -867,7 +874,7 @@ class PurchaseOrders extends AtumOrderPostType {
 	}
 
 	/**
-	 * Maybe decrease stock Levels
+	 * Maybe increase stock Levels
 	 *
 	 * @since 1.5.0
 	 *
@@ -889,11 +896,19 @@ class PurchaseOrders extends AtumOrderPostType {
 	 * @since 1.5.0
 	 *
 	 * @param PurchaseOrder $order
-	 * @param string        $action
+	 * @param string        $action Values: 'increase' or 'decrease'.
 	 */
 	public function change_stock_levels( $order, $action ) {
 
+		$order_id = $order->get_id();
+
+		// If this order was already processed, avoid changing the stock again.
+		if ( in_array( $order_id, $this->processed_orders ) ) {
+			return;
+		}
+
 		$atum_order_items = $order->get_items();
+		$is_completed     = self::FINISHED === $order->get_status();
 
 		if ( ! empty( $atum_order_items ) ) {
 			foreach ( $atum_order_items as $item_id => $atum_order_item ) {
@@ -908,15 +923,21 @@ class PurchaseOrders extends AtumOrderPostType {
 
 				if ( $product instanceof \WC_Product && $product->exists() && $product->managing_stock() ) {
 
+					// Make sure the stock wasn't already changed (through the ATUM's App, for example).
+					if ( $is_completed && 'yes' === $atum_order_item->get_stock_changed() ) {
+						$atum_order_item->save();
+						continue;
+					}
+
 					$old_stock = $product->get_stock_quantity();
 
-					// if stock is null but WC is managing stock.
+					// If stock is null but WC is managing stock, set it to 0 first.
 					if ( is_null( $old_stock ) ) {
 						$old_stock = 0;
 						wc_update_product_stock( $product, $old_stock );
 					}
 
-					$stock_change = apply_filters( 'atum/purchase_orders/po/restore_atum_order_stock_quantity', $atum_order_item->get_quantity(), $item_id );
+					$stock_change = apply_filters( 'atum/purchase_orders/restore_atum_order_stock_quantity', $atum_order_item->get_quantity(), $item_id );
 					$new_stock    = wc_update_product_stock( $product, $stock_change, $action );
 					$old_stock    = 'increase' === $action ? $new_stock - $stock_change : $new_stock + $stock_change;
 					$item_name    = $product->get_formatted_name();
@@ -930,12 +951,27 @@ class PurchaseOrders extends AtumOrderPostType {
 
 					$note .= ' ' . $item_name . ' ' . $old_stock . '&rarr;' . $new_stock;
 
-					$order->add_order_note( apply_filters( 'atum/purchase_order/add_stock_change_note', $note, $product, $action ) );
-					$atum_order_item->update_meta_data( '_stock_changed', TRUE );
+					// Add the order note.
+					$note_id = $order->add_order_note( apply_filters( 'atum/purchase_orders/add_stock_change_note', $note, $product, $action ) );
+					Helpers::save_order_note_meta( $note_id, [
+						'action'     => "{$action}_stock",
+						'item_name'  => $atum_order_item->get_name(),
+						'product_id' => $product->get_id(),
+						'old_stock'  => $old_stock,
+						'new_stock'  => $new_stock,
+					] );
+
+					// Register the stock change for each item.
+					$atum_order_item->set_stock_changed( $is_completed );
+
 					$atum_order_item->save();
+
 				}
 
 			}
+
+			$this->processed_orders[] = $order_id;
+
 		}
 
 	}

@@ -161,11 +161,16 @@ class Addons {
 
 		if ( ! empty( self::$addons ) ) {
 
-			foreach ( self::$addons as $addon ) {
+			foreach ( self::$addons as $index => $addon ) {
 
 				// Load the addon. Each addon should have a callback method for bootstraping.
 				if ( ! empty( $addon['bootstrap'] ) && is_callable( $addon['bootstrap'] ) ) {
-					call_user_func( $addon['bootstrap'] );
+
+					$bootstrapped = call_user_func( $addon['bootstrap'] );
+
+					if ( ! $bootstrapped ) {
+						unset( self::$addons[ $index ] );
+					}
 				}
 
 			}
@@ -213,6 +218,11 @@ class Addons {
 		wp_enqueue_style( 'sweetalert2' );
 		wp_enqueue_style( 'atum-addons' );
 
+		if ( is_rtl() ) {
+			wp_register_style( 'atum-addons-rtl', ATUM_URL . 'assets/css/atum-addons-rtl.css', array( 'atum-addons' ), ATUM_VERSION );
+			wp_enqueue_style( 'atum-addons-rtl' );
+		}
+
 		if ( wp_script_is( 'es6-promise', 'registered' ) ) {
 			wp_enqueue_script( 'es6-promise' );
 		}
@@ -241,23 +251,33 @@ class Addons {
 		if ( ! empty( $license_keys ) ) {
 			foreach ( $license_keys as $addon_name => $license_key ) {
 
-				if ( $license_key && 'valid' === $license_key['status'] ) {
+				if ( $license_key && is_array( $license_key ) && $license_key['key'] ) {
 
-					// All the ATUM addons' names should start with 'ATUM'.
-					$addon_info = Helpers::is_plugin_installed( 'ATUM ' . $addon_name, '', 'name', FALSE );
+					if ( 'valid' === $license_key['status'] ) {
 
-					if ( $addon_info ) {
+						// All the ATUM addons' names should start with 'ATUM'.
+						$addon_info = Helpers::is_plugin_installed( 'ATUM ' . $addon_name, '', 'name', FALSE );
 
-						// Setup the updater.
-						$addon_file = key( $addon_info );
+						if ( $addon_info ) {
 
-						new Updater( $addon_file, array(
-							'version'   => $addon_info[ $addon_file ]['Version'],
-							'license'   => $license_key['key'],
-							'item_name' => $addon_name,
-							'beta'      => FALSE,
-						) );
+							// Setup the updater.
+							$addon_file = key( $addon_info );
+
+							new Updater( $addon_file, array(
+								'version'   => $addon_info[ $addon_file ]['Version'],
+								'license'   => $license_key['key'],
+								'item_name' => $addon_name,
+								'beta'      => FALSE,
+							) );
+
+						}
+
 					}
+					elseif ( in_array( $license_key['status'], [ 'disabled', 'expired', 'invalid' ] ) ) {
+						/* translators: the add-on name */
+						AtumAdminNotices::add_notice( sprintf( __( "Your ATUM %1\$s add-on's license has expired, %2\$splease renew it asap%3\$s or you won't receive updates anymore.", ATUM_TEXT_DOMAIN ), $addon_name, '<a href="https://www.stockmanagementlabs.com/login" target="_blank">', '</a>' ), 'warning', TRUE, TRUE );
+					}
+
 				}
 
 			}

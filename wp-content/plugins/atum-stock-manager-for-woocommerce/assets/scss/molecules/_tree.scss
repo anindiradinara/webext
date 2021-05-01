@@ -63,8 +63,7 @@ ul.easytree-container {
 	}
 	
 	.easytree-node {
-		display: flex;
-		align-items: center;
+		display: inline-block;
 	}
 	
 	ul {
@@ -141,7 +140,7 @@ span {
 		line-height: 1;
 		display: inline-block;
 		vertical-align: top;
-		font-family: $atum-icon-font;
+		@include atum-icon-font-family;
 		cursor: pointer;
 		color: var(--main-text);
 	}
@@ -300,18 +299,48 @@ ul.easytree-container.easytree-focused {
 }
 
 // ATUM locations tree
-#atum-locations-tree {
-	.easytree-node{
+.atum-modal {
+	.atum-tree {
+		margin-top: 25px;
+	}
+}
+
+.edit-locations-modal {
+	
+	.swal2-content {
+		margin-bottom: 0;
+	}
+	
+	.swal2-actions {
+		margin-top: 0;
+	}
+	
+	.easytree-node {
 		
 		a {
 			color: var(--dark) !important;
 		}
+		
+		&.easytree-active {
+			.easytree-title {
+				background-color: var(--gray-400) !important;
+			}
+		}
+		
 		&.checked {
 			a {
 				color: var(--primary) !important;
 			}
-			&.easytree-active a{
-				color: var(--atum-table-bg) !important;
+			
+			&.easytree-active {
+				
+				.easytree-title {
+					background-color: var(--primary) !important;
+					
+					a {
+						color: var(--atum-table-bg) !important;
+					}
+				}
 			}
 		}
 	}

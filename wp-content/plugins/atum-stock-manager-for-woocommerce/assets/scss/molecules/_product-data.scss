@@ -28,6 +28,8 @@
 				&:before {
 					content: $atmi-atum !important;
 					font-family: $atum-icon-font !important;
+					-webkit-font-smoothing: antialiased;
+					-moz-osx-font-smoothing: grayscale;
 				}
 			}
 			
@@ -128,12 +130,6 @@
 		}
 	}
 	
-	.woocommerce-help-tip {
-		~ .switchery {
-			margin-left: 10px;
-		}
-	}
-	
 	.product-tab-runner {
 		select {
 			width: 166px;
@@ -148,9 +144,7 @@
 				
 				&:before {
 					font-size: 26px;
-					font-family: $atum-icon-font;
-					-webkit-font-smoothing: antialiased;
-					-moz-osx-font-smoothing: grayscale;
+					@include atum-icon-font-family;
 					visibility: visible;
 					color: $white;
 					width: 40px;
@@ -239,6 +233,14 @@
 				right: 0;
 			}
 			
+		}
+	}
+	
+	.form-row-last {
+		+ .form-row {
+			&:not(.form-row-first):not(.form-row-last) {
+				clear: left;
+			}
 		}
 	}
 	

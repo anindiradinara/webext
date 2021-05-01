@@ -9,10 +9,12 @@ import EnhancedSelect from './_enhanced-select';
 import PopoverBase from '../abstracts/_popover-base';
 import Settings from '../config/_settings';
 import Utils from '../utils/_utils';
+import WPHooks from '../interfaces/wp.hooks';
 
 export default class EditPopovers extends PopoverBase{
 
 	popoverClassName: string = 'edit-field-popover';
+	wpHooks: WPHooks = window['wp']['hooks']; // WP hooks.
 	
 	constructor(
 		private settings: Settings,
@@ -205,10 +207,11 @@ export default class EditPopovers extends PopoverBase{
 				// Set the field label.
 				this.setEditFieldLabel( $fieldWrapper.find( '.field-label' ), newLabel );
 
+				// Handle the value change extenally.
+				this.wpHooks.doAction( 'atum_editPopovers_setValue', $valueInput, newValue, oldValue, newLabel, $popoverWrapper.find( ':input' ).serializeArray(), $setButton );
+
 				// Once set, destroy the opened popover.
 				this.destroyPopover( $fieldWrapper.find( '.atum-edit-field' ) );
-
-				$editField.trigger( 'atum-edit-popover-set-value', [ $valueInput, newValue, oldValue, newLabel, $popoverWrapper.find( ':input' ).serializeArray() ] );
 
 			})
 
@@ -232,15 +235,28 @@ export default class EditPopovers extends PopoverBase{
 		// NOTE: we are using the #wpbody-content element instead of the body tag to avoid closing when clicking within popovers.
 		$( '#wpbody-content' ).click( ( evt: JQueryEventObject ) => {
 
+			if ( ! $( '.popover' ).length ) {
+				return;
+			}
+
 			const $target: JQuery = $( evt.target );
 
-			if ( $target.hasClass( 'atum-edit-field' ) || $target.hasClass( this.popoverClassName ) || $target.closest( `.${ this.popoverClassName }` ).length ) {
+			if (
+				! $target.length || $target.hasClass( 'select2-selection__choice__remove' ) ||
+				$target.hasClass( this.popoverClassName ) || $target.closest( `.${ this.popoverClassName }` ).length
+			) {
 				return;
 			}
 
 			// Hide all the opened popovers.
 			$( `.popover.${ this.popoverClassName }` ).each( ( index: number, elem: Element ) => {
-				super.hidePopover( $( `[aria-describedby="${ $( elem ).attr( 'id' ) }"]` ) );
+
+				const $editButton: JQuery = $( `[aria-describedby="${ $( elem ).attr( 'id' ) }"]` );
+
+				if ( ! $editButton.is( $target ) && ! $target.closest( $editButton ).length ) {
+					super.hidePopover( $editButton );
+				}
+
 			} );
 
 		} );
@@ -266,7 +282,6 @@ export default class EditPopovers extends PopoverBase{
 	 */
 	destroyPopover( $editButton: JQuery ) {
 
-		console.log('destroying poopover');
 		super.destroyPopover( $editButton, () => {
 
 			// Give a small lapse to complete the 'fadeOut' animation before re-binding.
@@ -292,7 +307,7 @@ export default class EditPopovers extends PopoverBase{
 					      minimumResultsForSearch: 20,
 					      placeholder            : {
 						      id  : '-1',
-						      text: $select.find( 'option' ).first().text(),
+						      text: $select.find( 'option' ).first().text().trim(),
 					      },
 				      };
 

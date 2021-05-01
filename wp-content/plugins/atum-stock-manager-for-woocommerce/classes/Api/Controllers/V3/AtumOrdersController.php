@@ -20,7 +20,6 @@ use Atum\Components\AtumOrders\Items\AtumOrderItemFee;
 use Atum\Components\AtumOrders\Items\AtumOrderItemProduct;
 use Atum\Components\AtumOrders\Items\AtumOrderItemShipping;
 use Atum\Components\AtumOrders\Items\AtumOrderItemTax;
-use Atum\Components\AtumOrders\Models\AtumOrderItemModel;
 use Atum\Components\AtumOrders\Models\AtumOrderModel;
 use Atum\Inc\Helpers;
 use Atum\PurchaseOrders\PurchaseOrders;
@@ -65,6 +64,14 @@ abstract class AtumOrdersController extends \WC_REST_Orders_Controller {
 			'context'     => array( 'view', 'edit' ),
 		);
 
+		// Allow editing order dates.
+		unset(
+			$schema['properties']['date_created']['readonly'],
+			$schema['properties']['date_created_gmt']['readonly'],
+			$schema['properties']['date_completed']['readonly'],
+			$schema['properties']['date_completed_gmt']['readonly']
+		);
+
 		return $schema;
 
 	}
@@ -93,6 +100,18 @@ abstract class AtumOrdersController extends \WC_REST_Orders_Controller {
 			),
 			'validate_callback' => 'rest_validate_request_arg',
 		);
+
+		$params['modified_before'] = [
+			'description' => __( 'Limit response to orders modified before a given ISO8601 compliant date.', ATUM_TEXT_DOMAIN ),
+			'type'        => 'string',
+			'format'      => 'date-time',
+		];
+
+		$params['modified_after'] = [
+			'description' => __( 'Limit response to orders modified after a given ISO8601 compliant date.', ATUM_TEXT_DOMAIN ),
+			'type'        => 'string',
+			'format'      => 'date-time',
+		];
 
 		return $params;
 
@@ -257,7 +276,7 @@ abstract class AtumOrdersController extends \WC_REST_Orders_Controller {
 
 				switch ( $key ) {
 					case 'status':
-						// Change should be done later so transitions have new data.
+						// Change must be done later so transitions have the new data.
 						break;
 
 					case 'line_items':
@@ -300,7 +319,22 @@ abstract class AtumOrdersController extends \WC_REST_Orders_Controller {
 
 						break;
 
-					// date_expected || multiple_suppliers || supplier.
+					// The right way to send dates is by using GMT formats, so we can convert them now to the site's timezone.
+					case 'date_created_gmt':
+					case 'date_completed_gmt':
+						$formatted_key = str_replace( '_gmt', '', $key );
+
+						if ( is_callable( array( $order, "set_{$formatted_key}" ) ) ) {
+							unset( $data_keys[ $formatted_key ] );
+
+							$date_value     = get_date_from_gmt( $value );
+							$formatted_date = Helpers::get_wc_time( $date_value );
+
+							$order->{"set_{$formatted_key}"}( $formatted_date );
+						}
+						break;
+
+					// Any ATUM order prop with a setter.
 					default:
 						if ( is_callable( array( $order, "set_{$key}" ) ) ) {
 							$order->{"set_{$key}"}( $value );
@@ -358,12 +392,12 @@ abstract class AtumOrdersController extends \WC_REST_Orders_Controller {
 				$object->calculate_totals( TRUE );
 			}
 
-			do_action( 'atum/order/before_api_save_oorder', $object, $request, $creating );
-
 			// Set status.
 			if ( ! empty( $request['status'] ) ) {
 				$object->set_status( $request['status'] );
 			}
+
+			do_action( 'atum/api/before_save_atum_order', $object, $request, $creating );
 
 			$object->save();
 
@@ -458,6 +492,18 @@ abstract class AtumOrdersController extends \WC_REST_Orders_Controller {
 
 		}
 
+		// Before modification date filter.
+		if ( isset( $request['modified_before'] ) && ! isset( $request['before'] ) ) {
+			$args['date_query'][0]['before'] = $request['modified_before'];
+			$args['date_query'][0]['column'] = 'post_modified';
+		}
+
+		// After modification date filter.
+		if ( isset( $request['modified_after'] ) && ! isset( $request['after'] ) ) {
+			$args['date_query'][0]['after']  = $request['modified_after'];
+			$args['date_query'][0]['column'] = 'post_modified';
+		}
+
 		/**
 		 * Filter the query arguments for a request.
 		 *
@@ -538,6 +584,7 @@ abstract class AtumOrdersController extends \WC_REST_Orders_Controller {
 		if ( ! empty( $data['meta_data'] ) ) {
 
 			foreach ( $data['meta_data'] as $index => $meta ) {
+				$meta = (object) $meta;
 				if ( $item->is_internal_meta( $meta->key ) ) {
 					unset( $data['meta_data'][ $index ] );
 				}
@@ -577,7 +624,14 @@ abstract class AtumOrdersController extends \WC_REST_Orders_Controller {
 
 		}
 
-		$this->maybe_set_item_props( $item, array( 'name', 'quantity', 'total', 'subtotal', 'tax_class' ), $posted );
+		$this->maybe_set_item_props( $item, array(
+			'name',
+			'quantity',
+			'total',
+			'subtotal',
+			'tax_class',
+			'stock_changed',
+		), $posted );
 		$this->maybe_set_item_meta_data( $item, $posted );
 
 	}

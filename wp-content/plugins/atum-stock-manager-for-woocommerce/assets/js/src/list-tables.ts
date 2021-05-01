@@ -1,7 +1,7 @@
 /**
  * Atum List Tables
  *
- * @copyright Stock Management Labs ©2019
+ * @copyright Stock Management Labs ©2021
  *
  * @since 0.0.1
  */
@@ -31,7 +31,7 @@ import Globals from './components/list-table/_globals';
 import LightBox from './components/_light-box';
 import ListTable from './components/list-table/_list-table';
 import LocationsTree from './components/list-table/_locations-tree';
-import Popover from './components/_popover';
+import TableCellPopovers from './components/_table-cell-popovers';
 import Router from './components/list-table/_router';
 import SalesLastDays from './components/list-table/_sales-last-days';
 import ScrollBar from './components/list-table/_scroll-bar';
@@ -42,6 +42,7 @@ import StickyHeader from './components/list-table/_sticky-header';
 import TableButtons from './components/list-table/_table-buttons';
 import Tooltip from './components/_tooltip';
 import RowActions from './components/list-table/_row-actions';
+import Utils from './utils/_utils';
 
 
 // Modules that need to execute when the DOM is ready should go here.
@@ -69,8 +70,12 @@ jQuery( ( $ ) => {
 	let router = new Router( settings, globals, listTable );
 	let stickyHeader = new StickyHeader( settings, globals, stickyCols, tooltip );
 	let dateTimePicker = new DateTimePicker( settings );
-	let popover = new Popover( settings, dateTimePicker );
-	new ScrollBar( globals );
+	let popover = new TableCellPopovers( settings, dateTimePicker );
+
+	if ( ! Utils.checkRTL( 'isRTL' ) ) {
+		new ScrollBar( globals );
+	}
+
 	new DragScroll( globals, tooltip, popover );
 	new SearchByColumn( settings, globals );
 	new ColumnGroups( globals, stickyHeader );

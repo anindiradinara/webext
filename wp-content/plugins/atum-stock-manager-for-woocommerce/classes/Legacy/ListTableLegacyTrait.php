@@ -115,39 +115,8 @@ trait ListTableLegacyTrait {
 
 		if ( ! empty( $_REQUEST['orderby'] ) ) {
 
-			$order                 = ( isset( $_REQUEST['order'] ) && 'asc' === $_REQUEST['order'] ) ? 'ASC' : 'DESC';
-			$atum_sortable_columns = apply_filters( 'atum/list_table/atum_sortable_columns', $this->atum_sortable_columns );
-
-			// Columns starting by underscore are based in meta keys, so can be sorted.
-			if ( '_' === substr( $_REQUEST['orderby'], 0, 1 ) ) {
-
-				if ( array_key_exists( $_REQUEST['orderby'], $atum_sortable_columns ) ) {
-
-					$this->atum_query_data['order']          = $atum_sortable_columns[ $_REQUEST['orderby'] ];
-					$this->atum_query_data['order']['order'] = $order;
-
-				}
-				// All the meta key based columns are numeric except the SKU.
-				else {
-
-					if ( '_sku' === $_REQUEST['orderby'] ) {
-						$args['orderby'] = 'meta_value';
-					}
-					else {
-						$args['orderby'] = 'meta_value_num';
-					}
-
-					$args['meta_key'] = $_REQUEST['orderby'];
-					$args['order']    = $order;
-
-				}
-
-			}
-			// Standard Fields.
-			else {
-				$args['orderby'] = $_REQUEST['orderby'];
-				$args['order']   = $order;
-			}
+			// Add the orderby args.
+			$args = $this->parse_orderby_args( $args );
 
 		}
 
@@ -174,11 +143,11 @@ trait ListTableLegacyTrait {
 				$this->atum_query_data['where']['relation'] = 'AND';
 			}
 
-			$this->atum_query_data['where'][] = array(
+			$this->atum_query_data['where'][] = apply_filters( 'atum/list_table/supplier_filter_query_data', array(
 				'key'   => 'supplier_id',
 				'value' => $supplier,
 				'type'  => 'NUMERIC',
-			);
+			));
 
 			// This query does not get product variations and as each variation may have a distinct supplier,
 			// we have to get them separately and to add their variables to the results.
@@ -308,9 +277,11 @@ trait ListTableLegacyTrait {
 			global $wp_query;
 
 			// Pass through the ATUM query data filter.
+			do_action( 'atum/list_table/before_query_data' );
 			add_filter( 'posts_clauses', array( $this, 'atum_product_data_query_clauses' ) );
 			$wp_query = new \WP_Query( $args );
 			remove_filter( 'posts_clauses', array( $this, 'atum_product_data_query_clauses' ) );
+			do_action( 'atum/list_table/after_query_data' );
 
 			$posts = $wp_query->posts;
 
@@ -320,9 +291,11 @@ trait ListTableLegacyTrait {
 				$_REQUEST['paged'] = $args['paged'];
 
 				// Pass through the ATUM query data filter.
+				do_action( 'atum/list_table/before_query_data' );
 				add_filter( 'posts_clauses', array( $this, 'atum_product_data_query_clauses' ) );
 				$wp_query = new \WP_Query( $args );
 				remove_filter( 'posts_clauses', array( $this, 'atum_product_data_query_clauses' ) );
+				do_action( 'atum/list_table/after_query_data' );
 
 				$posts = $wp_query->posts;
 
@@ -404,9 +377,11 @@ trait ListTableLegacyTrait {
 			global $wp_query;
 
 			// Pass through the ATUM query data filter.
+			do_action( 'atum/list_table/set_views_data/before_query_data' );
 			add_filter( 'posts_clauses', array( $this, 'atum_product_data_query_clauses' ) );
 			$wp_query = new \WP_Query( apply_filters( 'atum/list_table/set_views_data/all_args', $args ) );
 			remove_filter( 'posts_clauses', array( $this, 'atum_product_data_query_clauses' ) );
+			do_action( 'atum/list_table/set_views_data/after_query_data' );
 
 			$products = $wp_query->posts;
 
@@ -791,6 +766,9 @@ trait ListTableLegacyTrait {
 				$children_args['post_parent__in'] = $parents->posts;
 			}
 
+			// Apply the same order and orderby args than their parent.
+			$children_args = $this->parse_orderby_args( $children_args );
+
 			// Sometimes with the general cache for this function is not enough to avoid duplicated queries.
 			$cache_key    = AtumCache::get_cache_key( 'get_children_query', $children_args );
 			$children_ids = AtumCache::get_cache( $cache_key, ATUM_TEXT_DOMAIN, FALSE, $has_cache );
@@ -826,6 +804,7 @@ trait ListTableLegacyTrait {
 				if ( 'grouped' !== $parent_type ) {
 					$parents_with_child = wp_list_pluck( $children->posts, 'post_parent' );
 				}
+
 
 				switch ( $parent_type ) {
 					case 'variable':

@@ -2,7 +2,6 @@
 var gulp          = require('gulp'),
     plumber       = require('gulp-plumber'),
     gulpif        = require('gulp-if'),
-    watch         = require('gulp-watch'),
     livereload    = require('gulp-livereload'),
     notify        = require('gulp-notify'),
     wrap          = require('gulp-wrap'),
@@ -16,13 +15,14 @@ var gulp          = require('gulp'),
 	path          = require('path');
 
 // Plugin version
-var version = '1.8.5',
+var version = '1.8.9',
     curDate = new Date();
 
 // Global config
 var config = {
 	
 	assetsDir : './assets',
+	jsSrcDir  : path.join(__dirname, './assets/js/src/'),
 
 	devUrl    : 'http://atum.loc',
 	production: false,
@@ -85,6 +85,7 @@ gulp.task('sass::atum', function () {
 	
 	return gulp.src([
 			config.assetsDir + '/scss/*.scss',
+			config.assetsDir + '/scss/rtl/*.scss',
 		])
 		.pipe(plumber({errorHandler: onError}))
 		.pipe(gulpif(enabled.maps, sourcemaps.init()))
@@ -93,6 +94,7 @@ gulp.task('sass::atum', function () {
 		.pipe(wrap(config.decorate.templateCSS))
 		.pipe(gulpif(enabled.maps, sourcemaps.write('.', {
 			sourceRoot: 'assets/scss/',
+			sourceRoot: 'assets/scss/rtl/',
 		})))
 		.pipe(gulp.dest(destDir))
 		//.pipe(notify({message: 'sass task complete'}))
@@ -111,18 +113,19 @@ gulp.task('js::atum', function () {
 		//   config: require('./webpack.config.js')
 		// }, webpack))
 		.pipe(webpackStream({
-			devtool: 'source-map',
+			devtool: config.production ? 'no' : 'source-map',
 			
 			entry: {
-				'list-tables'    : path.join(__dirname, config.assetsDir + '/js/src/') + 'list-tables.ts',
-				'post-type-list' : path.join(__dirname, config.assetsDir + '/js/src/') + 'post-type-list-tables.ts',
-				'product-data'   : path.join(__dirname, config.assetsDir + '/js/src/') + 'product-data.ts',
-				'settings'       : path.join(__dirname, config.assetsDir + '/js/src/') + 'settings.ts',
-				'orders'         : path.join(__dirname, config.assetsDir + '/js/src/') + 'orders.ts',
-				'data-export'    : path.join(__dirname, config.assetsDir + '/js/src/') + 'data-export.ts',
-				'addons'         : path.join(__dirname, config.assetsDir + '/js/src/') + 'addons.ts',
-				'marketing-popup': path.join(__dirname, config.assetsDir + '/js/src/') + 'marketing-popup.ts',
-				'dashboard'      : path.join(__dirname, config.assetsDir + '/js/src/') + 'dashboard.ts',
+				'list-tables'    : config.jsSrcDir + 'list-tables.ts',
+				'post-type-list' : config.jsSrcDir + 'post-type-list-tables.ts',
+				'product-data'   : config.jsSrcDir + 'product-data.ts',
+				'settings'       : config.jsSrcDir + 'settings.ts',
+				'orders'         : config.jsSrcDir + 'orders.ts',
+				'data-export'    : config.jsSrcDir + 'data-export.ts',
+				'addons'         : config.jsSrcDir + 'addons.ts',
+				'marketing-popup': config.jsSrcDir + 'marketing-popup.ts',
+				'dashboard'      : config.jsSrcDir + 'dashboard.ts',
+				'check-orders'   : config.jsSrcDir + 'check-orders.ts',
 			},
 			
 			output: {
@@ -155,21 +158,17 @@ gulp.task('js::atum', function () {
 						}
 					},
 				],
-				noParse: /switchery/
 			},
 			
+			optimization: {
+				minimize: config.production
+			},
+			mode: config.production ? 'production' : 'development',
+			cache: !config.production,
+			bail: false,
+			watch: false,
+			
 			plugins: [
-				
-				// Compress JS with UglifyJS
-				new webpack.optimize.UglifyJsPlugin({
-					compress : {
-						warnings: false,
-					},
-					output   : {
-						comments: false,
-					},
-					sourceMap: enabled.maps
-				}),
 				
 				// Fixes warning in moment-with-locales.min.js
 				// Module not found: Error: Can't resolve './locale' in ...
@@ -222,7 +221,7 @@ gulp.task('watch::atum', function () {
 	livereload.listen();
 
 	gulp.watch(config.assetsDir + '/scss/**/*.scss', gulp.series(['sass::atum']));
-	gulp.watch(config.assetsDir + '/js/src/**/*.ts', gulp.series(['js::atum']));
+	gulp.watch(config.jsSrcDir + '**/*.ts', gulp.series(['js::atum']));
 
 	gulp.watch([
 

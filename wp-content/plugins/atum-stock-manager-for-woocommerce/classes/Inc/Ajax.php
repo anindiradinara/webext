@@ -94,6 +94,7 @@ final class Ajax {
 		add_action( 'wp_ajax_atum_activate_license', array( $this, 'activate_license' ) );
 		add_action( 'wp_ajax_atum_deactivate_license', array( $this, 'deactivate_license' ) );
 		add_action( 'wp_ajax_atum_install_addon', array( $this, 'install_addon' ) );
+		add_action( 'wp_ajax_atum_remove_license', array( $this, 'remove_license' ) );
 
 		// Search for products from enhanced selects.
 		add_action( 'wp_ajax_atum_json_search_products', array( $this, 'search_products' ) );
@@ -199,8 +200,7 @@ final class Ajax {
 
 		$user_id = get_current_user_id();
 		Dashboard::restore_user_widgets_layout( $user_id );
-
-		wp_die();
+		wp_send_json_success();
 
 	}
 
@@ -988,6 +988,32 @@ final class Ajax {
 	}
 
 	/**
+	 * Remove any invalid license key from the add-ons page
+	 *
+	 * @package Add-ons
+	 *
+	 * @since 1.8.8
+	 */
+	public function remove_license() {
+
+		check_ajax_referer( ATUM_PREFIX . 'manage_license', 'token' );
+
+		if ( empty( $_POST['addon'] ) ) {
+			wp_send_json_error( __( 'Add-on name not provided', ATUM_TEXT_DOMAIN ) );
+		}
+
+		// Clear the key.
+		$addon_name = esc_attr( $_POST['addon'] );
+		Addons::update_key( $addon_name, '' );
+
+		// Delete the transient.
+		Addons::delete_status_transient( $addon_name );
+
+		wp_send_json_success();
+
+	}
+
+	/**
 	 * If the site is not using the new tables, use the legacy methods
 	 *
 	 * @since 1.5.0
@@ -1073,11 +1099,13 @@ final class Ajax {
 		);
 		// phpcs:enable
 
-		$query_select = apply_filters( 'atum/product_levels/ajax/search_products/select', $query_select );
-		$where_clause = apply_filters( 'atum/product_levels/ajax/search_products/where', $where_clause );
+		$query_select = apply_filters( 'atum/ajax/search_products/query_select', $query_select );
+		$where_clause = apply_filters( 'atum/ajax/search_products/query_where', $where_clause );
 
-		$query = "$query_select $where_clause
-			ORDER BY posts.post_parent ASC, posts.post_title ASC";
+		$query = "
+			$query_select $where_clause
+			ORDER BY posts.post_parent ASC, posts.post_title ASC
+		";
 
 		$product_ids = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
@@ -1297,7 +1325,8 @@ final class Ajax {
 
 			if ( ! is_wp_error( $atum_order ) ) {
 
-				$comment_id   = $atum_order->add_order_note( $note, TRUE );
+				$comment_id = $atum_order->add_order_note( $note, TRUE );
+				Helpers::save_order_note_meta( $comment_id, [ 'action'     => 'ajax_note' ] );
 				$note_comment = get_comment( $comment_id );
 
 				do_action( 'atum/ajax/atum_order/note_added', $atum_order, $comment_id );
@@ -1755,7 +1784,7 @@ final class Ajax {
 	 *
 	 * @package ATUM Orders
 	 *
-	 * @since   1.3.0
+	 * @since 1.3.0
 	 *
 	 * @param string $action
 	 */
@@ -1804,7 +1833,6 @@ final class Ajax {
 					if ( is_null( $old_stock ) ) {
 						$old_stock = 0;
 						wc_update_product_stock( $product, $old_stock );
-
 					}
 
 					$stock_change = apply_filters( 'atum/ajax/restore_atum_order_stock_quantity', $quantities[ $item_id ], $item_id );
@@ -1823,8 +1851,22 @@ final class Ajax {
 					$note     = apply_filters( 'atum/atum_order/add_stock_change_note', $note, $product, $action, $stock_change );
 					$return[] = $note;
 
-					$atum_order->add_order_note( $note );
-					$atum_order_item->update_meta_data( '_stock_changed', TRUE );
+					$note_id = $atum_order->add_order_note( $note );
+					Helpers::save_order_note_meta( $note_id, [
+						'action'     => "{$action}_stock",
+						'item_name'  => $atum_order_item->get_name(),
+						'product_id' => $product->get_id(),
+						'old_stock'  => $old_stock,
+						'new_stock'  => $new_stock,
+					] );
+
+					if ( PurchaseOrders::POST_TYPE === $atum_order->get_post_type() ) {
+						$atum_order_item->set_stock_changed( PurchaseOrders::FINISHED === $atum_order->get_status() );
+					}
+					else {
+						$atum_order_item->set_stock_changed( TRUE );
+					}
+
 					$atum_order_item->save();
 
 				}
@@ -2122,14 +2164,16 @@ final class Ajax {
 			wp_send_json_error( __( 'No valid product ID provided', ATUM_TEXT_DOMAIN ) );
 		}
 
-		$product_id = intval( $_POST['product_id'] );
+		do_action( 'atum/ajax/stock_central_list/get_locations_tree' );
+
+		$product_id = intval( $_POST['product_id'] ); // Not using absint because it could be -1.
 
 		if ( $product_id > 0 ) {
 
 			$locations = wc_get_product_terms( $product_id, Globals::PRODUCT_LOCATION_TAXONOMY );
 
 			if ( empty( $locations ) ) {
-				wp_send_json_success( '<div class="alert alert-warning no-locations-set">' . __( 'No Locations were set for this product', ATUM_TEXT_DOMAIN ) . '</div>' );
+				wp_send_json_success( '<div class="alert alert-warning no-locations-set">' . __( 'No locations were set for this product', ATUM_TEXT_DOMAIN ) . '</div>' );
 			}
 			else {
 
@@ -2147,9 +2191,9 @@ final class Ajax {
 			}
 
 		}
+		// Prepare all (used on set_locations_tree view). We don't care here of the urls... because they are disabled on this view.
 		elseif ( -1 === $product_id ) {
 
-			// Prepare all (used on set_locations_tree view). We don't care here of the urls... because they are disabled on this view.
 			$locations_tree = wp_list_categories( array(
 				'taxonomy'   => Globals::PRODUCT_LOCATION_TAXONOMY,
 				'title_li'   => '',
@@ -2183,7 +2227,7 @@ final class Ajax {
 		$product_id      = absint( $_POST['product_id'] );
 		$sanitized_terms = array_map( 'absint', $terms );
 
-		do_action( 'atum/ajax/stock_central_list/before_set_locations', $product_id );
+		do_action( 'atum/ajax/stock_central_list/before_set_locations', $product_id, $sanitized_terms );
 
 		wp_set_post_terms( $product_id, $sanitized_terms, Globals::PRODUCT_LOCATION_TAXONOMY, FALSE );
 

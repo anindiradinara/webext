@@ -153,6 +153,9 @@ class Wpml {
 			add_action( 'atum/product_data_updated', array( $this, 'update_translations_data' ), 10, 2 );
 			add_filter( 'atum/model/product/supplier_sku_found', array( $this, 'skip_translations' ), 10, 3 );
 
+			// Prevent WPML from deleting meta when updating from SC.
+			add_filter( 'atum/ajax/before_update_product_meta', array( $this, 'prevent_deleting_product_translations_meta' ), 2 );
+
 			// Filter current language translations from the unmanaged products query.
 			add_filter( 'atum/get_unmanaged_products/where_query', array( $this, 'unmanaged_products_where' ) );
 			
@@ -164,8 +167,8 @@ class Wpml {
 			add_action( 'atum/after_upgrade', array( $this, 'upgrade' ) );
 			
 			// Filter original product parts shown in product json search.
-			add_filter( 'atum/product_levels/ajax/search_products/select', array( $this, 'select_add_icl_translations' ), 10, 3 );
-			add_filter( 'atum/product_levels/ajax/search_products/where', array( $this, 'where_add_icl_translations' ), 10, 3 );
+			add_filter( 'atum/ajax/search_products/query_select', array( $this, 'select_add_icl_translations' ), 10, 3 );
+			add_filter( 'atum/ajax/search_products/query_where', array( $this, 'where_add_icl_translations' ), 10, 3 );
 			
 			// Add Atum data rows when translations are created.
 			// The priority 111 is because the Atum data must be inserted after WCML created the variations.
@@ -305,7 +308,7 @@ class Wpml {
 
 		// string $is_custom  For prices, whether value is a WPML custom price value or not.
 		if ( ! empty( $args['is_custom'] ) ) {
-			$editable_col = str_replace( ' data-currency=', 'data-custom="' . $args['is_custom'] . '" data-currency=', $editable_col );
+			$editable_col = str_replace( ' data-meta=', 'data-custom="' . $args['is_custom'] . '" data-currency="' . AtumListTable::get_default_currency() . '" data-meta=', $editable_col );
 		}
 
 		return $editable_col;
@@ -1008,6 +1011,22 @@ class Wpml {
 			
 		}
 		
+	}
+
+	/**
+	 * Prevent WPML deleting meta from product translations when saving from Stock Central (it will be deleted by ATUM).
+	 *
+	 * @since 1.8.8
+	 *
+	 * @param array $data
+	 *
+	 * @return array
+	 */
+	public function prevent_deleting_product_translations_meta( $data ) {
+
+		remove_action( 'deleted_post_meta', array( $this->wpml->sync_product_data, 'delete_empty_post_meta_for_translations' ) );
+
+		return $data;
 	}
 	
 	/**

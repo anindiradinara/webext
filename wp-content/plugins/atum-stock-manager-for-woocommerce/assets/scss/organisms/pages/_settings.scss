@@ -239,7 +239,7 @@
 		margin-bottom: $grid-gutter-width/2;
 		
 		&.setting-checked label {
-			color: var(--black);
+			color: var(--atum-checkbox-label);
 			
 			[type=checkbox] {
 				background-color: var(--success);
@@ -248,7 +248,7 @@
 				&:checked::before {
 					color: var(--white);
 					content: $atmi-checkmark;
-					font-family: $atum-icon-font;
+					@include atum-icon-font-family;
 					font-size: 14px;
 					margin: 8px -2px 0;
 					font-weight: bold;
@@ -265,7 +265,7 @@
 			background-color: var(--success);
 			color: var(--white);
 			content: $atmi-checkmark;
-			font-family: $atum-icon-font;
+			@include atum-icon-font-family;
 			font-size: 14px;
 			font-weight: bold;
 			padding-top: 10px;
@@ -507,7 +507,7 @@
 				line-height: 1;
 				
 				&:after {
-					font-family: $atum-icon-font;
+					@include atum-icon-font-family;
 					content: $atmi-magnifier;
 					padding-right: 15px;
 					font-size: 12px;
@@ -636,7 +636,7 @@
 					
 					&-secondary {
 						background-color: var(--atum-text-color-var1);
-						color: $white;
+						color: var(--atum-section-field);
 					}
 				}
 			}
@@ -709,7 +709,7 @@
 						
 						strong {
 							font-weight: normal;
-							color: var(--gray-700);
+							color: var(--atum-setting-info);
 						}
 					}
 				}
@@ -720,7 +720,7 @@
 				margin: 0;
 				border-radius: 4px;
 				height: 30px;
-				color: var(--atum-text-color-var3);
+				color: var(--atum-input-text);
 				border: 1px solid var(--main-border-alt);
 				box-shadow: none;
 				
@@ -817,6 +817,7 @@
 					margin-bottom: 20px;
 					margin-left: 14px;
 					line-height: 30px;
+					color: var(--atum-checkbox-label);
 				}
 				
 				.tool-fields-wrapper {
@@ -858,7 +859,7 @@
 									display: inline-block;
 									background-color: red;
 									content: $atmi-calendar-full;
-									font-family: $atum-icon-font;
+									@include atum-icon-font-family;
 									padding-right: 15px;
 									font-size: 12px;
 									top: 13px;
@@ -1247,7 +1248,7 @@
 	line-height: 1;
 	
 	&:after {
-		font-family: $atum-icon-font;
+		@include atum-icon-font-family;
 		content: $atmi-magnifier;
 		padding-right: 15px;
 		font-size: 12px;

@@ -482,6 +482,86 @@ const Utils = {
 	 */
 	convertElemsToString( $elems: JQuery ): string {
 		return $('<div />').append( $elems ).html();
+	},
+
+	/**
+	 * Merge 2 arrays and return the result (this ensures the resulting arrar has no repeated values)
+	 *
+	 * @param {any[]} arr1
+	 * @param {any[]} arr2
+	 *
+	 * @return {any[]}
+	 */
+	mergeArrays( arr1: any[], arr2: any[] ): any[] {
+		return Array.from( new Set([ ...arr1, ...arr2 ]) );
+	},
+
+	/**
+	 * Restrict an input number field's values to fit within its allowed range
+	 *
+	 * @param {JQuery} $input
+	 */
+	restrictNumberInputValues( $input: JQuery ) {
+
+		if ( $input.attr( 'type' ) !== 'number' ) {
+			return; // Only input numbers are allowed.
+		}
+
+		const qty: string = $input.val();
+
+		// Make sure the value entered is within the allowed range.
+		const value: number = parseFloat( qty || '0' ),
+		      min: number   = parseFloat( $input.attr( 'min' ) || '0' ),
+		      max: number   = parseFloat( $input.attr( 'max' ) || '0' );
+
+		if ( value < min ) {
+			$input.val( min ); // Change to min.
+		}
+		else if ( value > max ) {
+			$input.val( max ); // Change to max.
+		}
+		else if ( qty === '' ) {
+			$input.val( 0 ); // Set to 0.
+		}
+
+	},
+
+	/**
+	 * Check if the RTL mode is active and add some options on some cases
+	 *
+	 * @param {string} value
+	 *
+	 * @return {string | boolean}
+	 */
+	checkRTL( value:string ) {
+
+		let isRTL:boolean = false;
+
+		if ( $( "html[ dir='rtl' ]" ).length > 0 ) {
+			isRTL = true;
+		}
+
+		switch( value ) {
+
+			case 'isRTL':
+			case 'reverse':
+				return isRTL;
+				break;
+
+			case 'xSide':
+				if (isRTL) {
+					return 'right';
+				}
+				else {
+					return 'left';
+				}
+				break;
+
+			default:
+				break;
+
+		}
+
 	}
 	
 }

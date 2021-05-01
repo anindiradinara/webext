@@ -33,6 +33,7 @@ export default class FileUploader {
 	wpHooks: WPHooks = window['wp']['hooks']; // WP hooks.
 
 	constructor(
+		private $buttons: JQuery,
 		private options?: WPMediaModalOptions,
 		private preview: boolean = false
 	) {
@@ -49,7 +50,7 @@ export default class FileUploader {
 		// The WP media must be enqueued.
 		if ( window['wp'].hasOwnProperty( 'media' ) ) {
 
-			$( 'body' ).on( 'click', '.atum-file-uploader', ( evt: JQueryEventObject ) => {
+			this.$buttons.click( ( evt: JQueryEventObject ) => {
 
 				const $button: JQuery = $( evt.currentTarget );
 
@@ -105,7 +106,7 @@ export default class FileUploader {
 
 						}
 
-						this.wpHooks.doAction( 'atum_fileUploader_selected', uploader );
+						this.wpHooks.doAction( 'atum_fileUploader_selected', uploader, $button );
 
 					} )
 					.open();

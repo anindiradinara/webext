@@ -524,11 +524,20 @@ final class Helpers {
 				$date_where .= $wpdb->prepare( ' AND post_date_gmt <= %s', $date_end );
 			}
 
-			$orders_query = "
-				SELECT ID FROM $wpdb->posts  
+			$order_status = (array) apply_filters( 'atum/get_sold_last_days/orders_status', [
+				'wc-processing',
+				'wc-completed',
+			] );
+
+			$format = implode( ', ', array_fill( 0, count( $order_status ), '%s' ) );
+
+			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+			$orders_query = $wpdb->prepare( "
+    			SELECT ID FROM $wpdb->posts  
 				$date_where
-				AND post_type = 'shop_order' AND post_status IN ('wc-processing', 'wc-completed')				  
-			";
+				AND post_type = 'shop_order' AND post_status IN ($format)
+			", $order_status );
+			// phpcs:enable
 
 			$query_columns              = $query_joins = [];
 			$use_lookup_table           = FALSE;
@@ -539,7 +548,8 @@ final class Helpers {
 			}
 
 			// Filter by product IDs.
-			$products_where = '';
+			$products_where      = '';
+			$products_type_where = "AND `mt_id`.`meta_key` = '_product_id'";
 			if ( ! empty( $items ) ) {
 
 				$items = apply_filters( 'atum/get_sold_last_days/product_ids', $items );
@@ -564,7 +574,7 @@ final class Helpers {
 					}
 
 				}
-
+				$products_type_where = "AND `mt_id`.`meta_key` IN ('_product_id', '_variation_id')";
 			}
 			// Get the product ID column too.
 			elseif ( in_array( 'prod_id', $colums ) && ! $use_lookup_table ) {
@@ -618,7 +628,7 @@ final class Helpers {
 				    LEFT JOIN `$order_product_lookup_table` opl ON `items`.`order_item_id` = `opl`.`order_item_id`	    
 			        $query_joins_str
 					WHERE `orders`.`ID` IN ($orders_query)
-			        $products_where			  
+			        $products_where
 					GROUP BY `opl`.`variation_id`, `opl`.`product_id`
 					HAVING (`QTY` IS NOT NULL);
 				";
@@ -629,11 +639,11 @@ final class Helpers {
 				$query = "
 					SELECT $query_columns_str
 					FROM `$wpdb->posts` AS `orders`
-				    LEFT JOIN `{$wpdb->prefix}woocommerce_order_items` AS `items` ON (`orders`.`ID` = `items`.`order_id`)		
-				    LEFT JOIN `$wpdb->order_itemmeta` AS `mt_id` ON (`items`.`order_item_id` = `mt_id`.`order_item_id`)	    
+				    LEFT JOIN `{$wpdb->prefix}woocommerce_order_items` AS `items` ON (`orders`.`ID` = `items`.`order_id`)
+				    LEFT JOIN `$wpdb->order_itemmeta` AS `mt_id` ON (`items`.`order_item_id` = `mt_id`.`order_item_id`)
 			        $query_joins_str
-					WHERE `orders`.`ID` IN ($orders_query) AND `mt_id`.`meta_key` IN ('_product_id', '_variation_id') 
-			        $products_where			  
+					WHERE `orders`.`ID` IN ($orders_query) $products_type_where
+			        $products_where
 					GROUP BY `mt_id`.`meta_value`
 					HAVING (`QTY` IS NOT NULL);
 				";
@@ -1850,9 +1860,10 @@ final class Helpers {
 
 				}
 
-				$product_ids    = apply_filters( 'atum/product_calc_stock_on_hold/product_ids', $product->get_id(), $post_type );
-				$product_sql    = is_array( $product_ids ) ? 'IN (' . implode( ',', $product_ids ) . ')' : "= $product_ids";
+				$product_ids = apply_filters( 'atum/product_calc_stock_on_hold/product_ids', $product->get_id(), $post_type );
+				$product_sql = is_array( $product_ids ) ? 'IN (' . implode( ',', $product_ids ) . ')' : "= $product_ids";
 
+				// phpcs:disable
 				$sql = $wpdb->prepare( "
 					SELECT SUM(omq.meta_value) AS qty 
 					FROM {$wpdb->prefix}woocommerce_order_items oi			
@@ -1864,6 +1875,7 @@ final class Helpers {
 					AND omq.meta_key = '_qty' AND order_item_type = 'line_item' AND omp.meta_key = %s AND omp.meta_value $product_sql ;",
 					$product_id_key
 				);
+				// phpcs:enable
 
 				$stock_on_hold = wc_stock_amount( $wpdb->get_var( $sql ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
@@ -2015,7 +2027,6 @@ final class Helpers {
 			switch ( $meta_key ) {
 				
 				case 'stock':
-					unset( $product_data['stock_custom'], $product_data['stock_currency'] );
 					$product->set_stock_quantity( $meta_value );
 					
 					// Needed to clear transients and other stuff.
@@ -2034,8 +2045,6 @@ final class Helpers {
 					if ( class_exists( '\WC_Subscription' ) && in_array( $product->get_type(), [ 'subscription', 'variable-subscription' ] ) ) {
 						update_post_meta( $product_id, '_subscription_price', $meta_value );
 					}
-						
-					unset( $product_data['regular_price_custom'], $product_data['regular_price_currency'] );
 					
 					break;
 				
@@ -2090,19 +2099,20 @@ final class Helpers {
 						$product->set_date_on_sale_to( $date_to_str );
 
 					}
-						
-					unset( $product_data['sale_price_custom'], $product_data['sale_price_currency'] );
 					
 					break;
 				
 				case substr( Globals::PURCHASE_PRICE_KEY, 1 ):
 					$product->set_purchase_price( $meta_value );
-					
-					unset( $product_data['purchase_price_custom'], $product_data['purchase_price_currency'] );
 					break;
 				
 				// Any other text meta.
 				default:
+					// These fields are only needed for WPML compatibility.
+					if ( strpos( $meta_key, '_custom' ) !== FALSE || strpos( $meta_key, '_currency' ) !== FALSE ) {
+						break;
+					}
+
 					if ( is_callable( array( $product, "set_{$meta_key}" ) ) ) {
 						call_user_func( array( $product, "set_{$meta_key}" ), $meta_value );
 					}
@@ -2110,7 +2120,6 @@ final class Helpers {
 						update_post_meta( $product_id, '_' . $meta_key, esc_attr( $meta_value ) );
 					}
 
-					unset( $product_data[ '_' . $meta_key . '_custom' ], $product_data[ '_' . $meta_key . 'currency' ] );
 					break;
 			}
 			
@@ -3333,8 +3342,14 @@ final class Helpers {
 	 */
 	public static function get_order_note_ids( $note_data, $searched_texts ) {
 
+		global $wpdb;
+
 		$found      = FALSE;
 		$return_ids = [];
+
+		if ( empty( $note_data['comment_content'] ) ) {
+			return $return_ids;
+		}
 
 		foreach ( $searched_texts as $searched_text ) {
 
@@ -3347,15 +3362,34 @@ final class Helpers {
 		if ( $found ) {
 
 			// Try to determine whether the product being processed has calculated stock.
-			preg_match_all( '#\((\#+[0-9]+)\)#', $note_data['comment_content'], $ids );
+			preg_match_all( '/\((\#*[^()]+)\)/is', $note_data['comment_content'], $ids );
 
 			if ( ! empty( $ids ) ) {
 
-				$ids = $ids[0];
+				$ids = $ids[1];
 
 				foreach ( $ids as $id ) {
 
-					$return_ids[] = absint( trim( $id, '()#' ) );
+					if ( 0 === strpos( $id, '#' ) ) {
+
+						// It's the id because begins with #.
+						$return_ids[] = intval( substr( $id, 1 ) );
+					}
+					else {
+
+						// It's as SKU, so get the product with that SKU.
+						$id_from_sku = $wpdb->get_var( $wpdb->prepare( "
+							SELECT pm.post_id FROM {$wpdb->posts} p
+							INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
+							WHERE p.post_status <> 'trash' AND p.post_type IN ('product','product_variation')
+							AND pm.meta_key = '_sku' AND pm.meta_value = %s
+						", $id));
+
+						if ( $id_from_sku ) {
+							$return_ids[] = intval( $id_from_sku );
+						}
+
+					}
 
 				}
 
@@ -3459,6 +3493,89 @@ final class Helpers {
 		}
 
 		return $rating_text;
+
+	}
+
+	/**
+	 * Adds the 'wc-' prefix to an order status if not set.
+	 *
+	 * @since 1.8.7
+	 *
+	 * @param string $status
+	 *
+	 * @return string
+	 */
+	public static function get_raw_wc_order_status( $status ) {
+
+		return 'wc-' . str_replace( 'wc-', '', $status );
+	}
+
+	/**
+	 * Save order notes additional meta data.
+	 *
+	 * @since 1.8.8
+	 *
+	 * @param integer $note_id
+	 * @param array   $params
+	 */
+	public static function save_order_note_meta( $note_id, $params ) {
+
+		if ( ! empty( $params ) && isset( $params['action'] ) ) {
+
+			switch ( $params['action'] ) {
+				case 'order_status_change':
+					$action = 'changeStatus';
+					break;
+				case 'ajax_note':
+					$action = 'ajaxNote';
+					break;
+				case 'api_note':
+					$action = 'apiNote';
+					break;
+				case 'increase_stock':
+					$action = 'increaseStock';
+					break;
+				case 'decrease_stock':
+					$action = 'decreaseStock';
+					break;
+				case 'added_line_items':
+					$action = 'addedLineItems';
+					break;
+				case 'deleted_line':
+					$action = 'deletedLineItems';
+					break;
+				case 'stock_levels_increased':
+					$action = 'stockLevelsIncreased';
+					break;
+				case 'stock_levels_reduced':
+					$action = 'stockLevelsReduced';
+					break;
+				case 'stock_levels_changed':
+					$action = 'stockLevelsChanged';
+					break;
+				case 'unable_restore':
+					$action = 'unableRestore';
+					break;
+				case 'unable_reduce':
+					$action = 'unableReduce';
+					break;
+				case 'unable_increase_stock':
+					$action = 'unableIncreaseStock';
+					break;
+				case 'unable_decrease_stock':
+					$action = 'unableDecreaseStock';
+					break;
+			}
+
+			unset( $params['action'] );
+
+			if ( ! empty( $action ) ) {
+				update_comment_meta( $note_id, 'note_type', $action );
+			}
+
+			update_comment_meta( $note_id, 'note_params', $params );
+
+		}
 
 	}
 

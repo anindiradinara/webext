@@ -27,7 +27,7 @@ export default abstract class PopoverBase {
 
 			if ( $popoverButton.length > 1 ) {
 				// Recursive call.
-				$popoverButton.each( ( index: number, elem: Element ) => this.destroyPopover( $( elem ) ) );
+				$popoverButton.each( ( index: number, elem: HTMLElement ) => this.destroyPopover( $( elem ) ) );
 			}
 			else {
 
@@ -36,7 +36,7 @@ export default abstract class PopoverBase {
 					return;
 				}
 
-				const popover: BsPopover = BsPopover.getInstance( $popoverButton.get( 0 ) );
+				const popover: BsPopover = this.getInstance( $popoverButton );
 
 				if ( popover ) {
 					popover.dispose();
@@ -59,12 +59,12 @@ export default abstract class PopoverBase {
 	 */
 	hidePopover( $popoverButton: JQuery ) {
 
-		if ( ! $popoverButton.length ) {
+		if ( ! $popoverButton.length || ! $( '.popover' ).length ) {
 			return;
 		}
 		else if ( $popoverButton.length > 1 ) {
 			// Recursive call.
-			$popoverButton.each( ( index: number, elem: Element ) => this.hidePopover( $( elem ) ) );
+			$popoverButton.each( ( index: number, elem: HTMLElement ) => this.hidePopover( $( elem ) ) );
 		}
 		else {
 
@@ -73,7 +73,7 @@ export default abstract class PopoverBase {
 				return;
 			}
 
-			const popover: BsPopover = BsPopover.getInstance( $popoverButton.get( 0 ) );
+			const popover: BsPopover = this.getInstance( $popoverButton );
 
 			if ( popover ) {
 				popover.hide();
@@ -81,6 +81,15 @@ export default abstract class PopoverBase {
 
 		}
 
+	}
+
+	/**
+	 * Get the BsPopover instance for any button
+	 *
+	 * @param {JQuery} $popoverButton
+	 */
+	getInstance( $popoverButton: JQuery ): BsPopover {
+		return BsPopover.getInstance( $popoverButton.get( 0 ) );
 	}
 
 	/**
