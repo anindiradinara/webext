@@ -1,0 +1,57 @@
+<?php
+/**
+*  starting point for the admin side of this plugin.
+*
+*  include other file here .. which need in admin side. 
+*
+*  In click-to-chat.php this file will be loaded as is_admin
+*
+* @package ctc
+* @subpackage Administration
+* @since 1.0
+*/
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+
+$ht_ctc_othersettings = get_option('ht_ctc_othersettings');
+
+
+/*************** includes ***********/
+
+// others - hooks ....
+include_once HT_CTC_PLUGIN_DIR .'new/admin/admin_commons/class-ht-ctc-admin-others.php';
+
+// add scripts
+include_once HT_CTC_PLUGIN_DIR .'new/admin/class-ht-ctc-admin-scripts.php';
+
+// Main, Chat admin page
+include_once HT_CTC_PLUGIN_DIR .'new/admin/class-ht-ctc-admin-main-page.php';
+
+// group admin page
+if ( isset ( $ht_ctc_othersettings['enable_group'] ) ) { 
+    include_once HT_CTC_PLUGIN_DIR .'new/admin/class-ht-ctc-admin-group-page.php';
+}
+
+// share admin page
+if ( isset ( $ht_ctc_othersettings['enable_share'] ) ) { 
+    include_once HT_CTC_PLUGIN_DIR .'new/admin/class-ht-ctc-admin-share-page.php';
+}
+
+// customize
+include_once HT_CTC_PLUGIN_DIR .'new/admin/class-ht-ctc-admin-customize-styles.php';
+
+// other settings - enable options ..
+include_once HT_CTC_PLUGIN_DIR .'new/admin/class-ht-ctc-admin-other-settings.php';
+
+// meta boxes - change values at page level
+include_once HT_CTC_PLUGIN_DIR .'new/admin/admin_commons/class-ht-ctc-metabox.php';
+
+
+// add hook after init - to make other things load
+if ( ! function_exists('ht_ctc_admin_includes')) {
+    function ht_ctc_admin_includes() {
+        do_action('ht_ctc_ah_admin_includes' );
+    }
+    add_action( 'init', 'ht_ctc_admin_includes' );
+}
