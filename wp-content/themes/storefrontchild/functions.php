@@ -22,7 +22,6 @@ if ( ! function_exists( 'storefront_credit' ) ) {
 		?>
 		<div class="site-info">
 			<?php echo esc_html( apply_filters( 'storefront_copyright_text', $content = '&copy; ' . gmdate( 'Y' ) . ' ' . get_bloginfo( 'name' ) . '. All rights reserved.' ) ); ?>
-
 			<?php if ( ! empty( $links_output ) ) { ?>
 				<br />
 				<?php echo wp_kses_post( $links_output ); ?>
