@@ -94,7 +94,7 @@ class HT_CTC_Admin_Share_Page {
         ?>
         <div class="row">
             <div class="input-field col s12">
-                <input name="ht_ctc_share[share_text]" value="<?php echo $value ?>" id="whatsapp_share_text" type="text" class="input-margin">
+                <input name="ht_ctc_share[share_text]" value="<?= $value ?>" id="whatsapp_share_text" type="text" class="input-margin">
                 <label for="whatsapp_share_text"><?php _e( 'Share Text', 'click-to-chat-for-whatsapp' ); ?></label>
                 <p class="description"><?php _e( "Placeholder {{url}} returns current webpage URL", 'click-to-chat-for-whatsapp' ); ?> - <a target="_blank" href="https://holithemes.com/plugins/click-to-chat/share-text/?utm_source=ctc&utm_medium=admin&utm_campaign=share"><?php _e( 'more info', 'click-to-chat-for-whatsapp' ); ?></a> ) </p>
             </div>
@@ -109,7 +109,7 @@ class HT_CTC_Admin_Share_Page {
         ?>
         <div class="row">
             <div class="input-field col s12">
-                <input name="ht_ctc_share[call_to_action]" value="<?php echo $value ?>" id="call_to_action" type="text" class="input-margin">
+                <input name="ht_ctc_share[call_to_action]" value="<?= $value ?>" id="call_to_action" type="text" class="input-margin">
                 <label for="call_to_action"><?php _e( 'Call to Action', 'click-to-chat-for-whatsapp' ); ?></label>
                 <p class="description"><?php _e( 'Text that appears along with WhatsApp icon/button', 'click-to-chat-for-whatsapp' ); ?> - <a target="_blank" href="https://holithemes.com/plugins/click-to-chat/call-to-action/?utm_source=ctc&utm_medium=admin&utm_campaign=share"><?php _e( 'more info', 'click-to-chat-for-whatsapp' ); ?></a> </p>
             </div>
@@ -232,6 +232,7 @@ class HT_CTC_Admin_Share_Page {
             }
         }
 
+        do_action('ht_ctc_ah_admin_after_sanitize' );
 
         return $new_input;
     }

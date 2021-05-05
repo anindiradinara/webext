@@ -87,10 +87,10 @@ class HT_CTC_Chat {
         $ht_ctc_chat['pre_filled'] = (isset($ht_ctc_pagelevel['pre_filled'])) ? esc_attr($ht_ctc_pagelevel['pre_filled']) : __( esc_attr( $options['pre_filled'] ) , 'click-to-chat-for-whatsapp' );
         $ht_ctc_chat['pre_filled'] = apply_filters( 'wpml_translate_single_string', $ht_ctc_chat['pre_filled'], 'Click to Chat for WhatsApp', 'pre_filled' );
 
-        // wa: wa.me  /  webapi: web/api.whatsapp,  
+        // wa: wa.me  /  web: web/api.whatsapp,  
         $ht_ctc_chat['webandapi'] = 'wa';
         if ( isset( $options['webandapi'] ) ) {
-            $ht_ctc_chat['webandapi'] = 'webapi';
+            $ht_ctc_chat['webandapi'] = 'web';
         }
 
         $ht_ctc_chat['display_mobile'] = (isset($options['hideon_mobile'])) ? 'hide' : 'show';
@@ -212,39 +212,52 @@ class HT_CTC_Chat {
             'css' => $ht_ctc_chat['css'],
             'pos_d' => $ht_ctc_chat['position'],
             'pos_m' => $ht_ctc_chat['position_mobile'],
-            'webandapi' => $ht_ctc_chat['webandapi'],
-
             'schedule' => $ht_ctc_chat['schedule'],
-            
-            'ga' => $ht_ctc_os['is_ga_enable'],
-            'fb' => $ht_ctc_os['is_fb_pixel'],
-            'ads' => $ht_ctc_os['ga_ads'],
             'se' => $ht_ctc_os['show_effect'],
             'ani' => $ht_ctc_os['an_type'],
-            
-            'v' => $ht_ctc_os['v'],
         );
 
-        
-        // adds if hided
+        // web whatsapp
+        if ( 'web' == $ht_ctc_chat['webandapi'] ) {
+            $ctc['web'] = 'y';
+        }
+
+        // ga
+        if ( 'yes' == $ht_ctc_os['is_ga_enable'] ) {
+            $ctc['ga'] = 'yes';
+        }
+        // ga4
+        if ( 'yes' == $ht_ctc_os['ga4'] ) {
+            $ctc['ga4'] = 'yes';
+        }
+
+        // ads
+        if ( 'yes' == $ht_ctc_os['ga_ads'] ) {
+            $ctc['ads'] = 'yes';
+        }
+
+        // fb
+        if ( 'yes' == $ht_ctc_os['is_fb_pixel'] ) {
+            $ctc['fb'] = 'yes';
+        }
+
+        // adds only if hided on current page
+            // global
         if ( 'no' == $display ) {
             $ctc['display'] = 'no';
         }
-        
+            // page level
         if ( 'hide' == $page_display ) {
             $ctc['page_display'] = 'hide';
         }
 
         // webhook
         if ( '' !== $hook_url ) {
-            
             // $ctc hook url
             $ctc['hook_url'] = $hook_url;
-
             $hook_v = isset($othersettings['hook_v']) ? $othersettings['hook_v'] : '';
 
             if ( is_array($hook_v) ) {
-                
                 $hook_v = array_filter($hook_v);
                 $hook_v = array_values($hook_v);
                 $hook_v = array_map('esc_attr', $hook_v );
@@ -253,11 +266,9 @@ class HT_CTC_Chat {
                     // $ctc - hook values
                     $ctc['hook_v'] = $hook_v;
                 }
-
             }
-          
-
         }
+
 
 
         $ctc = apply_filters( 'ht_ctc_fh_ctc', $ctc );
@@ -276,14 +287,14 @@ class HT_CTC_Chat {
             return;
         }
 
-        
+
         // load style
         if ( is_file( $path ) ) {
             do_action('ht_ctc_ah_before_fixed_position');
             ?>  
-            <div class="<?php echo $ht_ctc_chat['class_names'] ?>" id="<?php echo $ht_ctc_chat['id'] ?>"  
-                style="<?php echo $display_css ?> <?php echo $default_position ?>"  
-                <?php echo $on ?>  
+            <div class="<?= $ht_ctc_chat['class_names'] ?>" id="<?= $ht_ctc_chat['id'] ?>"  
+                style="<?= $display_css ?> <?= $default_position ?>"  
+                <?= $on ?>  
                 >
                 <?php
                 if ( isset( $othersettings['select_styles_issue'] ) ) {
@@ -304,8 +315,8 @@ class HT_CTC_Chat {
             // no_number may be needed.
             ?>
             <span class="ht_ctc_chat_data" 
-                data-no_number="<?php echo $no_number ?>"
-                data-settings="<?php echo $ht_ctc_settings ?>" 
+                data-no_number="<?= $no_number ?>"
+                data-settings="<?= $ht_ctc_settings ?>" 
             ></span>
             <?php
 

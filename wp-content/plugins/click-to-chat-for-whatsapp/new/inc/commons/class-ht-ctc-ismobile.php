@@ -18,7 +18,6 @@ class HT_CTC_IsMobile {
 
     public function __construct() {
         
-        // $this->is_mobile = $this->is_mobile();
         $this->is_mobile = $this->is_mobile();
         
     }

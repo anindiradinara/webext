@@ -80,12 +80,12 @@ $others = array(
 
 ?>
 <style id="ht-ctc-s3">
-.ht-ctc:hover svg stop{stop-color:<?php echo $s3_1_bg_color_hover ?>;}.ht-ctc:hover .ht_ctc_padding{<?php echo $s3_1_hover_css ?>}
+.ht-ctc:hover svg stop{stop-color:<?= $s3_1_bg_color_hover ?>;}.ht-ctc:hover .ht_ctc_padding{<?= $s3_1_hover_css ?>}
 </style>
 
-<div <?php echo $title ?> style="<?php echo $s3_1_css ?>">
-    <p class="ctc-analytics ctc_cta <?php echo $s3_1_cta_class ?>" style="<?php echo $s3_1_cta_css ?>"><?php echo $call_to_action ?></p>
-    <div class="ctc-analytics ht_ctc_padding" style="<?php echo $s3_1_extend_css ?>">
-        <?php echo ht_ctc_style_3_1_svg( $img_size, $type, $ht_ctc_svg_css, $others ); ?>
+<div <?= $title ?> style="<?= $s3_1_css ?>">
+    <p class="ctc-analytics ctc_cta <?= $s3_1_cta_class ?>" style="<?= $s3_1_cta_css ?>"><?= $call_to_action ?></p>
+    <div class="ctc-analytics ht_ctc_padding" style="<?= $s3_1_extend_css ?>">
+        <?= ht_ctc_style_3_1_svg( $img_size, $type, $ht_ctc_svg_css, $others ); ?>
     </div>
 </div>

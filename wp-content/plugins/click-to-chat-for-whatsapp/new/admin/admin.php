@@ -20,7 +20,7 @@ $ht_ctc_othersettings = get_option('ht_ctc_othersettings');
 /*************** includes ***********/
 
 // others - hooks ....
-include_once HT_CTC_PLUGIN_DIR .'new/admin/admin_commons/class-ht-ctc-admin-others.php';
+include_once HT_CTC_PLUGIN_DIR .'new/admin/admin_commons/class-ht-ctc-admin-hooks.php';
 
 // add scripts
 include_once HT_CTC_PLUGIN_DIR .'new/admin/class-ht-ctc-admin-scripts.php';
@@ -47,11 +47,4 @@ include_once HT_CTC_PLUGIN_DIR .'new/admin/class-ht-ctc-admin-other-settings.php
 // meta boxes - change values at page level
 include_once HT_CTC_PLUGIN_DIR .'new/admin/admin_commons/class-ht-ctc-metabox.php';
 
-
-// add hook after init - to make other things load
-if ( ! function_exists('ht_ctc_admin_includes')) {
-    function ht_ctc_admin_includes() {
-        do_action('ht_ctc_ah_admin_includes' );
-    }
-    add_action( 'init', 'ht_ctc_admin_includes' );
-}
+do_action('ht_ctc_ah_admin_includes' );

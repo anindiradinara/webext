@@ -66,16 +66,18 @@ class HT_CTC {
      */
     public function __construct() {
         $this->basic();
-        $this->includes();
+        // $this->includes();
         $this->hooks();
     }
 
     /**
      * add the basic things
      * 
-     * calling this before include, initilize other things
+     * calling this before include, initilize other 
      * 
-     * because this things may useful before initilize other things
+     * include, initilize files that needed before init
+     * 
+     * because this things may useful before  other things
      * 
      *  e.g. include, initialize files based on device, user settings
      */
@@ -83,49 +85,22 @@ class HT_CTC {
 
         include_once HT_CTC_PLUGIN_DIR .'new/inc/commons/class-ht-ctc-ismobile.php';
         include_once HT_CTC_PLUGIN_DIR .'new/inc/commons/class-ht-ctc-values.php';
-        include_once HT_CTC_PLUGIN_DIR .'new/inc/commons/class-ht-ctc-hooks.php';
-        
-        $this->device_type = new HT_CTC_IsMobile();
-        $this->values = new HT_CTC_Values();
         
     }
     
-    /**
-     * include plugin file
-     */
-    private function includes() {
-
-        //  is_admin ? include file to admin area : include files to non-admin area 
-        if ( is_admin() ) {
-            // admin
-             // admin main file
-            include_once HT_CTC_PLUGIN_DIR . 'new/admin/admin.php';
-        } else {
-            // front
-             // main file
-            include_once HT_CTC_PLUGIN_DIR . 'new/inc/class-ht-ctc-main.php';
-             // scripts
-            include_once HT_CTC_PLUGIN_DIR . 'new/inc/commons/class-ht-ctc-scripts.php';
-        }
-
-        // admin and front
-         // woo init
-        include_once HT_CTC_PLUGIN_DIR . 'new/tools/woo/ht-ctc-woo.php';
-        
-    }
-
     /**
      * Register hooks - when plugin activate, deactivate, uninstall
      * commented deactivation, uninstall hook - its not needed as now
      * 
      * plugins_loaded  - Check Diff - uses when plugin updates.
+     * 
+     * 
+     * @note: Add at init - if 'values->HT_CTC_Values' is needed and works if load at init.
      */
     private function hooks() {
 
-        // initilaze classes
-        if ( ! is_admin() ) {
-            add_action( 'init', array( $this, 'init' ), 0 );
-        }
+        // init
+        add_action( 'init', array( $this, 'init' ), 0 );
 
         // enable shortcodes in widget area.
         add_filter('widget_text', 'do_shortcode');
@@ -141,12 +116,41 @@ class HT_CTC {
     }
 
     /**
-     * create instance
+     * Init
+     * 
+     * include files .. 
+     * 
+     * if anything to work before init call at this->basic()
+     * 
      * @uses this->hooks() - using init hook - priority 0
      */
     public function init() {
-        // $this->values = new HT_CTC_Values();
-        // $this->device_type = new HT_CTC_IsMobile();
+        
+        do_action('ht_ctc_ah_init_before');
+
+        $this->values = new HT_CTC_Values();
+        $this->device_type = new HT_CTC_IsMobile();
+
+        // hooks
+        include_once HT_CTC_PLUGIN_DIR .'new/inc/commons/class-ht-ctc-hooks.php';      
+         // woo init
+        include_once HT_CTC_PLUGIN_DIR . 'new/tools/woo/ht-ctc-woo.php';
+
+        //  is_admin ? include file to admin area : include files to non-admin area 
+        if ( is_admin() ) {
+            // admin
+             // admin main file
+            include_once HT_CTC_PLUGIN_DIR . 'new/admin/admin.php';
+        } else {
+            // front
+             // main file - Enable - Chat, Group, Share
+            include_once HT_CTC_PLUGIN_DIR . 'new/inc/class-ht-ctc-main.php';
+             // scripts
+            include_once HT_CTC_PLUGIN_DIR . 'new/inc/commons/class-ht-ctc-scripts.php';
+        }
+
+        do_action('ht_ctc_ah_init_after');
+
     }
 
 }

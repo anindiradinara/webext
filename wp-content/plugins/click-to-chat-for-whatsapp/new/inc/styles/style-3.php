@@ -59,7 +59,7 @@ $ht_ctc_svg_css = "pointer-events:none; display:block; height:$img_size; width:$
 include_once HT_CTC_PLUGIN_DIR .'new/inc/assets/img/ht-ctc-svg-images.php';
 
 ?>
-<div <?php echo $title ?> style="<?php echo $s3_css ?>">
-    <p class="ctc-analytics ctc_cta <?php echo $s3_cta_class ?>" style="<?php echo $s3_cta_css ?>"><?php echo $call_to_action; ?></p>
-    <?php echo ht_ctc_style_3_svg( $img_size, $type, $ht_ctc_svg_css ); ?>
+<div <?= $title ?> style="<?= $s3_css ?>">
+    <p class="ctc-analytics ctc_cta <?= $s3_cta_class ?>" style="<?= $s3_cta_css ?>"><?= $call_to_action; ?></p>
+    <?= ht_ctc_style_3_svg( $img_size, $type, $ht_ctc_svg_css ); ?>
 </div>

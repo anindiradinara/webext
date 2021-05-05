@@ -48,10 +48,10 @@ if ( '' == $own_image ) {
 
 ?>
 
-<div class="ccw_plugin chatbot" style="<?php echo $p1 ?>; <?php echo $p2 ?>;">
-    <div class="ccw_style_99 animated <?php echo $an_on_load .' '. $an_on_hover ?>">
-        <a target="_blank" href="<?php echo $redirect_a ?>" class="img-icon-a nofocus">   
-            <img class="own-img ccw-analytics" id="style-9" data-ccw="style-99-own-image" style="<?php echo $img_css ?>" src="<?php echo $own_image ?>" alt="WhatsApp chat">
+<div class="ccw_plugin chatbot" style="<?= $p1 ?>; <?= $p2 ?>;">
+    <div class="ccw_style_99 animated <?= $an_on_load .' '. $an_on_hover ?>">
+        <a target="_blank" href="<?= $redirect_a ?>" class="img-icon-a nofocus">   
+            <img class="own-img ccw-analytics" id="style-9" data-ccw="style-99-own-image" style="<?= $img_css ?>" src="<?= $own_image ?>" alt="WhatsApp chat">
         </a>
     </div>
 </div>

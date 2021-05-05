@@ -17,7 +17,7 @@ class HT_CTC_Animations {
 
     function animations( $a, $d, $i ) {
         ?>
-        <style id="ht-ctc-animations">.ht_ctc_animation{animation-duration:1s;animation-fill-mode:both;animation-delay:<?php echo $d ?>;animation-iteration-count:<?php echo $i ?>;}</style>
+        <style id="ht-ctc-animations">.ht_ctc_animation{animation-duration:1s;animation-fill-mode:both;animation-delay:<?= $d ?>;animation-iteration-count:<?= $i ?>;}</style>
         <?php $this->$a(); ?>
         <?php
     }

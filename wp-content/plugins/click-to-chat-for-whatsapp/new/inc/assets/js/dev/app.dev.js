@@ -173,14 +173,28 @@ $(function () {
         var ga_category = 'Click to Chat for WhatsApp';
         var ga_action = 'chat: ' + id;
         var ga_label = post_title + ', ' + url;
+
         // if ga_enabled
-        if ( 'yes' == ctc.ga ) {
+        if (ctc.ga || ctc.ga4) {
+            console.log('google analytics');
+            
             if (typeof gtag !== "undefined") {
                 console.log('gtag');
-                gtag('event', ga_action, {
-                    'event_category': ga_category,
-                    'event_label': ga_label,
-                });
+                if (ctc.ga4) {
+                    // ga4
+                    // gtag may not work if ga4 installed using gtm
+                    console.log('ga4');
+                    gtag('event', 'click to chat', {
+                        'number': id,
+                        'title': post_title,
+                        'url': url,
+                    });
+                } else {
+                    gtag('event', ga_action, {
+                        'event_category': ga_category,
+                        'event_label': ga_label,
+                    });
+                }
             } else if (typeof ga !== "undefined" && typeof ga.getAll !== "undefined") {
                 console.log('ga');
                 var tracker = ga.getAll();
@@ -197,6 +211,10 @@ $(function () {
             console.log('dataLayer');
             dataLayer.push({
                 'event': 'Click to Chat',
+                'type': 'chat',
+                'number': id,
+                'title': post_title,
+                'url': url,
                 'event_category': ga_category,
                 'event_label': ga_label,
                 'event_action': ga_action
@@ -204,7 +222,7 @@ $(function () {
         }
 
         // google ads - call conversation code
-        if ('yes' == ctc.ads ) {
+        if (ctc.ads) {
             console.log('google ads enabled');
             if (typeof gtag_report_conversion !== "undefined") {
                 console.log('calling gtag_report_conversion');
@@ -213,7 +231,7 @@ $(function () {
         }
 
         // FB Pixel
-        if ( 'yes' == ctc.fb ) {
+        if (ctc.fb) {
             console.log('fb pixel');
             if (typeof fbq !== "undefined") {
                 fbq('trackCustom', 'Click to Chat by HoliThemes', {
@@ -247,7 +265,7 @@ $(function () {
         }
 
         // web/api.whatsapp or wa.me 
-        if ( 'webapi' == ctc.webandapi && is_mobile !== 'yes' ) {
+        if (ctc.web && is_mobile !== 'yes') {
             // web.whatsapp - if web api is enabled and is not mobile
             window.open('https://web.whatsapp.com/send' + '?phone=' + number + '&text=' + pre_filled, '_blank', 'noopener');
         } else {
@@ -272,20 +290,13 @@ $(function () {
             var pre_filled = this.getAttribute('data-pre_filled');
             pre_filled = pre_filled.replace(/\[url]/gi, url);
             pre_filled = encodeURIComponent(pre_filled);
-            var webandapi = this.getAttribute('data-webandapi');
 
-            // web/api.whatsapp or wa.me
-            if ('webapi' == webandapi) {
-                if (is_mobile == 'yes') {
-                    var base_link = 'https://api.whatsapp.com/send';
-                } else {
-                    var base_link = 'https://web.whatsapp.com/send';
-                }
-                window.open(base_link + '?phone=' + number + '&text=' + pre_filled, '_blank', 'noopener');
+            if (ctc.web && is_mobile !== 'yes') {
+                // web.whatsapp - if web api is enabled and is not mobile
+                window.open('https://web.whatsapp.com/send' + '?phone=' + number + '&text=' + pre_filled, '_blank', 'noopener');
             } else {
                 // wa.me
-                var base_link = 'https://wa.me/';
-                window.open(base_link + number + '?text=' + pre_filled, '_blank', 'noopener');
+                window.open('https://wa.me/' + number + '?text=' + pre_filled, '_blank', 'noopener');
             }
 
             // analytics

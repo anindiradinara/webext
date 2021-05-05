@@ -48,7 +48,7 @@ class HT_CTC_Admin_WOO {
             <!-- prefilled message -->
             <div class="row">
                 <div class="input-field col s12">
-                    <textarea name="ht_ctc_chat_options[woo_pre_filled]" id="woo_pre_filled" class="materialize-textarea input-margin" style="min-height: 84px;" placeholder="<?php echo $placeholder ?>"><?php echo $woo_pre_filled ?></textarea>
+                    <textarea name="ht_ctc_chat_options[woo_pre_filled]" id="woo_pre_filled" class="materialize-textarea input-margin" style="min-height: 84px;" placeholder="<?= $placeholder ?>"><?= $woo_pre_filled ?></textarea>
                     <label for="woo_pre_filled">Pre-filled message</label>
                     <p class="description">Pre-filled message for WooCommerce Single Product pages. Leave blank to get default pre-filled message.</p>
                     <p class="description">Variables: {product}, {price}, {regular_price}, {sku}, {site}, {url}, {title} - <a target="_blank" href="https://holithemes.com/plugins/click-to-chat/woocommerce_pre-filled-message/">more info</a> </p>
@@ -58,7 +58,7 @@ class HT_CTC_Admin_WOO {
             <!-- Call to Action -->
             <div class="row">
                 <div class="input-field col s12">
-                    <input name="ht_ctc_chat_options[woo_call_to_action]" value="<?php echo $woo_call_to_action ?>" id="woo_call_to_action" type="text" class="input-margin">
+                    <input name="ht_ctc_chat_options[woo_call_to_action]" value="<?= $woo_call_to_action ?>" id="woo_call_to_action" type="text" class="input-margin">
                     <label for="woo_call_to_action">Call to Action</label>
                     <p class="description">Call-to-Action for WooCommerce Single Product pages. Leave blank to get default call-to-action - <a target="_blank" href="https://holithemes.com/plugins/click-to-chat/woocommerce_call-to-action/">more info</a> </p>
                 </div>

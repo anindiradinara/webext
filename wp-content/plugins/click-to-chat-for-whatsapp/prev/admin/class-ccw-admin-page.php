@@ -76,8 +76,8 @@ class CCW_Admin_Page {
             <div class="input-field col s12" style="margin-bottom: 0px;">
                 <select name="ht_ctc_switch[interface]" class="select-2">
                     <!-- here first option value place as "no" as here default/db value not placed, when save with no changes it saves as no -->
-                    <option value="no" <?php echo $interface_value == 'no' ? 'SELECTED' : ''; ?> >Previous Interface</option>
-                    <option value="yes" <?php echo $interface_value == 'yes' ? 'SELECTED' : ''; ?> >New Interface  (Have to reconfigure the settings)</option>
+                    <option value="no" <?= $interface_value == 'no' ? 'SELECTED' : ''; ?> >Previous Interface</option>
+                    <option value="yes" <?= $interface_value == 'yes' ? 'SELECTED' : ''; ?> >New Interface  (Have to reconfigure the settings)</option>
                 </select>
                 <label>Switch Interface</label>
             </div>
@@ -112,7 +112,7 @@ class CCW_Admin_Page {
             <div class="input-field col s12">
                 <select name="ccw_options[enable]" class="select-1">
                 <option value="1">No</option>
-                <option value="2" <?php echo esc_attr( $ccw_enable['enable'] ) == 2 ? 'SELECTED' : ''; ?>  >Yes</option>
+                <option value="2" <?= esc_attr( $ccw_enable['enable'] ) == 2 ? 'SELECTED' : ''; ?>  >Yes</option>
                 </select>
                 <label>enable</label>
             </div>
@@ -128,7 +128,7 @@ class CCW_Admin_Page {
             <div class="input-field col s12 select-margin">
                 <select name="ccw_options[enable_sc]" class="select-1">
                 <option value="1">No</option>
-                <option value="2" <?php echo esc_attr( $ccw_enable_sc['enable_sc'] ) == 2 ? 'SELECTED' : ''; ?>  >Yes</option>
+                <option value="2" <?= esc_attr( $ccw_enable_sc['enable_sc'] ) == 2 ? 'SELECTED' : ''; ?>  >Yes</option>
                 </select>
                 <label>enable ShortCodes</label>
                 <p class="description">If Selected - No - then Hides Shortcodes and its syntax - <a target="_blank" href="https://holithemes.com/plugins/whatsapp-chat/enable-disable-styles/">more info</a> </p>
@@ -144,8 +144,8 @@ class CCW_Admin_Page {
         <div class="row">
             <div class="input-field col s12 select-margin">
                 <select name="ccw_options[return_type]" class="select-1">
-                <option value="chat" <?php echo esc_attr( $ccw_return_type['return_type'] ) == 'chat' ? 'SELECTED' : ''; ?> >Chat</option>
-                <option value="group_chat" <?php echo esc_attr( $ccw_return_type['return_type'] ) == 'group_chat' ? 'SELECTED' : ''; ?> >Group chat - Invite</option>
+                <option value="chat" <?= esc_attr( $ccw_return_type['return_type'] ) == 'chat' ? 'SELECTED' : ''; ?> >Chat</option>
+                <option value="group_chat" <?= esc_attr( $ccw_return_type['return_type'] ) == 'group_chat' ? 'SELECTED' : ''; ?> >Group chat - Invite</option>
                 </select>
                 <label>Default return type - Chat or Group Chat Invite</label>
                 <p class="description">Default return type for Floating Style, shortcodes. But for shortcodes can change using shortcode attributes - <a target="_blank" href="https://holithemes.com/plugins/whatsapp-chat/return-type-chat-or-group-chat/">more info</a> </p>
@@ -163,21 +163,21 @@ class CCW_Admin_Page {
         <div class="row">
             <div class="input-field col s12">
                 <select name="ccw_options[style]" class="select-2">
-                    <option value="1" <?php echo $style_value == 1 ? 'SELECTED' : ''; ?> >Style-1</option>
-                    <option value="2" <?php echo $style_value == 2 ? 'SELECTED' : ''; ?> >Style-2</option>
-                    <option value="3" <?php echo $style_value == 3 ? 'SELECTED' : ''; ?> >Style-3</option>
-                    <option value="4" <?php echo $style_value == 4 ? 'SELECTED' : ''; ?> >Style-4</option>
-                    <option value="5" <?php echo $style_value == 5 ? 'SELECTED' : ''; ?> >Style-5</option>
-                    <option value="6" <?php echo $style_value == 6 ? 'SELECTED' : ''; ?> >Style-6</option>
-                    <option value="7" <?php echo $style_value == 7 ? 'SELECTED' : ''; ?> >Style-7</option>
-                    <option value="8" <?php echo $style_value == 8 ? 'SELECTED' : ''; ?> >Style-8</option>
-                    <option value="9" <?php echo $style_value == 9 ? 'SELECTED' : ''; ?> >Style-9</option>
-                    <option value="99" <?php echo $style_value == 99 ? 'SELECTED' : ''; ?> >Style-99 ( Add your own Image / GIF )</option>
-                    <option value="0" <?php echo $style_value == 0 ? 'SELECTED' : ''; ?> >Hide on Desktop Devices</option>
+                    <option value="1" <?= $style_value == 1 ? 'SELECTED' : ''; ?> >Style-1</option>
+                    <option value="2" <?= $style_value == 2 ? 'SELECTED' : ''; ?> >Style-2</option>
+                    <option value="3" <?= $style_value == 3 ? 'SELECTED' : ''; ?> >Style-3</option>
+                    <option value="4" <?= $style_value == 4 ? 'SELECTED' : ''; ?> >Style-4</option>
+                    <option value="5" <?= $style_value == 5 ? 'SELECTED' : ''; ?> >Style-5</option>
+                    <option value="6" <?= $style_value == 6 ? 'SELECTED' : ''; ?> >Style-6</option>
+                    <option value="7" <?= $style_value == 7 ? 'SELECTED' : ''; ?> >Style-7</option>
+                    <option value="8" <?= $style_value == 8 ? 'SELECTED' : ''; ?> >Style-8</option>
+                    <option value="9" <?= $style_value == 9 ? 'SELECTED' : ''; ?> >Style-9</option>
+                    <option value="99" <?= $style_value == 99 ? 'SELECTED' : ''; ?> >Style-99 ( Add your own Image / GIF )</option>
+                    <option value="0" <?= $style_value == 0 ? 'SELECTED' : ''; ?> >Hide on Desktop Devices</option>
                 </select>
                 <label>Select Style for Desktop</label>
                 <p class="description"> - <a target="_blank" href="https://holithemes.com/plugins/whatsapp-chat/styles/">List of Styles</a> </p>
-                <p class="description">These styles are customizable - <a target="_blank" href="<?php echo admin_url( 'admin.php?page=ccw-edit-styles' ); ?>">Customize Styles</a> </p>
+                <p class="description">These styles are customizable - <a target="_blank" href="<?= admin_url( 'admin.php?page=ccw-edit-styles' ); ?>">Customize Styles</a> </p>
                 
             </div>
         </div>
@@ -192,17 +192,17 @@ class CCW_Admin_Page {
         <div class="row">
             <div class="input-field col s12">
                 <select name="ccw_options[stylemobile]" class="select-2_2">
-                <option value="1" <?php echo $style_mobile_value == 1 ? 'SELECTED' : ''; ?> >Style-1</option>
-                <option value="2" <?php echo $style_mobile_value == 2 ? 'SELECTED' : ''; ?> >Style-2</option>
-                <option value="3" <?php echo $style_mobile_value == 3 ? 'SELECTED' : ''; ?> >Style-3</option>
-                <option value="4" <?php echo $style_mobile_value == 4 ? 'SELECTED' : ''; ?> >Style-4</option>
-                <option value="5" <?php echo $style_mobile_value == 5 ? 'SELECTED' : ''; ?> >Style-5</option>
-                <option value="6" <?php echo $style_mobile_value == 6 ? 'SELECTED' : ''; ?> >Style-6</option>
-                <option value="7" <?php echo $style_mobile_value == 7 ? 'SELECTED' : ''; ?> >Style-7</option>
-                <option value="8" <?php echo $style_mobile_value == 8 ? 'SELECTED' : ''; ?> >Style-8</option>
-                <option value="9" <?php echo $style_mobile_value == 9 ? 'SELECTED' : ''; ?> >Style-9</option>
-                <option value="99" <?php echo $style_mobile_value == 99 ? 'SELECTED' : ''; ?> >Style-99 ( Add your own Image / GIF )</option>
-                <option value="0" <?php echo $style_mobile_value == 0 ? 'SELECTED' : ''; ?> >Hide on Mobile Devices</option>
+                <option value="1" <?= $style_mobile_value == 1 ? 'SELECTED' : ''; ?> >Style-1</option>
+                <option value="2" <?= $style_mobile_value == 2 ? 'SELECTED' : ''; ?> >Style-2</option>
+                <option value="3" <?= $style_mobile_value == 3 ? 'SELECTED' : ''; ?> >Style-3</option>
+                <option value="4" <?= $style_mobile_value == 4 ? 'SELECTED' : ''; ?> >Style-4</option>
+                <option value="5" <?= $style_mobile_value == 5 ? 'SELECTED' : ''; ?> >Style-5</option>
+                <option value="6" <?= $style_mobile_value == 6 ? 'SELECTED' : ''; ?> >Style-6</option>
+                <option value="7" <?= $style_mobile_value == 7 ? 'SELECTED' : ''; ?> >Style-7</option>
+                <option value="8" <?= $style_mobile_value == 8 ? 'SELECTED' : ''; ?> >Style-8</option>
+                <option value="9" <?= $style_mobile_value == 9 ? 'SELECTED' : ''; ?> >Style-9</option>
+                <option value="99" <?= $style_mobile_value == 99 ? 'SELECTED' : ''; ?> >Style-99 ( Add your own Image / GIF )</option>
+                <option value="0" <?= $style_mobile_value == 0 ? 'SELECTED' : ''; ?> >Hide on Mobile Devices</option>
                 </select>
                 <label>Select Style for Mobile Devices</label>
             </div>
@@ -216,7 +216,7 @@ class CCW_Admin_Page {
         ?>
         <div class="row">
             <div class="input-field col s12">
-                <input name="ccw_options[number]" value="<?php echo esc_attr( $ccw_number['number'] ) ?>" id="whatsapp_number" type="text" class="input-margin">
+                <input name="ccw_options[number]" value="<?= esc_attr( $ccw_number['number'] ) ?>" id="whatsapp_number" type="text" class="input-margin">
                 <label for="whatsapp_number">Enter whatsapp number </label>
                 <p class="description">Enter whatsapp number with country code ( e.g. 916123456789 ) please dont include +, ( here in e.g. 91 is country code 6123456789 is mobile number - <a target="_blank" href="https://holithemes.com/plugins/whatsapp-chat/whatsapp-number/">more info</a> ) </p>
             </div>
@@ -231,7 +231,7 @@ class CCW_Admin_Page {
         ?>
         <div class="row">
             <div class="input-field col s12">
-                <input name="ccw_options[initial]" value="<?php echo esc_attr( $ccw_initial['initial'] ) ?>" id="whatsapp_initial" type="text" class="input-margin">
+                <input name="ccw_options[initial]" value="<?= esc_attr( $ccw_initial['initial'] ) ?>" id="whatsapp_initial" type="text" class="input-margin">
                 <label for="whatsapp_initial">Initial Message</label>
                 <p class="description">Initial message ( pre-filled ), placeholder {{url}} to add webpage url -  <a target="_blank" href="https://holithemes.com/plugins/whatsapp-chat/pre-filled-message/">more info</a> </p>
             </div>
@@ -246,7 +246,7 @@ class CCW_Admin_Page {
         ?>
         <div class="row">
             <div class="input-field col s12">
-                <input name="ccw_options[group_id]" value="<?php echo esc_attr( $ccw_group_id['group_id'] ) ?>" id="whatsapp_group_id" type="text" class="input-margin">
+                <input name="ccw_options[group_id]" value="<?= esc_attr( $ccw_group_id['group_id'] ) ?>" id="whatsapp_group_id" type="text" class="input-margin">
                 <label for="whatsapp_group_id">whatsapp group ID Extenstion </label>
                 <p class="description">Enter whatsapp Group Id - E.g. 9EHLsEsOeJk6AVtE8AvXiA  - <a target="_blank" href="https://holithemes.com/plugins/click-to-chat/find-whatsapp-group-id/">more info</a> </p>
             </div>
@@ -262,10 +262,10 @@ class CCW_Admin_Page {
         <div class="row">
             <div class="input-field col s12">
                 <select name="ccw_options[position]" class="select">
-                <option value="1"  <?php echo $ccw_position_value == 1 ? 'SELECTED' : ''; ?> >bottom right</option>
-                <option value="2"  <?php echo $ccw_position_value == 2 ? 'SELECTED' : ''; ?> >bottom left</option>
-                <option value="3"  <?php echo $ccw_position_value == 3 ? 'SELECTED' : ''; ?> >top left</option>
-                <option value="4"  <?php echo $ccw_position_value == 4 ? 'SELECTED' : ''; ?> >top right</option>
+                <option value="1"  <?= $ccw_position_value == 1 ? 'SELECTED' : ''; ?> >bottom right</option>
+                <option value="2"  <?= $ccw_position_value == 2 ? 'SELECTED' : ''; ?> >bottom left</option>
+                <option value="3"  <?= $ccw_position_value == 3 ? 'SELECTED' : ''; ?> >top left</option>
+                <option value="4"  <?= $ccw_position_value == 4 ? 'SELECTED' : ''; ?> >top right</option>
                 </select>
                 <label>Fixed position to place</label>
                 <p class="description">e.g. 10px - please add css units as suffix, e.g. 10px, 10%, 10rem, 10em .. <a target="_blank" href="https://holithemes.com/plugins/whatsapp-chat/position-to-place/">more info</a> </p>
@@ -274,22 +274,22 @@ class CCW_Admin_Page {
 
         <div class="row display-none position position-1 bottom-right">
             <div class="input-field col s6">
-                <input name="ccw_options[position-1_bottom]" value="<?php echo esc_attr( $ccw_position['position-1_bottom'] ) ?>" id="position-1_bottom" type="text" class="validate">
+                <input name="ccw_options[position-1_bottom]" value="<?= esc_attr( $ccw_position['position-1_bottom'] ) ?>" id="position-1_bottom" type="text" class="validate">
                 <label for="position-1_bottom">position_bottom: </label>
             </div>
             <div class="input-field col s6">
-                <input name="ccw_options[position-1_right]" value="<?php echo esc_attr( $ccw_position['position-1_right'] ) ?>" id="position-1_right" type="text" class="validate">
+                <input name="ccw_options[position-1_right]" value="<?= esc_attr( $ccw_position['position-1_right'] ) ?>" id="position-1_right" type="text" class="validate">
                 <label for="position-1_right">position_right: </label>
             </div>
         </div>
 
         <div class="row display-none position position-2 bottom-left">
             <div class="input-field col s6">
-                <input name="ccw_options[position-2_bottom]" value="<?php echo esc_attr( $ccw_position['position-2_bottom'] ) ?>" id="position-2_bottom" type="text" class="validate">
+                <input name="ccw_options[position-2_bottom]" value="<?= esc_attr( $ccw_position['position-2_bottom'] ) ?>" id="position-2_bottom" type="text" class="validate">
                 <label for="position-2_bottom">position_bottom: </label>
             </div>
             <div class="input-field col s6">
-                <input name="ccw_options[position-2_left]" value="<?php echo esc_attr( $ccw_position['position-2_left'] ) ?>" id="position-2_left" type="text" class="validate">
+                <input name="ccw_options[position-2_left]" value="<?= esc_attr( $ccw_position['position-2_left'] ) ?>" id="position-2_left" type="text" class="validate">
                 <label for="position-2_left">position_left: </label>
             </div>
         </div>
@@ -298,22 +298,22 @@ class CCW_Admin_Page {
 
         <div class="row display-none position position-3 top-left">
             <div class="input-field col s6">
-                <input name="ccw_options[position-3_top]" value="<?php echo esc_attr( $ccw_position['position-3_top'] ) ?>" id="position-3_top" type="text" class="validate">
+                <input name="ccw_options[position-3_top]" value="<?= esc_attr( $ccw_position['position-3_top'] ) ?>" id="position-3_top" type="text" class="validate">
                 <label for="position-3_top">position_top: </label>
             </div>
             <div class="input-field col s6">
-                <input name="ccw_options[position-3_left]" value="<?php echo esc_attr( $ccw_position['position-3_left'] ) ?>" id="position-3_left" type="text" class="validate">
+                <input name="ccw_options[position-3_left]" value="<?= esc_attr( $ccw_position['position-3_left'] ) ?>" id="position-3_left" type="text" class="validate">
                 <label for="position-3_left">position_left: </label>
             </div>
         </div>
 
         <div class="row display-none position position-4 top-right">
             <div class="input-field col s6">
-                <input name="ccw_options[position-4_top]" value="<?php echo esc_attr( $ccw_position['position-4_top'] ) ?>" id="position-4_top" type="text" class="validate">
+                <input name="ccw_options[position-4_top]" value="<?= esc_attr( $ccw_position['position-4_top'] ) ?>" id="position-4_top" type="text" class="validate">
                 <label for="position-4_top">position_top: </label>
             </div>
             <div class="input-field col s6">
-                <input name="ccw_options[position-4_right]" value="<?php echo esc_attr( $ccw_position['position-4_right'] ) ?>" id="position-4_right" type="text" class="validate">
+                <input name="ccw_options[position-4_right]" value="<?= esc_attr( $ccw_position['position-4_right'] ) ?>" id="position-4_right" type="text" class="validate">
                 <label for="position-4_right">position_right: </label>
             </div>
         </div>
@@ -327,7 +327,7 @@ class CCW_Admin_Page {
         ?>
         <div class="row">
             <div class="input-field col s12">
-                <input name="ccw_options[input_placeholder]" value="<?php echo esc_attr( $ccw_placeholder['input_placeholder'] ) ?>" id="input_placeholder" type="text" class="input-margin">
+                <input name="ccw_options[input_placeholder]" value="<?= esc_attr( $ccw_placeholder['input_placeholder'] ) ?>" id="input_placeholder" type="text" class="input-margin">
                 <label for="input_placeholder">placeholder value</label>
                 <p class="description"> - <a target="_blank" href="https://holithemes.com/plugins/whatsapp-chat/text-to-display/">more info</a> </p>
             </div>
@@ -363,7 +363,7 @@ class CCW_Admin_Page {
         ?>
         
         <p class="description"> If Google Analytics is installed - creates an Event at there - <a target="_blank" href="https://holithemes.com/plugins/whatsapp-chat/google-analytics/">more info</a> </p>
-        <p class="description"> Customize Event Values - <a target="_blank" href="<?php echo admin_url( 'admin.php?page=ccw-edit-styles#ga-analytics' ); ?>"><?php _e( 'Customize Styles' , 'click-to-chat-for-whatsapp' ) ?></a>  </p>
+        <p class="description"> Customize Event Values - <a target="_blank" href="<?= admin_url( 'admin.php?page=ccw-edit-styles#ga-analytics' ); ?>"><?php _e( 'Customize Styles' , 'click-to-chat-for-whatsapp' ) ?></a>  </p>
         <p class="description"> Using - <a target="_blank" href="https://holithemes.com/google-analytics-for-click-to-chat-for-whatsapp-plugin/">Google Tag Manager</a> </p>
         <?php
     }
@@ -395,7 +395,7 @@ class CCW_Admin_Page {
         }
         ?>
         <p class="description"> If Facebook Analytics is installed - creates an Event at there - <a target="_blank" href="https://holithemes.com/plugins/whatsapp-chat/facebook-analytics/">more info</a> </p>
-        <p class="description"> Customize Event Values - <a target="_blank" href="<?php echo admin_url( 'admin.php?page=ccw-edit-styles#fb-analytics' ); ?>">Customize Styles</a>  </p>
+        <p class="description"> Customize Event Values - <a target="_blank" href="<?= admin_url( 'admin.php?page=ccw-edit-styles#fb-analytics' ); ?>">Customize Styles</a>  </p>
         <?php
     }
 
@@ -569,7 +569,7 @@ class CCW_Admin_Page {
         ?>
         <div class="row">
             <div class="input-field col s12">
-                <input name="ccw_options[list_hideon_pages]" value="<?php echo esc_attr( $ccw_list_id_tohide['list_hideon_pages'] ) ?>" id="ccw_list_id_tohide" type="text" class="input-margin">
+                <input name="ccw_options[list_hideon_pages]" value="<?= esc_attr( $ccw_list_id_tohide['list_hideon_pages'] ) ?>" id="ccw_list_id_tohide" type="text" class="input-margin">
                 <label for="ccw_list_id_tohide">Id's list to Hide - add ',' after each id </label>
                 <p class="description"> Add Post, Pages, Media - ID's to hide, Add multiple id's separate with a comma ( , ) - <a target="_blank" href="https://holithemes.com/plugins/whatsapp-chat/show-hide-styles-based-on-id/">more info</a> </p>
             </div>
@@ -583,7 +583,7 @@ class CCW_Admin_Page {
         ?>
         <div class="row">
             <div class="input-field col s12">
-                <input name="ccw_options[list_hideon_cat]" value="<?php echo esc_attr( $ccw_list_cat_tohide['list_hideon_cat'] ) ?>" id="ccw_list_cat_tohide" type="text" class="input-margin">
+                <input name="ccw_options[list_hideon_cat]" value="<?= esc_attr( $ccw_list_cat_tohide['list_hideon_cat'] ) ?>" id="ccw_list_cat_tohide" type="text" class="input-margin">
                 <label for="ccw_list_cat_tohide">Category name's to Hide - add ',' after each category name </label>
                 <p class="description">Category name's to hide, Add multiple Categories separate with a comma ( , ) - <a target="_blank" href="https://holithemes.com/plugins/whatsapp-chat/hide-styles-based-on-category/">more info</a> </p>
             </div>
@@ -597,7 +597,7 @@ class CCW_Admin_Page {
         ?>
         <div class="row">
             <div class="input-field col s12">
-                <input name="ccw_options[shortcode]" value="<?php echo esc_attr( $ccw_shortcode['shortcode'] ) ?>" id="shortcode" type="text" class="input-margin">
+                <input name="ccw_options[shortcode]" value="<?= esc_attr( $ccw_shortcode['shortcode'] ) ?>" id="shortcode" type="text" class="input-margin">
                 <label for="shortcode">shortcode name</label>
                 <?php
                 $shortcode_list = '';
@@ -607,7 +607,7 @@ class CCW_Admin_Page {
                  }
                 ?>
                 <p class="description"> Default values is 'chat', can customize shortcode name - <a target="_blank" href="https://holithemes.com/plugins/whatsapp-chat/change-shortcode-name/">more info</a> </p>
-                <!-- <p class="description"> please dont add this already existing shortcode names - <?php echo $shortcode_list ?> </p> -->
+                <!-- <p class="description"> please dont add this already existing shortcode names - <?= $shortcode_list ?> </p> -->
                 <p class="description"> please dont change to already existing shortcode name </p>
             </div>
         </div>

@@ -1,9 +1,9 @@
 === Click to Chat ===
 Requires at least: 4.6
-Tested up to: 5.7
+Tested up to: 5.7.1
 Requires PHP: 5.6
 Contributors: holithemes
-Stable tag: 3.3.1
+Stable tag: 3.3.2
 Tags: whatsapp, whatsapp business, click to chat, whatsapp chat, whatsapp support, whatsapp group, whatsapp message, social chat, whatsapp wordpress, whatsapp floating button, whatsapp icon, holithemes
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -424,6 +424,11 @@ plugin will update automatically when new version is released
 After Activate the plugin, add WhatsApp Number at plugin settings.
 
 == Changelog ==
+
+= 3.3.2 =
+* Enchantment: Google Analytics
+* Enchantment: Web WhatsApp
+* code: php echo shorthand
 
 = 3.3.1 =
 * New: Webhooks

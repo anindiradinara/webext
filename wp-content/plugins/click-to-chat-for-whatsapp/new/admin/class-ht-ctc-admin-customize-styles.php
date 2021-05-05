@@ -159,14 +159,18 @@ class HT_CTC_Admin_Customize_Styles {
     }
 
     // display all styles
+        // count - updates each time, uses at clear cache 
     public function ht_ctc_cs_cb() {
 
         $options = get_option('ht_ctc_cs_options');
         $dbrow = 'ht_ctc_cs_options';
 
+        $count = ( isset( $options['count']) ) ? esc_attr( $options['count'] ) : '1';
+        $count++;
+
         ?>
         <!-- not make empty table -->
-        <input name="<?php echo $dbrow ?>[hello]" value="world" id="" type="hidden" class="hide" >
+        <input name="<?= $dbrow; ?>[count]" value="<?= $count; ?>" type="hidden" class="hide" >
 
         <?php
         // Display all Styles
@@ -174,7 +178,7 @@ class HT_CTC_Admin_Customize_Styles {
             ?>
             <p>
                 <label>
-                    <input name="<?php echo $dbrow ?>[display_allstyles]" type="checkbox" value="1" <?php checked( $options['display_allstyles'], 1 ); ?> id="display_allstyles" />
+                    <input name="<?= $dbrow; ?>[display_allstyles]" type="checkbox" value="1" <?php checked( $options['display_allstyles'], 1 ); ?> id="display_allstyles" />
                     <span><?php _e( 'Display all Styles', 'click-to-chat-for-whatsapp' ); ?></span>
                 </label>
             </p>
@@ -183,7 +187,7 @@ class HT_CTC_Admin_Customize_Styles {
         ?>
         <p>
             <label>
-                <input name="<?php echo $dbrow ?>[display_allstyles]" type="checkbox" value="1" id="display_allstyles" />
+                <input name="<?= $dbrow; ?>[display_allstyles]" type="checkbox" value="1" id="display_allstyles" />
                 <span><?php _e( 'Display all Styles', 'click-to-chat-for-whatsapp' ); ?></span>
             </label>
         </p>
@@ -221,7 +225,7 @@ class HT_CTC_Admin_Customize_Styles {
                     ?>
                     <p>
                         <label>
-                            <input name="<?php echo $dbrow ?>[s1_m_fullwidth]" type="checkbox" value="1" <?php checked( $options['s1_m_fullwidth'], 1 ); ?> id="s1_m_fullwidth" />
+                            <input name="<?= $dbrow; ?>[s1_m_fullwidth]" type="checkbox" value="1" <?php checked( $options['s1_m_fullwidth'], 1 ); ?> id="s1_m_fullwidth" />
                             <span><?php _e( 'Full Width on Mobile', 'click-to-chat-for-whatsapp' ); ?></span>
                         </label>
                     </p>
@@ -230,7 +234,7 @@ class HT_CTC_Admin_Customize_Styles {
                 ?>
                 <p>
                     <label>
-                        <input name="<?php echo $dbrow ?>[s1_m_fullwidth]" type="checkbox" value="1" id="s1_m_fullwidth" />
+                        <input name="<?= $dbrow; ?>[s1_m_fullwidth]" type="checkbox" value="1" id="s1_m_fullwidth" />
                         <span><?php _e( 'Full Width on Mobile', 'click-to-chat-for-whatsapp' ); ?></span>
                     </label>
                 </p>
@@ -247,7 +251,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Text Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input class="ht-ctc-color" name="<?php echo $dbrow ?>[s1_text_color]" value="<?php echo $s1_text_color ?>" type="text">
+                <input class="ht-ctc-color" name="<?= $dbrow; ?>[s1_text_color]" value="<?= $s1_text_color; ?>" type="text">
             </div>
         </div>
 
@@ -257,7 +261,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Background Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input class="ht-ctc-color" name="<?php echo $dbrow ?>[s1_bg_color]" value="<?php echo $s1_bg_color ?>" type="text">
+                <input class="ht-ctc-color" name="<?= $dbrow; ?>[s1_bg_color]" value="<?= $s1_bg_color; ?>" type="text">
             </div>
         </div>
 
@@ -294,7 +298,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Image Size', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="<?php echo $dbrow ?>[s2_img_size]" value="<?php echo $s2_img_size ?>" id="s2_img_size" type="text" class="" >
+                <input name="<?= $dbrow; ?>[s2_img_size]" value="<?= $s2_img_size ?>" id="s2_img_size" type="text" class="" >
                 <label for="s2_img_size"><?php _e( 'Image Size', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -316,14 +320,14 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Display - Call to Action', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <select name="<?php echo $dbrow ?>[cta_type]" class="select_cta_type">
-                    <option value="hover" <?php echo $select_cta_type == 'hover' ? 'SELECTED' : ''; ?> >On Hover</option>
-                    <option value="show" <?php echo $select_cta_type == 'show' ? 'SELECTED' : ''; ?> >Show</option>
-                    <option value="hide" <?php echo $select_cta_type == 'hide' ? 'SELECTED' : ''; ?> >Hide</option>
+                <select name="<?= $dbrow; ?>[cta_type]" class="select_cta_type">
+                    <option value="hover" <?= $select_cta_type == 'hover' ? 'SELECTED' : ''; ?> >On Hover</option>
+                    <option value="show" <?= $select_cta_type == 'show' ? 'SELECTED' : ''; ?> >Show</option>
+                    <option value="hide" <?= $select_cta_type == 'hide' ? 'SELECTED' : ''; ?> >Hide</option>
                     <?php
                     if ( 's7' == $style) {
                     ?>
-                    <option value="inside" <?php echo $select_cta_type == 'inside' ? 'SELECTED' : ''; ?> >Inside padding</option>
+                    <option value="inside" <?= $select_cta_type == 'inside' ? 'SELECTED' : ''; ?> >Inside padding</option>
                     <?php
                     }
                     ?>
@@ -337,7 +341,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Call to Action - Text Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input class="ht-ctc-color" name="<?php echo $dbrow ?>[cta_textcolor]" data-default-color="#ffffff" value="<?php echo $cta_textcolor ?>" type="text">
+                <input class="ht-ctc-color" name="<?= $dbrow; ?>[cta_textcolor]" data-default-color="#ffffff" value="<?= $cta_textcolor ?>" type="text">
             </div>
         </div>
 
@@ -347,7 +351,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Call to Action - Background Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input class="ht-ctc-color" name="<?php echo $dbrow ?>[cta_bgcolor]" data-default-color="#25D366" value="<?php echo $cta_bgcolor ?>" id="cta_bgcolor" type="text">
+                <input class="ht-ctc-color" name="<?= $dbrow; ?>[cta_bgcolor]" data-default-color="#25D366" value="<?= $cta_bgcolor ?>" id="cta_bgcolor" type="text">
             </div>
         </div>
 
@@ -357,7 +361,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Font Size', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="<?php echo $dbrow ?>[cta_font_size]" value="<?php echo $cta_font_size ?>" id="s2_cta_font_size" type="text" class="" >
+                <input name="<?= $dbrow; ?>[cta_font_size]" value="<?= $cta_font_size ?>" id="s2_cta_font_size" type="text" class="" >
                 <label for="s2_cta_font_size"><?php _e( 'Font Size (e.g. 15px)', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -406,7 +410,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Image Size', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s3[s3_img_size]" value="<?php echo $s3_img_size ?>" id="s3_img_size" type="text" class="" >
+                <input name="ht_ctc_s3[s3_img_size]" value="<?= $s3_img_size ?>" id="s3_img_size" type="text" class="" >
                 <label for="s3_img_size"><?php _e( 'Image Size (Default: 50px )', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -420,14 +424,14 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Display - Call to Action', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <select name="<?php echo $dbrow ?>[cta_type]" class="select_cta_type">
-                    <option value="hover" <?php echo $select_cta_type == 'hover' ? 'SELECTED' : ''; ?> >On Hover</option>
-                    <option value="show" <?php echo $select_cta_type == 'show' ? 'SELECTED' : ''; ?> >Show</option>
-                    <option value="hide" <?php echo $select_cta_type == 'hide' ? 'SELECTED' : ''; ?> >Hide</option>
+                <select name="<?= $dbrow; ?>[cta_type]" class="select_cta_type">
+                    <option value="hover" <?= $select_cta_type == 'hover' ? 'SELECTED' : ''; ?> >On Hover</option>
+                    <option value="show" <?= $select_cta_type == 'show' ? 'SELECTED' : ''; ?> >Show</option>
+                    <option value="hide" <?= $select_cta_type == 'hide' ? 'SELECTED' : ''; ?> >Hide</option>
                     <?php
                     if ( 's7' == $style) {
                     ?>
-                    <option value="inside" <?php echo $select_cta_type == 'inside' ? 'SELECTED' : ''; ?> >Inside padding</option>
+                    <option value="inside" <?= $select_cta_type == 'inside' ? 'SELECTED' : ''; ?> >Inside padding</option>
                     <?php
                     }
                     ?>
@@ -441,7 +445,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Call to Action - Text Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input class="ht-ctc-color" name="<?php echo $dbrow ?>[cta_textcolor]" data-default-color="#ffffff" value="<?php echo $cta_textcolor ?>" type="text">
+                <input class="ht-ctc-color" name="<?= $dbrow; ?>[cta_textcolor]" data-default-color="#ffffff" value="<?= $cta_textcolor; ?>" type="text">
             </div>
         </div>
 
@@ -451,7 +455,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Call to Action - Background Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input class="ht-ctc-color" name="<?php echo $dbrow ?>[cta_bgcolor]" data-default-color="#25D366" value="<?php echo $cta_bgcolor ?>" id="cta_bgcolor" type="text">
+                <input class="ht-ctc-color" name="<?= $dbrow; ?>[cta_bgcolor]" data-default-color="#25D366" value="<?= $cta_bgcolor; ?>" id="cta_bgcolor" type="text">
             </div>
         </div>
 
@@ -461,7 +465,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Font Size', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="<?php echo $dbrow ?>[cta_font_size]" value="<?php echo $cta_font_size ?>" id="s3_cta_font_size" type="text" class="" >
+                <input name="<?= $dbrow; ?>[cta_font_size]" value="<?= $cta_font_size; ?>" id="s3_cta_font_size" type="text" class="" >
                 <label for="s3_cta_font_size"><?php _e( 'Font Size (e.g. 15px)', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -504,7 +508,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Image Size', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s3_1[s3_img_size]" value="<?php echo $s3_img_size ?>" id="s3_img_size" type="text" class="" >
+                <input name="ht_ctc_s3_1[s3_img_size]" value="<?= $s3_img_size; ?>" id="s3_img_size" type="text" class="" >
                 <label for="s3_img_size"><?php _e( 'Image Size (Default: 40px )', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -516,7 +520,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Padding', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s3_1[s3_padding]" value="<?php echo $s3_padding ?>" id="s3_padding" type="text" class="" >
+                <input name="ht_ctc_s3_1[s3_padding]" value="<?= $s3_padding; ?>" id="s3_padding" type="text" class="" >
                 <label for="s3_padding"><?php _e( 'Padding (Default: 20px )', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -527,7 +531,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Background Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input class="ht-ctc-color" name="ht_ctc_s3_1[s3_bg_color]" data-default-color="#25D366" value="<?php echo $s3_bg_color ?>" id="s3_bg_color" type="text">
+                <input class="ht-ctc-color" name="ht_ctc_s3_1[s3_bg_color]" data-default-color="#25D366" value="<?= $s3_bg_color; ?>" id="s3_bg_color" type="text">
             </div>
         </div>
 
@@ -537,7 +541,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Background Color on Hover', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input class="ht-ctc-color" name="ht_ctc_s3_1[s3_bg_color_hover]" data-default-color="#25D366" value="<?php echo $s3_bg_color_hover ?>" id="s3_bg_color_hover" type="text">
+                <input class="ht-ctc-color" name="ht_ctc_s3_1[s3_bg_color_hover]" data-default-color="#25D366" value="<?= $s3_bg_color_hover; ?>" id="s3_bg_color_hover" type="text">
                 <p class="description"><?php _e( 'E.g. Colors: #25D366, #20b038', 'click-to-chat-for-whatsapp' ); ?> </p>
             </div>
         </div>
@@ -605,14 +609,14 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Display - Call to Action', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <select name="<?php echo $dbrow ?>[cta_type]" class="select_cta_type">
-                    <option value="hover" <?php echo $select_cta_type == 'hover' ? 'SELECTED' : ''; ?> >On Hover</option>
-                    <option value="show" <?php echo $select_cta_type == 'show' ? 'SELECTED' : ''; ?> >Show</option>
-                    <option value="hide" <?php echo $select_cta_type == 'hide' ? 'SELECTED' : ''; ?> >Hide</option>
+                <select name="<?= $dbrow; ?>[cta_type]" class="select_cta_type">
+                    <option value="hover" <?= $select_cta_type == 'hover' ? 'SELECTED' : ''; ?> >On Hover</option>
+                    <option value="show" <?= $select_cta_type == 'show' ? 'SELECTED' : ''; ?> >Show</option>
+                    <option value="hide" <?= $select_cta_type == 'hide' ? 'SELECTED' : ''; ?> >Hide</option>
                     <?php
                     if ( 's7' == $style) {
                     ?>
-                    <option value="inside" <?php echo $select_cta_type == 'inside' ? 'SELECTED' : ''; ?> >Inside padding</option>
+                    <option value="inside" <?= $select_cta_type == 'inside' ? 'SELECTED' : ''; ?> >Inside padding</option>
                     <?php
                     }
                     ?>
@@ -626,7 +630,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Call to Action - Text Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input class="ht-ctc-color" name="<?php echo $dbrow ?>[cta_textcolor]" data-default-color="#ffffff" value="<?php echo $cta_textcolor ?>" type="text">
+                <input class="ht-ctc-color" name="<?= $dbrow; ?>[cta_textcolor]" data-default-color="#ffffff" value="<?= $cta_textcolor ?>" type="text">
             </div>
         </div>
 
@@ -636,7 +640,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Call to Action - Background Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input class="ht-ctc-color" name="<?php echo $dbrow ?>[cta_bgcolor]" data-default-color="#25D366" value="<?php echo $cta_bgcolor ?>" id="cta_bgcolor" type="text">
+                <input class="ht-ctc-color" name="<?= $dbrow; ?>[cta_bgcolor]" data-default-color="#25D366" value="<?= $cta_bgcolor ?>" id="cta_bgcolor" type="text">
             </div>
         </div>
 
@@ -646,7 +650,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Font Size', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="<?php echo $dbrow ?>[cta_font_size]" value="<?php echo $cta_font_size ?>" id="s3_1_cta_font_size" type="text" class="" >
+                <input name="<?= $dbrow; ?>[cta_font_size]" value="<?= $cta_font_size ?>" id="s3_1_cta_font_size" type="text" class="" >
                 <label for="s3_1_cta_font_size"><?php _e( 'Font Size (e.g. 15px)', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -683,7 +687,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Text Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input class="ht-ctc-color" name="ht_ctc_s4[s4_text_color]" data-default-color="#7f7d7d" value="<?php echo $s4_text_color ?>" id="s4_text_color" type="text">
+                <input class="ht-ctc-color" name="ht_ctc_s4[s4_text_color]" data-default-color="#7f7d7d" value="<?= $s4_text_color ?>" id="s4_text_color" type="text">
             </div>
         </div>
 
@@ -693,7 +697,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Background Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input id="s4_bg_color" class="ht-ctc-color" data-default-color="#e4e4e4" name="ht_ctc_s4[s4_bg_color]" value="<?php echo $s4_bg_color ?>" type="text" style="height: 1.375rem;" >
+                <input id="s4_bg_color" class="ht-ctc-color" data-default-color="#e4e4e4" name="ht_ctc_s4[s4_bg_color]" value="<?= $s4_bg_color ?>" type="text" style="height: 1.375rem;" >
             </div>
         </div>
 
@@ -704,8 +708,8 @@ class HT_CTC_Admin_Customize_Styles {
             </div>
             <div class="input-field col s6">
                 <select name="ht_ctc_s4[s4_img_position]" class="select-2">
-                    <option value="left" <?php echo $select_s4_img_position == 'left' ? 'SELECTED' : ''; ?> >Left</option>
-                    <option value="right" <?php echo $select_s4_img_position == 'right' ? 'SELECTED' : ''; ?> >Right</option>
+                    <option value="left" <?= $select_s4_img_position == 'left' ? 'SELECTED' : ''; ?> >Left</option>
+                    <option value="right" <?= $select_s4_img_position == 'right' ? 'SELECTED' : ''; ?> >Right</option>
                 </select>
             </div>
         </div>
@@ -716,7 +720,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Image URL', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s4[s4_img_url]" value="<?php echo $s4_img_url ?>" id="s4_img_url" type="text" class="" >
+                <input name="ht_ctc_s4[s4_img_url]" value="<?= $s4_img_url ?>" id="s4_img_url" type="text" class="" >
                 <label for="s4_img_url"><?php _e( 'Image URL(leave blank for default image)', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -727,7 +731,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Image Size', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s4[s4_img_size]" value="<?php echo $s4_img_size ?>" id="s4_img_size" type="text" class="" >
+                <input name="ht_ctc_s4[s4_img_size]" value="<?= $s4_img_size ?>" id="s4_img_size" type="text" class="" >
                 <label for="s4_img_size"><?php _e( 'Image Size (default 32px)', 'click-to-chat-for-whatsapp' ); ?></label>
                 <p class="description"><?php _e( '(possible, keep the value less then or equal to 32px)', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
@@ -772,7 +776,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Line 1', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s5[s5_line_1]" value="<?php echo $s5_line_1 ?>" id="s5_line_1" type="text" class="" >
+                <input name="ht_ctc_s5[s5_line_1]" value="<?= $s5_line_1 ?>" id="s5_line_1" type="text" class="" >
                 <label for="s5_line_1"><?php _e( 'Line 1', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -783,7 +787,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Line 2', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s5[s5_line_2]" value="<?php echo $s5_line_2 ?>" id="s5_line_2" type="text" class="" >
+                <input name="ht_ctc_s5[s5_line_2]" value="<?= $s5_line_2 ?>" id="s5_line_2" type="text" class="" >
                 <label for="s5_line_2"><?php _e( 'Line 2', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -794,7 +798,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Line 1 - Text Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input class="ht-ctc-color" name="ht_ctc_s5[s5_line_1_color]" data-default-color="#000000" value="<?php echo $s5_line_1_color ?>" id="s5_line_1_color" type="text">
+                <input class="ht-ctc-color" name="ht_ctc_s5[s5_line_1_color]" data-default-color="#000000" value="<?= $s5_line_1_color ?>" id="s5_line_1_color" type="text">
             </div>
         </div>
 
@@ -804,7 +808,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Line 2 - Text Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input class="ht-ctc-color" name="ht_ctc_s5[s5_line_2_color]" data-default-color="#000000" value="<?php echo $s5_line_2_color ?>" id="s5_line_2_color" type="text">
+                <input class="ht-ctc-color" name="ht_ctc_s5[s5_line_2_color]" data-default-color="#000000" value="<?= $s5_line_2_color ?>" id="s5_line_2_color" type="text">
             </div>
         </div>
 
@@ -814,7 +818,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Content Box Background Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input class="ht-ctc-color" name="ht_ctc_s5[s5_background_color]" data-default-color="#ffffff" value="<?php echo $s5_background_color ?>" id="s5_background_color" type="text">
+                <input class="ht-ctc-color" name="ht_ctc_s5[s5_background_color]" data-default-color="#ffffff" value="<?= $s5_background_color ?>" id="s5_background_color" type="text">
             </div>
         </div>
 
@@ -824,7 +828,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Content Box Border Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input class="ht-ctc-color" name="ht_ctc_s5[s5_border_color]" data-default-color="#dddddd" value="<?php echo $s5_border_color ?>" id="s5_border_color" type="text">
+                <input class="ht-ctc-color" name="ht_ctc_s5[s5_border_color]" data-default-color="#dddddd" value="<?= $s5_border_color ?>" id="s5_border_color" type="text">
             </div>
         </div>
 
@@ -834,7 +838,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Image URL', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s5[s5_img]" value="<?php echo $s5_img ?>" id="s5_img" type="text" class="" >
+                <input name="ht_ctc_s5[s5_img]" value="<?= $s5_img ?>" id="s5_img" type="text" class="" >
                 <label for="s5_img">Leave blank for default image</label>
             </div>
         </div>
@@ -845,7 +849,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Image Height', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s5[s5_img_height]" value="<?php echo $s5_img_height ?>" id="s5_img_height" type="text" class="" >
+                <input name="ht_ctc_s5[s5_img_height]" value="<?= $s5_img_height ?>" id="s5_img_height" type="text" class="" >
                 <label for="s5_img_height"><?php _e( 'Image Height', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -856,7 +860,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Image Width', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s5[s5_img_width]" value="<?php echo $s5_img_width ?>" id="s5_img_width" type="text" class="" >
+                <input name="ht_ctc_s5[s5_img_width]" value="<?= $s5_img_width ?>" id="s5_img_width" type="text" class="" >
                 <label for="s5_img_width"><?php _e( 'Image Width', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -867,7 +871,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Content Box Height', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s5[s5_content_height]" value="<?php echo $s5_content_height ?>" id="s5_content_height" type="text" class="" >
+                <input name="ht_ctc_s5[s5_content_height]" value="<?= $s5_content_height ?>" id="s5_content_height" type="text" class="" >
                 <label for="s5_content_height"><?php _e( 'Content Box Height', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -878,7 +882,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Content Box Width', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s5[s5_content_width]" value="<?php echo $s5_content_width ?>" id="s5_content_width" type="text" class="" >
+                <input name="ht_ctc_s5[s5_content_width]" value="<?= $s5_content_width ?>" id="s5_content_width" type="text" class="" >
                 <label for="s5_content_width"><?php _e( 'Content Box Width', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -890,8 +894,8 @@ class HT_CTC_Admin_Customize_Styles {
             </div>
             <div class="input-field col s6">
                 <select name="ht_ctc_s5[s5_img_position]" class="select-2">
-                    <option value="right" <?php echo $select_s5_img_position == 'right' ? 'SELECTED' : ''; ?> ><?php _e( 'Right', 'click-to-chat-for-whatsapp' ); ?></option>
-                    <option value="left" <?php echo $select_s5_img_position == 'left' ? 'SELECTED' : ''; ?> ><?php _e( 'Left', 'click-to-chat-for-whatsapp' ); ?></option>
+                    <option value="right" <?= $select_s5_img_position == 'right' ? 'SELECTED' : ''; ?> ><?php _e( 'Right', 'click-to-chat-for-whatsapp' ); ?></option>
+                    <option value="left" <?= $select_s5_img_position == 'left' ? 'SELECTED' : ''; ?> ><?php _e( 'Left', 'click-to-chat-for-whatsapp' ); ?></option>
                 </select>
                 <p class="description"><?php _e( 'If style position/located: Right to screen then select Right, if Left to screen then select Left', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
@@ -929,8 +933,8 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Text Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <!-- <input id="s6_txt_color" class="ht-ctc-color" data-default-color="#006ccc" name="ht_ctc_s6[s6_txt_color]" value="<?php echo $s6_txt_color ?>" type="text" style="height: 1.375rem;" > -->
-                <input id="s6_txt_color" class="ht-ctc-color" name="ht_ctc_s6[s6_txt_color]" value="<?php echo $s6_txt_color ?>" type="text" style="height: 1.375rem;" >
+                <!-- <input id="s6_txt_color" class="ht-ctc-color" data-default-color="#006ccc" name="ht_ctc_s6[s6_txt_color]" value="<?= $s6_txt_color ?>" type="text" style="height: 1.375rem;" > -->
+                <input id="s6_txt_color" class="ht-ctc-color" name="ht_ctc_s6[s6_txt_color]" value="<?= $s6_txt_color ?>" type="text" style="height: 1.375rem;" >
             </div>
         </div>
 
@@ -941,8 +945,8 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Text Color on Hover', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <!-- <input id="s6_txt_color_on_hover" class="ht-ctc-color" data-default-color="#006ccc" name="ht_ctc_s6[s6_txt_color_on_hover]" value="<?php echo $s6_txt_color_on_hover ?>" type="text" style="height: 1.375rem;" > -->
-                <input id="s6_txt_color_on_hover" class="ht-ctc-color" name="ht_ctc_s6[s6_txt_color_on_hover]" value="<?php echo $s6_txt_color_on_hover ?>" type="text" style="height: 1.375rem;" >
+                <!-- <input id="s6_txt_color_on_hover" class="ht-ctc-color" data-default-color="#006ccc" name="ht_ctc_s6[s6_txt_color_on_hover]" value="<?= $s6_txt_color_on_hover ?>" type="text" style="height: 1.375rem;" > -->
+                <input id="s6_txt_color_on_hover" class="ht-ctc-color" name="ht_ctc_s6[s6_txt_color_on_hover]" value="<?= $s6_txt_color_on_hover ?>" type="text" style="height: 1.375rem;" >
             </div>
         </div>
 
@@ -953,11 +957,11 @@ class HT_CTC_Admin_Customize_Styles {
             </div>
             <div class="input-field col s6">
                 <select name="ht_ctc_s6[s6_txt_decoration]" class="select-2">
-                    <option value="initial" <?php echo $text_decoration_value == 'initial' ? 'SELECTED' : ''; ?> >initial</option>
-                    <option value="underline" <?php echo $text_decoration_value == 'underline' ? 'SELECTED' : ''; ?> >underline</option>
-                    <option value="overline" <?php echo $text_decoration_value == 'overline' ? 'SELECTED' : ''; ?> >overline</option>
-                    <option value="line-through" <?php echo $text_decoration_value == 'line-through' ? 'SELECTED' : ''; ?> >line-through</option>
-                    <option value="inherit" <?php echo $text_decoration_value == 'inherit' ? 'SELECTED' : ''; ?> >inherit</option>
+                    <option value="initial" <?= $text_decoration_value == 'initial' ? 'SELECTED' : ''; ?> >initial</option>
+                    <option value="underline" <?= $text_decoration_value == 'underline' ? 'SELECTED' : ''; ?> >underline</option>
+                    <option value="overline" <?= $text_decoration_value == 'overline' ? 'SELECTED' : ''; ?> >overline</option>
+                    <option value="line-through" <?= $text_decoration_value == 'line-through' ? 'SELECTED' : ''; ?> >line-through</option>
+                    <option value="inherit" <?= $text_decoration_value == 'inherit' ? 'SELECTED' : ''; ?> >inherit</option>
                 </select>
                 <!-- <label>Text Decoration</label> -->
             </div>
@@ -970,11 +974,11 @@ class HT_CTC_Admin_Customize_Styles {
             </div>
             <div class="input-field col s6">
                 <select name="ht_ctc_s6[s6_txt_decoration_on_hover]" class="select-2">
-                    <option value="initial" <?php echo $text_decoration_hover_value == 'initial' ? 'SELECTED' : ''; ?> >initial</option>
-                    <option value="underline" <?php echo $text_decoration_hover_value == 'underline' ? 'SELECTED' : ''; ?> >underline</option>
-                    <option value="overline" <?php echo $text_decoration_hover_value == 'overline' ? 'SELECTED' : ''; ?> >overline</option>
-                    <option value="line-through" <?php echo $text_decoration_hover_value == 'line-through' ? 'SELECTED' : ''; ?> >line-through</option>
-                    <option value="inherit" <?php echo $text_decoration_hover_value == 'inherit' ? 'SELECTED' : ''; ?> >inherit</option>
+                    <option value="initial" <?= $text_decoration_hover_value == 'initial' ? 'SELECTED' : ''; ?> >initial</option>
+                    <option value="underline" <?= $text_decoration_hover_value == 'underline' ? 'SELECTED' : ''; ?> >underline</option>
+                    <option value="overline" <?= $text_decoration_hover_value == 'overline' ? 'SELECTED' : ''; ?> >overline</option>
+                    <option value="line-through" <?= $text_decoration_hover_value == 'line-through' ? 'SELECTED' : ''; ?> >line-through</option>
+                    <option value="inherit" <?= $text_decoration_hover_value == 'inherit' ? 'SELECTED' : ''; ?> >inherit</option>
                 </select>
                 <!-- <label>Text Decoration when Hover</label> -->
             </div>
@@ -1022,7 +1026,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Icon Size', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s7[s7_icon_size]" value="<?php echo $s7_icon_size ?>" id="s7_icon_size" type="text" class="" >
+                <input name="ht_ctc_s7[s7_icon_size]" value="<?= $s7_icon_size ?>" id="s7_icon_size" type="text" class="" >
                 <label for="s7_icon_size"><?php _e( 'Icon Size', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -1033,7 +1037,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Icon Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input id="s7_icon_color" class="ht-ctc-color" data-default-color="#ffffff" name="ht_ctc_s7[s7_icon_color]" value="<?php echo $s7_icon_color ?>" type="text" style="height: 1.375rem;" >
+                <input id="s7_icon_color" class="ht-ctc-color" data-default-color="#ffffff" name="ht_ctc_s7[s7_icon_color]" value="<?= $s7_icon_color ?>" type="text" style="height: 1.375rem;" >
             </div>
         </div>
 
@@ -1043,7 +1047,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Icon Color on Hover', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input id="s7_icon_color_hover" class="ht-ctc-color" data-default-color="#fffff" name="ht_ctc_s7[s7_icon_color_hover]" value="<?php echo $s7_icon_color_hover ?>" type="text" style="height: 1.375rem;" >
+                <input id="s7_icon_color_hover" class="ht-ctc-color" data-default-color="#fffff" name="ht_ctc_s7[s7_icon_color_hover]" value="<?= $s7_icon_color_hover ?>" type="text" style="height: 1.375rem;" >
             </div>
         </div>
 
@@ -1053,7 +1057,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Border Padding Size', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s7[s7_border_size]" value="<?php echo $s7_border_size ?>" id="s7_border_size" type="text" class="" >
+                <input name="ht_ctc_s7[s7_border_size]" value="<?= $s7_border_size ?>" id="s7_border_size" type="text" class="" >
                 <label for="s7_border_size"><?php _e( 'Border Padding Size', 'click-to-chat-for-whatsapp' ); ?></label>
                 <p class="description"><?php _e( 'E.g. 12px', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
@@ -1065,7 +1069,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Background Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input id="s7_border_color" class="ht-ctc-color" data-default-color="#25d366" name="ht_ctc_s7[s7_border_color]" value="<?php echo $s7_border_color ?>" type="text" style="height: 1.375rem;" >
+                <input id="s7_border_color" class="ht-ctc-color" data-default-color="#25d366" name="ht_ctc_s7[s7_border_color]" value="<?= $s7_border_color ?>" type="text" style="height: 1.375rem;" >
             </div>
         </div>
 
@@ -1075,7 +1079,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Background Color on Hover', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input id="s7_border_color_hover" class="ht-ctc-color" data-default-color="#25d366" name="ht_ctc_s7[s7_border_color_hover]" value="<?php echo $s7_border_color_hover ?>" type="text" style="height: 1.375rem;" >
+                <input id="s7_border_color_hover" class="ht-ctc-color" data-default-color="#25d366" name="ht_ctc_s7[s7_border_color_hover]" value="<?= $s7_border_color_hover ?>" type="text" style="height: 1.375rem;" >
             </div>
         </div>
 
@@ -1085,7 +1089,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Border radius', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s7[s7_border_radius]" value="<?php echo $s7_border_radius ?>" id="s7_border_radius" type="text" class="" >
+                <input name="ht_ctc_s7[s7_border_radius]" value="<?= $s7_border_radius ?>" id="s7_border_radius" type="text" class="" >
                 <label for="s7_border_radius"><?php _e( 'Border radius', 'click-to-chat-for-whatsapp' ); ?></label>
                 <p class="description"><?php _e( 'E.g. 10px, 50% ( for round border add 50% )', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
@@ -1103,10 +1107,10 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Display - Call to Action', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <select name="<?php echo $dbrow ?>[cta_type]" class="select_cta_type">
-                    <option value="hover" <?php echo $select_cta_type == 'hover' ? 'SELECTED' : ''; ?> >On Hover</option>
-                    <option value="show" <?php echo $select_cta_type == 'show' ? 'SELECTED' : ''; ?> >Show</option>
-                    <option value="hide" <?php echo $select_cta_type == 'hide' ? 'SELECTED' : ''; ?> >Hide</option>
+                <select name="<?= $dbrow; ?>[cta_type]" class="select_cta_type">
+                    <option value="hover" <?= $select_cta_type == 'hover' ? 'SELECTED' : ''; ?> >On Hover</option>
+                    <option value="show" <?= $select_cta_type == 'show' ? 'SELECTED' : ''; ?> >Show</option>
+                    <option value="hide" <?= $select_cta_type == 'hide' ? 'SELECTED' : ''; ?> >Hide</option>
                 </select>
             </div>
         </div>
@@ -1116,7 +1120,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Text Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input class="ht-ctc-color" name="<?php echo $dbrow ?>[cta_textcolor]" data-default-color="#ffffff" value="<?php echo $cta_textcolor ?>" type="text">
+                <input class="ht-ctc-color" name="<?= $dbrow; ?>[cta_textcolor]" data-default-color="#ffffff" value="<?= $cta_textcolor ?>" type="text">
             </div>
         </div>
 
@@ -1126,7 +1130,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Background Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input class="ht-ctc-color" name="<?php echo $dbrow ?>[cta_bgcolor]" data-default-color="#25d366" value="<?php echo $cta_bgcolor ?>" id="cta_bgcolor" type="text">
+                <input class="ht-ctc-color" name="<?= $dbrow; ?>[cta_bgcolor]" data-default-color="#25d366" value="<?= $cta_bgcolor ?>" id="cta_bgcolor" type="text">
             </div>
         </div>
 
@@ -1167,9 +1171,9 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Display - Call to Action', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <select name="<?php echo $dbrow ?>[cta_type]" class="select_cta_type">
-                    <option value="hover" <?php echo $select_cta_type == 'hover' ? 'SELECTED' : ''; ?> >On Hover</option>
-                    <option value="show" <?php echo $select_cta_type == 'show' ? 'SELECTED' : ''; ?> >Show</option>
+                <select name="<?= $dbrow; ?>[cta_type]" class="select_cta_type">
+                    <option value="hover" <?= $select_cta_type == 'hover' ? 'SELECTED' : ''; ?> >On Hover</option>
+                    <option value="show" <?= $select_cta_type == 'show' ? 'SELECTED' : ''; ?> >Show</option>
                 </select>
             </div>
         </div>
@@ -1181,7 +1185,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Icon Size', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="<?php echo $dbrow ?>[s7_icon_size]" value="<?php echo $s7_icon_size ?>" id="s7_icon_size" type="text" class="" >
+                <input name="<?= $dbrow; ?>[s7_icon_size]" value="<?= $s7_icon_size ?>" id="s7_icon_size" type="text" class="" >
                 <label for="s7_icon_size"><?php _e( 'Icon Size', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -1192,7 +1196,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Icon Border Padding Size', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="<?php echo $dbrow ?>[s7_border_size]" value="<?php echo $s7_border_size ?>" id="s7_border_size" type="text" class="" >
+                <input name="<?= $dbrow; ?>[s7_border_size]" value="<?= $s7_border_size ?>" id="s7_border_size" type="text" class="" >
                 <label for="s7_border_size"><?php _e( 'Border Padding Size', 'click-to-chat-for-whatsapp' ); ?></label>
                 <p class="description"><?php _e( 'E.g. 12px', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
@@ -1204,7 +1208,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Icon,Text Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input id="s7_icon_color" class="ht-ctc-color" data-default-color="#ffffff" name="<?php echo $dbrow ?>[s7_icon_color]" value="<?php echo $s7_icon_color ?>" type="text" style="height: 1.375rem;" >
+                <input id="s7_icon_color" class="ht-ctc-color" data-default-color="#ffffff" name="<?= $dbrow; ?>[s7_icon_color]" value="<?= $s7_icon_color ?>" type="text" style="height: 1.375rem;" >
             </div>
         </div>
 
@@ -1214,7 +1218,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Icon,Text Color on Hover', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input id="s7_icon_color_hover" class="ht-ctc-color" data-default-color="#f4f4f4" name="<?php echo $dbrow ?>[s7_icon_color_hover]" value="<?php echo $s7_icon_color_hover ?>" type="text" style="height: 1.375rem;" >
+                <input id="s7_icon_color_hover" class="ht-ctc-color" data-default-color="#f4f4f4" name="<?= $dbrow; ?>[s7_icon_color_hover]" value="<?= $s7_icon_color_hover ?>" type="text" style="height: 1.375rem;" >
             </div>
         </div>
 
@@ -1224,7 +1228,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Background Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input id="s7_bgcolor" class="ht-ctc-color" data-default-color="#25d366" name="<?php echo $dbrow ?>[s7_bgcolor]" value="<?php echo $s7_bgcolor ?>" type="text" style="height: 1.375rem;" >
+                <input id="s7_bgcolor" class="ht-ctc-color" data-default-color="#25d366" name="<?= $dbrow; ?>[s7_bgcolor]" value="<?= $s7_bgcolor ?>" type="text" style="height: 1.375rem;" >
             </div>
         </div>
 
@@ -1234,7 +1238,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Background Color on Hover', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input id="s7_bgcolor_hover" class="ht-ctc-color" data-default-color="#25d366" name="<?php echo $dbrow ?>[s7_bgcolor_hover]" value="<?php echo $s7_bgcolor_hover ?>" type="text" style="height: 1.375rem;" >
+                <input id="s7_bgcolor_hover" class="ht-ctc-color" data-default-color="#25d366" name="<?= $dbrow; ?>[s7_bgcolor_hover]" value="<?= $s7_bgcolor_hover ?>" type="text" style="height: 1.375rem;" >
             </div>
         </div>
 
@@ -1282,7 +1286,7 @@ class HT_CTC_Admin_Customize_Styles {
                     ?>
                     <p>
                         <label>
-                            <input name="<?php echo $dbrow ?>[s8_m_fullwidth]" type="checkbox" value="1" <?php checked( $options['s8_m_fullwidth'], 1 ); ?> id="s8_m_fullwidth" />
+                            <input name="<?= $dbrow; ?>[s8_m_fullwidth]" type="checkbox" value="1" <?php checked( $options['s8_m_fullwidth'], 1 ); ?> id="s8_m_fullwidth" />
                             <span><?php _e( 'Full Width on Mobile', 'click-to-chat-for-whatsapp' ); ?></span>
                         </label>
                     </p>
@@ -1291,7 +1295,7 @@ class HT_CTC_Admin_Customize_Styles {
                 ?>
                 <p>
                     <label>
-                        <input name="<?php echo $dbrow ?>[s8_m_fullwidth]" type="checkbox" value="1" id="s8_m_fullwidth" />
+                        <input name="<?= $dbrow; ?>[s8_m_fullwidth]" type="checkbox" value="1" id="s8_m_fullwidth" />
                         <span><?php _e( 'Full Width on Mobile', 'click-to-chat-for-whatsapp' ); ?></span>
                     </label>
                 </p>
@@ -1308,7 +1312,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Text Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input id="s8_txt_color" class="ht-ctc-color" data-default-color="#ffffff" name="ht_ctc_s8[s8_txt_color]" value="<?php echo $s8_txt_color ?>" type="text" style="height: 1.375rem;" >
+                <input id="s8_txt_color" class="ht-ctc-color" data-default-color="#ffffff" name="ht_ctc_s8[s8_txt_color]" value="<?= $s8_txt_color ?>" type="text" style="height: 1.375rem;" >
                 <!-- <label for="s3_img_url">Text Color</label> -->
                 <!-- <p class="description">Default Color: #ffffff</p> -->
             </div>
@@ -1320,7 +1324,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Text Color on Hover', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input id="s8_txt_color_on_hover" class="ht-ctc-color" data-default-color="#ffffff" name="ht_ctc_s8[s8_txt_color_on_hover]" value="<?php echo $s8_txt_color_on_hover ?>" type="text" style="height: 1.375rem;" >
+                <input id="s8_txt_color_on_hover" class="ht-ctc-color" data-default-color="#ffffff" name="ht_ctc_s8[s8_txt_color_on_hover]" value="<?= $s8_txt_color_on_hover ?>" type="text" style="height: 1.375rem;" >
                 <!-- <label for="s3_img_url">Text Color on Hover</label> -->
                 <!-- <p class="description">Default Color: #ffffff</p> -->
             </div>
@@ -1332,7 +1336,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Background Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input id="s8_bg_color" class="ht-ctc-color" data-default-color="#26a69a" name="ht_ctc_s8[s8_bg_color]" value="<?php echo $s8_bg_color ?>" type="text" style="height: 1.375rem;" >
+                <input id="s8_bg_color" class="ht-ctc-color" data-default-color="#26a69a" name="ht_ctc_s8[s8_bg_color]" value="<?= $s8_bg_color ?>" type="text" style="height: 1.375rem;" >
                 <!-- <label for="s3_img_url">Background Color</label> -->
                 <!-- <p class="description">Default Color: #26a69a</p> -->
             </div>
@@ -1344,7 +1348,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Background Color on Hover', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input id="s8_bg_color_on_hover" class="ht-ctc-color" data-default-color="#26a69a" name="ht_ctc_s8[s8_bg_color_on_hover]" value="<?php echo $s8_bg_color_on_hover ?>" type="text" style="height: 1.375rem;" >
+                <input id="s8_bg_color_on_hover" class="ht-ctc-color" data-default-color="#26a69a" name="ht_ctc_s8[s8_bg_color_on_hover]" value="<?= $s8_bg_color_on_hover ?>" type="text" style="height: 1.375rem;" >
                 <!-- <label for="s3_img_url">Background Color on Hover</label> -->
                 <!-- <p class="description">Default Color: #26a69a</p> -->
             </div>
@@ -1356,7 +1360,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Icon Color', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input id="s8_icon_color" class="ht-ctc-color" data-default-color="#ffffff" name="ht_ctc_s8[s8_icon_color]" value="<?php echo $s8_icon_color ?>" type="text" style="height: 1.375rem;" >
+                <input id="s8_icon_color" class="ht-ctc-color" data-default-color="#ffffff" name="ht_ctc_s8[s8_icon_color]" value="<?= $s8_icon_color ?>" type="text" style="height: 1.375rem;" >
                 <!-- <label for="s3_img_url">Icon Color</label> -->
                 <!-- <p class="description">Default Color: #ffffff</p> -->
             </div>
@@ -1368,7 +1372,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Icon Color on Hover', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input id="s8_icon_color_on_hover" class="ht-ctc-color" data-default-color="#ffffff" name="ht_ctc_s8[s8_icon_color_on_hover]" value="<?php echo $s8_icon_color_on_hover ?>" type="text" style="height: 1.375rem;" >
+                <input id="s8_icon_color_on_hover" class="ht-ctc-color" data-default-color="#ffffff" name="ht_ctc_s8[s8_icon_color_on_hover]" value="<?= $s8_icon_color_on_hover ?>" type="text" style="height: 1.375rem;" >
                 <!-- <label for="s3_img_url">Icon Color on Hover</label> -->
                 <!-- <p class="description">Default Color: #ffffff</p> -->
             </div>
@@ -1383,9 +1387,9 @@ class HT_CTC_Admin_Customize_Styles {
             </div>
             <div class="input-field col s6">
                 <select name="ht_ctc_s8[s8_icon_position]" class="select-2">
-                    <option value="left" <?php echo $icon_position_value == 'left' ? 'SELECTED' : ''; ?> >Left</option>
-                    <option value="right" <?php echo $icon_position_value == 'right' ? 'SELECTED' : ''; ?> >Right</option>
-                    <option value="hide" <?php echo $icon_position_value == 'hide' ? 'SELECTED' : ''; ?> >Hide</option>
+                    <option value="left" <?= $icon_position_value == 'left' ? 'SELECTED' : ''; ?> >Left</option>
+                    <option value="right" <?= $icon_position_value == 'right' ? 'SELECTED' : ''; ?> >Right</option>
+                    <option value="hide" <?= $icon_position_value == 'hide' ? 'SELECTED' : ''; ?> >Hide</option>
                 </select>
                 <!-- <label>Icon Position</label> -->
             </div>
@@ -1398,7 +1402,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Text Size', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s8[s8_text_size]" value="<?php echo $s8_text_size ?>" id="s8_text_size" type="text" class="" >
+                <input name="ht_ctc_s8[s8_text_size]" value="<?= $s8_text_size ?>" id="s8_text_size" type="text" class="" >
                 <label for="s8_text_size"><?php _e( 'Text Size  -  E.g. 12px', 'click-to-chat-for-whatsapp' ); ?></label>
                 <span class="helper-text"><?php _e( 'Leave blank for default settings', 'click-to-chat-for-whatsapp' ); ?></span>
             </div>
@@ -1410,7 +1414,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p>Icon Size</p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s8[s8_icon_size]" value="<?php echo $s8_icon_size ?>" id="s8_icon_size" type="text" class="" >
+                <input name="ht_ctc_s8[s8_icon_size]" value="<?= $s8_icon_size ?>" id="s8_icon_size" type="text" class="" >
                 <label for="s8_icon_size"><?php _e( 'Icon Size  -  E.g. 16px', 'click-to-chat-for-whatsapp' ); ?></label>
                 <span class="helper-text"><?php _e( 'Leave blank for default settings', 'click-to-chat-for-whatsapp' ); ?></span>
             </div>
@@ -1423,8 +1427,8 @@ class HT_CTC_Admin_Customize_Styles {
             </div>
             <div class="input-field col s6">
                 <select name="ht_ctc_s8[s8_btn_size]" class="select-2">
-                    <option value="btn" <?php echo $s8_btn_size == 'btn' ? 'SELECTED' : ''; ?> ><?php _e( 'Normal', 'click-to-chat-for-whatsapp' ); ?></option>
-                    <option value="btn-large" <?php echo $s8_btn_size == 'btn-large' ? 'SELECTED' : ''; ?> ><?php _e( 'Large', 'click-to-chat-for-whatsapp' ); ?></option>
+                    <option value="btn" <?= $s8_btn_size == 'btn' ? 'SELECTED' : ''; ?> ><?php _e( 'Normal', 'click-to-chat-for-whatsapp' ); ?></option>
+                    <option value="btn-large" <?= $s8_btn_size == 'btn-large' ? 'SELECTED' : ''; ?> ><?php _e( 'Large', 'click-to-chat-for-whatsapp' ); ?></option>
                 </select>
             </div>
         </div>
@@ -1463,7 +1467,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p>Image URL</p>
             </div> -->
             <div class="input-field col s12">
-                <input name="ht_ctc_s99[s99_dekstop_img_url]" value="<?php echo $s99_dekstop_img_url ?>" id="s99_dekstop_img_url" type="text" class="" >
+                <input name="ht_ctc_s99[s99_dekstop_img_url]" value="<?= $s99_dekstop_img_url ?>" id="s99_dekstop_img_url" type="text" class="" >
                 <label for="s99_dekstop_img_url"><?php _e( 'Image URL - Desktop', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -1474,7 +1478,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p>Image URL</p>
             </div> -->
             <div class="input-field col s12">
-                <input name="ht_ctc_s99[s99_mobile_img_url]" value="<?php echo $s99_mobile_img_url ?>" id="s99_mobile_img_url" type="text" class="" >
+                <input name="ht_ctc_s99[s99_mobile_img_url]" value="<?= $s99_mobile_img_url ?>" id="s99_mobile_img_url" type="text" class="" >
                 <label for="s99_mobile_img_url"><?php _e( 'Image URL - Mobile', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -1485,7 +1489,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Desktop - Image Height', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s99[s99_desktop_img_height]" value="<?php echo $s99_desktop_img_height ?>" id="s99_desktop_img_height" type="text" class="" >
+                <input name="ht_ctc_s99[s99_desktop_img_height]" value="<?= $s99_desktop_img_height ?>" id="s99_desktop_img_height" type="text" class="" >
                 <label for="s99_desktop_img_height"><?php _e( 'Desktop - Image Height', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -1496,7 +1500,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Desktop - Image Width', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s99[s99_desktop_img_width]" value="<?php echo $s99_desktop_img_width ?>" id="s99_desktop_img_width" type="text" class="" >
+                <input name="ht_ctc_s99[s99_desktop_img_width]" value="<?= $s99_desktop_img_width ?>" id="s99_desktop_img_width" type="text" class="" >
                 <label for="s99_desktop_img_width"><?php _e( 'Desktop - Image Width', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -1507,7 +1511,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Mobile - Image Height', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s99[s99_mobile_img_height]" value="<?php echo $s99_mobile_img_height ?>" id="s99_mobile_img_height" type="text" class="" >
+                <input name="ht_ctc_s99[s99_mobile_img_height]" value="<?= $s99_mobile_img_height ?>" id="s99_mobile_img_height" type="text" class="" >
                 <label for="s99_mobile_img_height"><?php _e( 'Mobile - Image Height', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -1518,7 +1522,7 @@ class HT_CTC_Admin_Customize_Styles {
                 <p><?php _e( 'Mobile - Image Width', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="ht_ctc_s99[s99_mobile_img_width]" value="<?php echo $s99_mobile_img_width ?>" id="s99_mobile_img_width" type="text" class="" >
+                <input name="ht_ctc_s99[s99_mobile_img_width]" value="<?= $s99_mobile_img_width ?>" id="s99_mobile_img_width" type="text" class="" >
                 <label for="s99_mobile_img_width"><?php _e( 'Mobile - Image Width', 'click-to-chat-for-whatsapp' ); ?></label>
             </div>
         </div>
@@ -1602,7 +1606,6 @@ class HT_CTC_Admin_Customize_Styles {
 
             }
         }
-
 
         return $new_input;
     }

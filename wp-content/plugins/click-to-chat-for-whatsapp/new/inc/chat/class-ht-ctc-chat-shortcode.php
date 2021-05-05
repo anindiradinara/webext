@@ -173,11 +173,6 @@ class HT_CTC_Chat_Shortcode {
             $css .= 'display:none;';
         }
 
-        $webandapi = 'wa';
-        if ( isset( $options['webandapi'] ) ) {
-            $webandapi = 'webapi';
-        }
-
         $return_type = "chat";
 
         $style = $a["style"];
@@ -195,9 +190,6 @@ class HT_CTC_Chat_Shortcode {
         $class_names = "ht-ctc-sc ht-ctc-sc-chat sc-style-$style";
 
         // analytics
-        $ht_ctc_os['is_ga_enable'] = 'yes';
-        $ht_ctc_os['is_fb_pixel'] = 'yes';
-        $ht_ctc_os['ga_ads'] = 'no';
         $ht_ctc_os['data-attributes'] = '';
         
         // Hooks
@@ -210,13 +202,13 @@ class HT_CTC_Chat_Shortcode {
         $sc_path = plugin_dir_path( HT_CTC_PLUGIN_FILE ) . 'new/inc/styles-shortcode/sc-style-' . $style. '.php';
 
         if ( is_file( $sc_path ) ) {
-            $o .= '<div data-webandapi="'.$webandapi.'" data-number="'.$number.'" data-pre_filled="'.$pre_filled.'" data-return_type="'.$return_type.'" data-style="'.$style.'" data-is_ga_enable="'.$ht_ctc_os['is_ga_enable'].'" data-is_fb_pixel="'.$ht_ctc_os['is_fb_pixel'].'" data-ga_ads="'.$ht_ctc_os['ga_ads'].'" style="display: inline; cursor: pointer; z-index: 99999999; '.$css.'" class="'.$class_names.' ht-ctc-inline">';
+            $o .= '<div data-number="'.$number.'" data-pre_filled="'.$pre_filled.'" data-style="'.$style.'" style="display: inline; cursor: pointer; z-index: 99999999; '.$css.'" class="'.$class_names.' ht-ctc-inline">';
             include $sc_path;
             $o .= '</div>';
         } else {
             // if style is not in the list.. 
             $img_link = plugins_url("./new/inc/assets/img/whatsapp-logo.svg", HT_CTC_PLUGIN_FILE );
-            $o .= '<div data-webandapi="'.$webandapi.'" data-number="'.$number.'" data-pre_filled="'.$pre_filled.'" data-return_type="'.$return_type.'" data-is_ga_enable="'.$ht_ctc_os['is_ga_enable'].'" data-is_fb_pixel="'.$ht_ctc_os['is_fb_pixel'].'" data-ga_ads="'.$ht_ctc_os['ga_ads'].'" style="display: inline; cursor: pointer; z-index: 99999999; '.$css.'" class="'.$class_names.' ht-ctc-inline">';
+            $o .= '<div data-number="'.$number.'" data-pre_filled="'.$pre_filled.'" style="display: inline; cursor: pointer; z-index: 99999999; '.$css.'" class="'.$class_names.' ht-ctc-inline">';
             $o .= '<img class="img-icon-sc sc_item pointer style-3-sc" src="'.$img_link.'" alt="'.$call_to_action.'" style="height: 50px; '.$css.' " >';
             $o .= '</div>';
         }

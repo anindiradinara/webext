@@ -45,20 +45,20 @@ $s4_chip_img_css ="margin:$s4_margin;order:$s4_order;height:$s4_img_size;width:$
 $ht_ctc_svg_css = "pointer-events:none; display: block; height:$s4_img_size; width:$s4_img_size;";
 ?>
 
-<div class="chip ctc-analytics" style="<?php echo $s4_chip_css ?>">
+<div class="chip ctc-analytics" style="<?= $s4_chip_css ?>">
     <?php
     if ( '' == $s4_img_url ) {
         include_once HT_CTC_PLUGIN_DIR .'new/inc/assets/img/ht-ctc-svg-images.php';
         $type = "$type-s4";
         ?>
-        <span style="<?php echo $s4_chip_svg_css ?>"><?php echo ht_ctc_style_3_svg( $s4_img_size, $type, $ht_ctc_svg_css ); ?></span>
+        <span style="<?= $s4_chip_svg_css ?>"><?= ht_ctc_style_3_svg( $s4_img_size, $type, $ht_ctc_svg_css ); ?></span>
         <?php
     } else {
         // if user changed the image
         ?>
-        <img style="<?php echo $s4_chip_img_css ?>" src="<?php echo $s4_img_url ?>" alt="<?php echo $call_to_action ?>">
+        <img style="<?= $s4_chip_img_css ?>" src="<?= $s4_img_url ?>" alt="<?= $call_to_action ?>">
         <?php
     }
     ?>
-    <span class="ctc_cta"><?php echo $call_to_action ?></span>
+    <span class="ctc_cta"><?= $call_to_action ?></span>
 </div>

@@ -29,9 +29,9 @@ if ( isset( $s1_options['s1_m_fullwidth'] ) ) {
   $s1_fullwidth_css = "@media(max-width:1201px){.ht-ctc.style-1{left:unset !important;right:0px !important;}.ht-ctc.style-1,.ht-ctc .s1_btn{width:100%;}}";
 
 ?>
-<style id="ht-ctc-s1"><?php echo $s1_fullwidth_css ?></style>
+<style id="ht-ctc-s1"><?= $s1_fullwidth_css ?></style>
 <?php
 }
 
 ?>
-<button <?php echo $s1_style; ?> class="ctc-analytics s1_btn ctc_cta"><?php echo $call_to_action ?></button>
+<button <?= $s1_style; ?> class="ctc-analytics s1_btn ctc_cta"><?= $call_to_action ?></button>

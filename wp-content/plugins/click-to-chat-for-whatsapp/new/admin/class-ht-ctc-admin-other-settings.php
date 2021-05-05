@@ -56,10 +56,8 @@ class HT_CTC_Admin_Other_Settings {
             <!-- new row - After settings page  -->
             <div class="row">
                 
-                        <!-- after settings page -->
-                        <?php 
-                        // include_once HT_CTC_PLUGIN_DIR .'new/admin/admin_commons/admin-after-settings-page.php'; 
-                        ?>
+                <!-- after settings page -->
+                <?php // include_once HT_CTC_PLUGIN_DIR .'new/admin/admin_commons/admin-after-settings-page.php'; ?>
                     
             </div>
 
@@ -108,7 +106,7 @@ class HT_CTC_Admin_Other_Settings {
             ?>
             <p>
                 <label>
-                    <input name="<?php echo $dbrow ?>[google_analytics]" type="checkbox" value="1" <?php checked( $options['google_analytics'], 1 ); ?> id="google_analytics" />
+                    <input name="<?= $dbrow; ?>[google_analytics]" type="checkbox" value="1" <?php checked( $options['google_analytics'], 1 ); ?> id="google_analytics" />
                     <span><?php _e( 'Google Analytics', 'click-to-chat-for-whatsapp' ); ?></span>
                 </label>
             </p>
@@ -117,13 +115,37 @@ class HT_CTC_Admin_Other_Settings {
         ?>
         <p>
             <label>
-                <input name="<?php echo $dbrow ?>[google_analytics]" type="checkbox" value="1" id="google_analytics" />
+                <input name="<?= $dbrow; ?>[google_analytics]" type="checkbox" value="1" id="google_analytics" />
                 <span><?php _e( 'Google Analytics', 'click-to-chat-for-whatsapp' ); ?></span>
             </label>
         </p>
         <?php
         }
+
+        // ga4
+        if ( isset( $options['ga4'] ) ) {
+            ?>
+            <p class="ctc_ga4" style="margin-left:40px;">
+                <label>
+                    <input name="<?= $dbrow; ?>[ga4]" type="checkbox" value="1" <?php checked( $options['ga4'], 1 ); ?> id="ga4" />
+                    <span><?php _e( 'If Google Analytics 4 is installed', 'click-to-chat-for-whatsapp' ); ?></span>
+                </label>
+            </p>
+            <?php
+        } else {
+            ?>
+            <p class="ctc_ga4" style="margin-left:40px;">
+                <label>
+                    <input name="<?= $dbrow; ?>[ga4]" type="checkbox" value="1" id="ga4" />
+                    <span><?php _e( 'If Google Analytics 4 is installed', 'click-to-chat-for-whatsapp' ); ?></span>
+                </label>
+            </p>
+            <?php
+            }
         ?>
+        <!-- todo link ga4 -->
+        <!-- <p class="description ctc_ga4" style="margin-left:40px;"> <a target="_blank" href="https://holithemes.com/plugins/click-to-chat/google-analytics-4/"><?php _e( 'Google Analytics 4', 'click-to-chat-for-whatsapp' ); ?></a> </p> -->
+
         <p class="description"><?php _e( 'If Google Analytics installed creates an Event there', 'click-to-chat-for-whatsapp' ); ?> - <a target="_blank" href="https://holithemes.com/plugins/click-to-chat/google-analytics/"><?php _e( 'more info', 'click-to-chat-for-whatsapp' ); ?></a> </p>
         <br>
 
@@ -135,7 +157,7 @@ class HT_CTC_Admin_Other_Settings {
             ?>
             <p>
                 <label>
-                    <input name="<?php echo $dbrow ?>[fb_pixel]" type="checkbox" value="1" <?php checked( $options['fb_pixel'], 1 ); ?> id="fb_pixel" />
+                    <input name="<?= $dbrow; ?>[fb_pixel]" type="checkbox" value="1" <?php checked( $options['fb_pixel'], 1 ); ?> id="fb_pixel" />
                     <span><?php _e( 'Facebook Pixel', 'click-to-chat-for-whatsapp' ); ?></span>
                 </label>
             </p>
@@ -144,7 +166,7 @@ class HT_CTC_Admin_Other_Settings {
         ?>
         <p>
             <label>
-                <input name="<?php echo $dbrow ?>[fb_pixel]" type="checkbox" value="1" id="fb_pixel" />
+                <input name="<?= $dbrow; ?>[fb_pixel]" type="checkbox" value="1" id="fb_pixel" />
                 <span><?php _e( 'Facebook Pixel', 'click-to-chat-for-whatsapp' ); ?></span>
             </label>
         </p>
@@ -161,7 +183,7 @@ class HT_CTC_Admin_Other_Settings {
             ?>
             <p>
                 <label>
-                    <input name="<?php echo $dbrow ?>[ga_ads]" type="checkbox" value="1" <?php checked( $options['ga_ads'], 1 ); ?> id="ga_ads" />
+                    <input name="<?= $dbrow; ?>[ga_ads]" type="checkbox" value="1" <?php checked( $options['ga_ads'], 1 ); ?> id="ga_ads" />
                     <span><?php _e( 'Google Ads Conversion', 'click-to-chat-for-whatsapp' ); ?></span>
                 </label>
             </p>
@@ -170,7 +192,7 @@ class HT_CTC_Admin_Other_Settings {
         ?>
         <p>
             <label>
-                <input name="<?php echo $dbrow ?>[ga_ads]" type="checkbox" value="1" id="ga_ads" />
+                <input name="<?= $dbrow; ?>[ga_ads]" type="checkbox" value="1" id="ga_ads" />
                 <span><?php _e( 'Google Ads Conversion', 'click-to-chat-for-whatsapp' ); ?></span>
             </label>
         </p>
@@ -212,7 +234,7 @@ class HT_CTC_Admin_Other_Settings {
         <!-- Webhook URL -->
         <div class="row">
             <div class="input-field col s12">
-                <input name="<?php echo $dbrow ?>[hook_url]" value="<?php echo $hook_url ?>" id="hook_url" type="text" class="input-margin">
+                <input name="<?= $dbrow; ?>[hook_url]" value="<?= $hook_url ?>" id="hook_url" type="text" class="input-margin">
                 <label for="hook_url"><?php _e( 'Webhook URL', 'click-to-chat-for-whatsapp' ); ?></label>
                 <p class="description"><?php _e( 'Calls this webhook url after user clicks on WhatsApp Icon/Image', 'click-to-chat-for-whatsapp' ); ?> - <a target="_blank" href="https://holithemes.com/plugins/click-to-chat/webhooks/"><?php _e( 'more info', 'click-to-chat-for-whatsapp' ); ?></a> </p>
             </div>
@@ -243,11 +265,11 @@ class HT_CTC_Admin_Other_Settings {
                         ?>
                         <div class="additional-value row" style="margin-bottom: 15px;">
                             <div class="col s3">
-                                <p class="description">Value<?php echo $i+1; ?></p>
+                                <p class="description">Value<?= $i+1; ?></p>
                             </div>
                             <div class="col s9 m6">
                                 <p style="display: flex;">
-                                    <input name="<?php echo $dbrow; ?>" value="<?php echo $num; ?>" type="text"/>
+                                    <input name="<?= $dbrow; ?>" value="<?= $num; ?>" type="text"/>
                                     <span style="color:lightgrey; cursor:pointer;" class="hook_remove_value dashicons dashicons-no-alt"></span>
                                 </p>
                             </div>
@@ -322,7 +344,7 @@ class HT_CTC_Admin_Other_Settings {
                 
                 foreach ( $an_list as $value ) {
                 ?>
-                <option value="<?php echo $value ?>" <?php echo $an_type == $value ? 'SELECTED' : ''; ?> ><?php echo $value ?></option>
+                <option value="<?= $value ?>" <?= $an_type == $value ? 'SELECTED' : ''; ?> ><?= $value ?></option>
                 <?php
                 }
 
@@ -338,7 +360,7 @@ class HT_CTC_Admin_Other_Settings {
                 <p><?php _e( 'Animation Delay', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="<?php echo $dbrow ?>[an_delay]" value="<?php echo $an_delay ?>" id="an_delay" type="number" min="0" class="" >
+                <input name="<?= $dbrow; ?>[an_delay]" value="<?= $an_delay ?>" id="an_delay" type="number" min="0" class="" >
                 <label for="an_delay"><?php _e( 'Animation Delay', 'click-to-chat-for-whatsapp' ); ?></label>
                 <p class="description"><?php _e( 'E.g. Add 1 for 1 second delay', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
@@ -350,7 +372,7 @@ class HT_CTC_Admin_Other_Settings {
                 <p><?php _e( 'Animation Iteration', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
             <div class="input-field col s6">
-                <input name="<?php echo $dbrow ?>[an_itr]" value="<?php echo $an_itr ?>" id="an_itr" type="number" min="1" class="" >
+                <input name="<?= $dbrow; ?>[an_itr]" value="<?= $an_itr ?>" id="an_itr" type="number" min="1" class="" >
                 <label for="an_itr"><?php _e( 'Animation Iteration', 'click-to-chat-for-whatsapp' ); ?></label>
                 <p class="description"><?php _e( 'E.g. Add 2 to repeat animation 2 times', 'click-to-chat-for-whatsapp' ); ?></p>
             </div>
@@ -370,7 +392,7 @@ class HT_CTC_Admin_Other_Settings {
                 
                 foreach ( $show_effect_list as $value ) {
                 ?>
-                <option value="<?php echo $value ?>" <?php echo $show_effect == $value ? 'SELECTED' : ''; ?> ><?php echo $value ?></option>
+                <option value="<?= $value ?>" <?= $show_effect == $value ? 'SELECTED' : ''; ?> ><?= $value ?></option>
                 <?php
                 }
 
@@ -410,7 +432,7 @@ class HT_CTC_Admin_Other_Settings {
             ?>
             <p id="styles_issue">
                 <label>
-                    <input name="<?php echo $dbrow ?>[select_styles_issue]" type="checkbox" value="1" <?php checked( $options['select_styles_issue'], 1 ); ?> id="select_styles_issue" />
+                    <input name="<?= $dbrow; ?>[select_styles_issue]" type="checkbox" value="1" <?php checked( $options['select_styles_issue'], 1 ); ?> id="select_styles_issue" />
                     <!-- <span>Style for device is not as expected(due to cache)</span> -->
                     <span><?php _e( 'Check this only, If styles for mobile, desktop not selected as expected(due to cache)', 'click-to-chat-for-whatsapp' ); ?></span>
                 </label>
@@ -420,7 +442,7 @@ class HT_CTC_Admin_Other_Settings {
             ?>
             <p id="styles_issue">
                 <label>
-                    <input name="<?php echo $dbrow ?>[select_styles_issue]" type="checkbox" value="1" id="select_styles_issue" />
+                    <input name="<?= $dbrow; ?>[select_styles_issue]" type="checkbox" value="1" id="select_styles_issue" />
                     <span><?php _e( 'Check this only, If styles for mobile, desktop not selected as expected(due to cache)', 'click-to-chat-for-whatsapp' ); ?></span>
                 </label>
             </p>
@@ -445,7 +467,7 @@ class HT_CTC_Admin_Other_Settings {
 
         <!-- enable group, share features -->
         <ul class="collapsible" data-collapsible="accordion" id="ht_ctc_enable_share_group">
-        <li <?php echo $li_active_gr_sh; ?>>
+        <li <?= $li_active_gr_sh; ?>>
         <div class="collapsible-header"><?php _e( 'Group, Share features', 'click-to-chat-for-whatsapp' ); ?></div>
         <div class="collapsible-body">
         
@@ -459,7 +481,7 @@ class HT_CTC_Admin_Other_Settings {
                 <input name="ht_ctc_othersettings[enable_group]" type="checkbox" value="1" <?php checked( $options['enable_group'], 1 ); ?> id="enable_group" />
                 <span><?php _e( 'Enable Group Features', 'click-to-chat-for-whatsapp' ); ?></span>
             </label>
-            <p class="description"> <?php _e( 'Adds WhatsApp Icon for Group', 'click-to-chat-for-whatsapp' ); ?> - <a href="<?php echo admin_url( 'admin.php?page=click-to-chat-group-feature' ); ?>"><?php _e( 'Group Settings page', 'click-to-chat-for-whatsapp' ); ?></a> </p>
+            <p class="description"> <?php _e( 'Adds WhatsApp Icon for Group', 'click-to-chat-for-whatsapp' ); ?> - <a href="<?= admin_url( 'admin.php?page=click-to-chat-group-feature' ); ?>"><?php _e( 'Group Settings page', 'click-to-chat-for-whatsapp' ); ?></a> </p>
         </p>
         <?php
         } else {
@@ -486,7 +508,7 @@ class HT_CTC_Admin_Other_Settings {
                 <input name="ht_ctc_othersettings[enable_share]" type="checkbox" value="1" <?php checked( $options['enable_share'], 1 ); ?> id="enable_share" />
                 <span><?php _e( 'Enable Share Features', 'click-to-chat-for-whatsapp' ); ?></span>
             </label>
-            <p class="description"> <?php _e( 'Adds WhatsApp Icon for Share', 'click-to-chat-for-whatsapp' ); ?> - <a href="<?php echo admin_url( 'admin.php?page=click-to-chat-share-feature' ); ?>"><?php _e( 'Share Settings page', 'click-to-chat-for-whatsapp' ); ?></a> </p>
+            <p class="description"> <?php _e( 'Adds WhatsApp Icon for Share', 'click-to-chat-for-whatsapp' ); ?> - <a href="<?= admin_url( 'admin.php?page=click-to-chat-share-feature' ); ?>"><?php _e( 'Share Settings page', 'click-to-chat-for-whatsapp' ); ?></a> </p>
         </p>
         <?php
         } else {
@@ -504,7 +526,7 @@ class HT_CTC_Admin_Other_Settings {
         <br>
         
         <!-- chat -->
-        <p class="description"><?php _e( "Chat settings are enabled by default. If like to hide chat on all pages select", 'click-to-chat-for-whatsapp' ); ?> <a target="_blank" href="<?php echo admin_url( 'admin.php?page=click-to-chat#showhide_settings' ); ?>"><?php _e( 'show on selected pages', 'click-to-chat-for-whatsapp' ); ?></a> - <a target="_blank" href="https://holithemes.com/plugins/click-to-chat/enable-chat"><?php _e( 'more info', 'click-to-chat-for-whatsapp' ); ?></a> </p>
+        <p class="description"><?php _e( "Chat settings are enabled by default. If like to hide chat on all pages select", 'click-to-chat-for-whatsapp' ); ?> <a target="_blank" href="<?= admin_url( 'admin.php?page=click-to-chat#showhide_settings' ); ?>"><?php _e( 'show on selected pages', 'click-to-chat-for-whatsapp' ); ?></a> - <a target="_blank" href="https://holithemes.com/plugins/click-to-chat/enable-chat"><?php _e( 'more info', 'click-to-chat-for-whatsapp' ); ?></a> </p>
         <br>
 
 
@@ -529,7 +551,7 @@ class HT_CTC_Admin_Other_Settings {
                 ?>
                 <p id="amp_compatibility">
                     <label>
-                        <input name="<?php echo $dbrow ?>[amp]" type="checkbox" value="1" <?php checked( $options['amp'], 1 ); ?> id="amp" />
+                        <input name="<?= $dbrow; ?>[amp]" type="checkbox" value="1" <?php checked( $options['amp'], 1 ); ?> id="amp" />
                         <span><?php _e( 'AMP Compatibility', 'click-to-chat-for-whatsapp' ); ?></span>
                     </label>
                 </p>
@@ -538,7 +560,7 @@ class HT_CTC_Admin_Other_Settings {
                 ?>
                 <p id="amp_compatibility">
                     <label>
-                        <input name="<?php echo $dbrow ?>[amp]" type="checkbox" value="1" id="amp" />
+                        <input name="<?= $dbrow; ?>[amp]" type="checkbox" value="1" id="amp" />
                         <span><?php _e( 'AMP Compatibility', 'click-to-chat-for-whatsapp' ); ?></span>
                     </label>
                 </p>
@@ -643,6 +665,8 @@ class HT_CTC_Admin_Other_Settings {
             }
 
         }
+        
+        do_action('ht_ctc_ah_admin_after_sanitize' );
 
         return $new_input;
     }

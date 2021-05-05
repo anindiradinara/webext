@@ -71,11 +71,11 @@ echo $o;
 
 <div class="ht-ctc-style-5 ctc-analytics" style="cursor: pointer; z-index: 99999999;" >
 
-    <div class="s5_cta" style="<?php echo $s5_cta_style ?>"   >
-        <img class="s5_img ctc-analytics" src="<?php echo $s5_img ?>" style="<?php echo $s5_img_style ?>" alt="<?php echo $call_to_action ?>">
-        <div class="s5_content ctc-analytics <?php echo $s5_img_position ?>" style="<?php echo $s5_content_style ?>" >
-            <span class="heading ctc-analytics ctc_cta" style="color: <?php echo $s5_line_1_color ?>"><?php echo $s5_line_1 ?></span>
-            <span class="description ctc-analytics" style="color: <?php echo $s5_line_2_color ?>"><?php echo $s5_line_2 ?></span>
+    <div class="s5_cta" style="<?= $s5_cta_style ?>"   >
+        <img class="s5_img ctc-analytics" src="<?= $s5_img ?>" style="<?= $s5_img_style ?>" alt="<?= $call_to_action ?>">
+        <div class="s5_content ctc-analytics <?= $s5_img_position ?>" style="<?= $s5_content_style ?>" >
+            <span class="heading ctc-analytics ctc_cta" style="color: <?= $s5_line_1_color ?>"><?= $s5_line_1 ?></span>
+            <span class="description ctc-analytics" style="color: <?= $s5_line_2_color ?>"><?= $s5_line_2 ?></span>
         </div>
     </div>
 

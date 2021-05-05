@@ -71,20 +71,20 @@ class HT_CTC_MetaBox {
 		<!-- number -->
 		<div class="row">
 			<label for="number"><?php _e( 'WhatsApp Number', 'click-to-chat-for-whatsapp' ); ?></label><br>
-			<input name="ht_ctc_pagelevel[number]" value="<?php echo $number ?>" id="number" type="text" placeholder="<?php echo $ph_number ?>">
+			<input name="ht_ctc_pagelevel[number]" value="<?= $number ?>" id="number" type="text" placeholder="<?= $ph_number ?>">
 			<p class="description"><a style="text-decoration: none" target="_blank" href="https://holithemes.com/plugins/click-to-chat/whatsapp-number/?utm_source=ctc&utm_medium=meta&utm_campaign=chat">WhatsApp Number</a> with country code</p>
 		</div>
 
 		<!-- call to action -->
 		<div class="row">
 			<label for="call_to_action"><?php _e( 'Call to Action', 'click-to-chat-for-whatsapp' ); ?></label><br>
-			<input name="ht_ctc_pagelevel[call_to_action]" value="<?php echo $call_to_action ?>" id="call_to_action" type="text" placeholder="<?php echo $ph_call_to_action ?>">
+			<input name="ht_ctc_pagelevel[call_to_action]" value="<?= $call_to_action ?>" id="call_to_action" type="text" placeholder="<?= $ph_call_to_action ?>">
 		</div>
 
 		<!-- pre-filled message -->
 		<div class="row">
 			<label for="pre_filled"><?php _e( 'Pre-filled Message', 'click-to-chat-for-whatsapp' ); ?></label><br>
-			<textarea style="min-height: 74px; min-width: 72%" placeholder="<?php echo $ph_pre_filled ?>" name="ht_ctc_pagelevel[pre_filled]" id="pre_filled" class="materialize-textarea input-margin"><?php echo $pre_filled ?></textarea>
+			<textarea style="min-height: 74px; min-width: 72%" placeholder="<?= $ph_pre_filled ?>" name="ht_ctc_pagelevel[pre_filled]" id="pre_filled" class="materialize-textarea input-margin"><?= $pre_filled ?></textarea>
 		</div>
 
 		<!-- show/hide -->
@@ -122,7 +122,7 @@ class HT_CTC_MetaBox {
 			<!-- group id -->
 			<div class="row">
 				<label for="group_id">Group ID</label><br>
-				<input name="ht_ctc_pagelevel[group_id]" value="<?php echo $group_id ?>" id="group_id" type="text">
+				<input name="ht_ctc_pagelevel[group_id]" value="<?= $group_id ?>" id="group_id" type="text">
 				<!-- <p class="description"><a style="text-decoration: none" target="_blank" href="https://holithemes.com/plugins/click-to-chat/whatsapp-number/">WhatsApp Number</a> with country code</p> -->
 			</div>
 			<?php

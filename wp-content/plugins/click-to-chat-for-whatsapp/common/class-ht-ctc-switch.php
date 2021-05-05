@@ -93,6 +93,12 @@ class HT_CTC_Swift {
 		if ( 'yes' == HT_CTC_IS_NEW ) {
 			// new interface
 
+			// register hooks
+			include_once HT_CTC_PLUGIN_DIR .'new/inc/class-ht-ctc-register.php';
+			register_activation_hook( HT_CTC_PLUGIN_FILE, array( 'HT_CTC_Register', 'activate' )  );
+			register_deactivation_hook( HT_CTC_PLUGIN_FILE, array( 'HT_CTC_Register', 'deactivate' )  );
+			register_uninstall_hook( HT_CTC_PLUGIN_FILE, array( 'HT_CTC_Register', 'uninstall' ) );
+
 			// include main file - prev
 			include_once HT_CTC_PLUGIN_DIR .'new/class-ht-ctc.php';
 

@@ -23,15 +23,15 @@ class HT_CTC_Values {
      * 
      * @var array get_options ht_ctc_main_options
      */
-    public $ctc_chat;
+    public $chat;
 
     public function __construct() {
-        $this->ctc_chat_fn();
+        $this->chat_fn();
     }
 
     // main options
-    public function ctc_chat_fn() {
-        $this->ctc_chat =  get_option('ht_ctc_chat_options');
+    public function chat_fn() {
+        $this->chat =  get_option('ht_ctc_chat_options');
     }
 
 

@@ -18,36 +18,42 @@ if ( ! class_exists( 'HT_CTC_Admin_Others' ) ) :
 class HT_CTC_Admin_Others {
 
     public function __construct() {
-        $this->admin_notice();
+        $this->admin_hooks();
     }
 
     function admin_hooks() {
-        // clear cache
-        add_action( 'current_screen', array( $this, 'add_clear_cache') );
-        // $this->add_clear_cache();
-        // hooks related to admin notices
+        
+        // admin notices
         $this->admin_notice();
-    }
 
-    function add_clear_cache() {
+        // ht_ctc_ah_admin
+        add_action( 'ht_ctc_ah_admin_after_sanitize', array( $this, 'after_sanitize') );
+
 
         // clear cache
-        add_action( 'update_option_ht_ctc_chat_options', array( $this, 'clear_cache') );
-        add_action( 'update_option_ht_ctc_othersettings', array( $this, 'clear_cache') );
-        add_action( 'update_option_ht_ctc_group', array( $this, 'clear_cache') );
-        add_action( 'update_option_ht_ctc_share', array( $this, 'clear_cache') );
-        //customize styles
-        add_action( 'update_option_ht_ctc_s1', array( $this, 'clear_cache') );
-        add_action( 'update_option_ht_ctc_s2', array( $this, 'clear_cache') );
-        add_action( 'update_option_ht_ctc_s3', array( $this, 'clear_cache') );
-        add_action( 'update_option_ht_ctc_s4', array( $this, 'clear_cache') );
-        add_action( 'update_option_ht_ctc_s5', array( $this, 'clear_cache') );
-        add_action( 'update_option_ht_ctc_s7', array( $this, 'clear_cache') );
-        add_action( 'update_option_ht_ctc_s7_1', array( $this, 'clear_cache') );
-        add_action( 'update_option_ht_ctc_s8', array( $this, 'clear_cache') );
-        add_action( 'update_option_ht_ctc_s99', array( $this, 'clear_cache') );
+        add_action( 'update_option_ht_ctc_admin_pages', array( $this, 'clear_cache') );
+        // clear cache - customize styles
+        add_action( 'update_option_ht_ctc_cs_options', array( $this, 'clear_cache') );
 
     }
+
+    // runs on all plugin admin pages (expect customize styles - in cs multiple register options are there)
+        // used to clear cache
+    function after_sanitize() {
+
+        $ht_ctc_admin_pages = get_option( 'ht_ctc_admin_pages');
+
+        $count = ( isset( $ht_ctc_admin_pages['count']) ) ? esc_attr( $ht_ctc_admin_pages['count'] ) : '1';
+        // to make this settings will always update to work for clear cache
+        $count++;
+
+        $values = array(
+            'count' => $count,
+        );
+
+        update_option( 'ht_ctc_admin_pages', $values );
+    }
+
 
     function admin_notice() {
 
@@ -91,7 +97,7 @@ class HT_CTC_Admin_Others {
     function ifnumberblank() {
         ?>
         <div class="notice notice-info is-dismissible">
-            <p><?php _e( 'Click to Chat is almost ready', 'click-to-chat-for-whatsapp' ); ?>. <a href="<?php echo admin_url('admin.php?page=click-to-chat');?>"><?php _e( 'Add WhatsApp Number', 'click-to-chat-for-whatsapp' ); ?></a> <?php _e( 'and let visitors chat', 'click-to-chat-for-whatsapp' ); ?>.</p>
+            <p><?php _e( 'Click to Chat is almost ready', 'click-to-chat-for-whatsapp' ); ?>. <a href="<?= admin_url('admin.php?page=click-to-chat'); ?>"><?php _e( 'Add WhatsApp Number', 'click-to-chat-for-whatsapp' ); ?></a> <?php _e( 'and let visitors chat', 'click-to-chat-for-whatsapp' ); ?>.</p>
             <!-- <p>Click to Chat is almost ready. <a href="<?php // echo admin_url('admin.php?page=click-to-chat');?>">Add WhatsApp Number</a> to display the chat options and let visitors chat.</p> -->
             <!-- <a href="?dismis">Dismiss</a> -->
         </div>
@@ -101,7 +107,7 @@ class HT_CTC_Admin_Others {
     function ifgroupblank() {
         ?>
         <div class="notice notice-info is-dismissible">
-            <p><?php _e( 'Click to Chat is almost ready', 'click-to-chat-for-whatsapp' ); ?>. <a href="<?php echo admin_url('admin.php?page=click-to-chat-group-feature');?>"><?php _e( 'Add WhatsApp Group ID', 'click-to-chat-for-whatsapp' ); ?></a> <?php _e( 'to let visitors join in your WhatsApp Group', 'click-to-chat-for-whatsapp' ); ?>.</p>
+            <p><?php _e( 'Click to Chat is almost ready', 'click-to-chat-for-whatsapp' ); ?>. <a href="<?= admin_url('admin.php?page=click-to-chat-group-feature'); ?>"><?php _e( 'Add WhatsApp Group ID', 'click-to-chat-for-whatsapp' ); ?></a> <?php _e( 'to let visitors join in your WhatsApp Group', 'click-to-chat-for-whatsapp' ); ?>.</p>
             <!-- <a href="?dismis">Dismiss</a> -->
         </div>
         <?php
@@ -110,7 +116,7 @@ class HT_CTC_Admin_Others {
     function ifshareblank() {
         ?>
         <div class="notice notice-info is-dismissible">
-            <p><?php _e( 'Click to Chat is almost ready', 'click-to-chat-for-whatsapp' ); ?>. <a href="<?php echo admin_url('admin.php?page=click-to-chat-share-feature');?>"><?php _e( 'Add Share Text', 'click-to-chat-for-whatsapp' ); ?></a> <?php _e( 'to let vistiors Share your Webpages', 'click-to-chat-for-whatsapp' ); ?>.</p>
+            <p><?php _e( 'Click to Chat is almost ready', 'click-to-chat-for-whatsapp' ); ?>. <a href="<?= admin_url('admin.php?page=click-to-chat-share-feature'); ?>"><?php _e( 'Add Share Text', 'click-to-chat-for-whatsapp' ); ?></a> <?php _e( 'to let vistiors Share your Webpages', 'click-to-chat-for-whatsapp' ); ?>.</p>
             <!-- <a href="?dismis">Dismiss</a> -->
         </div>
         <?php

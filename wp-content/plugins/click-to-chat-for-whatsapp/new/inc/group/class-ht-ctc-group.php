@@ -124,20 +124,20 @@ class HT_CTC_Group {
         if ( is_file( $path ) ) {
             do_action('ht_ctc_ah_before_fixed_position');
             ?>
-            <div class="<?php echo $ht_ctc_group['class_names'] ?>" 
+            <div class="<?= $ht_ctc_group['class_names'] ?>" 
                 style="display: none;"
-                data-return_type="<?php echo $type ?>" 
-                data-group_id="<?php echo $ht_ctc_group['group_id'] ?>" 
-                data-is_ga_enable="<?php echo $ht_ctc_os['is_ga_enable'] ?>" 
-                data-is_fb_pixel="<?php echo $ht_ctc_os['is_fb_pixel'] ?>" 
-                data-ga_ads="<?php echo $ht_ctc_os['ga_ads'] ?>" 
-                data-display_mobile="<?php echo $ht_ctc_group['display_mobile'] ?>" 
-                data-display_desktop="<?php echo $ht_ctc_group['display_desktop'] ?>" 
-                data-css="<?php echo $ht_ctc_group['css'] ?>" 
-                data-position="<?php echo $ht_ctc_group['position'] ?>" 
-                data-position_mobile="<?php echo $ht_ctc_group['position_mobile'] ?>" 
-                data-show_effect="<?php echo $ht_ctc_os['show_effect'] ?>" 
-                <?php echo $ht_ctc_os['data-attributes'] ?>  
+                data-return_type="<?= $type ?>" 
+                data-group_id="<?= $ht_ctc_group['group_id'] ?>" 
+                data-is_ga_enable="<?= $ht_ctc_os['is_ga_enable'] ?>" 
+                data-is_fb_pixel="<?= $ht_ctc_os['is_fb_pixel'] ?>" 
+                data-ga_ads="<?= $ht_ctc_os['ga_ads'] ?>" 
+                data-display_mobile="<?= $ht_ctc_group['display_mobile'] ?>" 
+                data-display_desktop="<?= $ht_ctc_group['display_desktop'] ?>" 
+                data-css="<?= $ht_ctc_group['css'] ?>" 
+                data-position="<?= $ht_ctc_group['position'] ?>" 
+                data-position_mobile="<?= $ht_ctc_group['position_mobile'] ?>" 
+                data-show_effect="<?= $ht_ctc_os['show_effect'] ?>" 
+                <?= $ht_ctc_os['data-attributes'] ?>  
                 >
                 <?php 
                 if ( isset( $othersettings['select_styles_issue'] ) ) {

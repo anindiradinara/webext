@@ -102,6 +102,7 @@ class HT_CTC_Hooks {
 
         $ht_ctc_os['show_effect'] = (isset($othersettings['show_effect'])) ? esc_attr($othersettings['show_effect']) : '';
         $ht_ctc_os['is_ga_enable'] = (isset( $othersettings['google_analytics'] )) ? 'yes' : 'no';
+        $ht_ctc_os['ga4'] = (isset( $othersettings['ga4'] )) ? 'yes' : 'no';
         $ht_ctc_os['is_fb_pixel'] = (isset( $othersettings['fb_pixel'] )) ? 'yes' : 'no';
         $ht_ctc_os['ga_ads'] = (isset( $othersettings['ga_ads'] )) ? 'yes' : 'no';
 

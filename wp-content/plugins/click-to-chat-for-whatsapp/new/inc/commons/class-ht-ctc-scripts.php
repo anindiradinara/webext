@@ -27,7 +27,7 @@ class HT_CTC_Scripts {
 
         // js
         // $js = 'app.js';
-        $js = '331.app.js';
+        $js = '332.app.js';
         $group_js = 'group.js';
         $share_js = 'share.js';
 
@@ -37,7 +37,7 @@ class HT_CTC_Scripts {
             $share_js = 'dev/share.dev.js';
         }
 
-        do_action('ht_ctc_ah_scripts_start');
+        do_action('ht_ctc_ah_scripts_before');
 
         // app.js for all (chat)
         wp_enqueue_script( 'ht_ctc_app_js', plugins_url( "new/inc/assets/js/$js", HT_CTC_PLUGIN_FILE ), array ( 'jquery' ), HT_CTC_VERSION, $load_app_js_bottom );
@@ -53,7 +53,7 @@ class HT_CTC_Scripts {
             wp_enqueue_script( 'ht_ctc_share_js', plugins_url( "new/inc/assets/js/$share_js", HT_CTC_PLUGIN_FILE ), array ( 'jquery', 'ht_ctc_app_js' ), HT_CTC_VERSION, $load_app_js_bottom );
         }
 
-        do_action('ht_ctc_ah_scripts_end');
+        do_action('ht_ctc_ah_scripts_after');
 
     }
 

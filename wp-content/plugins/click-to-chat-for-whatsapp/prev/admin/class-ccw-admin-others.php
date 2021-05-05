@@ -35,7 +35,7 @@ class HT_CCW_Admin_Others {
     function ifnumberblank() {
         ?>
         <div class="notice notice-info is-dismissible">
-            <p>Click to Chat is almost ready. <a href="<?php echo admin_url('admin.php?page=click-to-chat');?>">Add WhatsApp Number</a> to let vistiors chat.</p>
+            <p>Click to Chat is almost ready. <a href="<?= admin_url('admin.php?page=click-to-chat');?>">Add WhatsApp Number</a> to let vistiors chat.</p>
             <!-- <a href="?dismis">Dismiss</a> -->
         </div>
         <?php

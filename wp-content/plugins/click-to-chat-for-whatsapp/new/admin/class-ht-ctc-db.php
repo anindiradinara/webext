@@ -61,7 +61,7 @@ class HT_CTC_DB {
         $this->ht_ctc_s7_1();
         $this->ht_ctc_s8();
         $this->ht_ctc_s99();
-        $this->ht_ctc_cs_options();
+        // $this->ht_ctc_cs_options();
         
         $this->ht_ctc_plugin_details();
         $this->ht_ctc_one_time();
@@ -159,6 +159,11 @@ class HT_CTC_DB {
             );
             $values = array_merge($values, $mobile_values);
         }
+
+        // for new installs. 
+        // if ( !isset ( $this->os['version'] ) ) {
+        //     $values['same_settings'] = '1';
+        // }
 
         $db_values = get_option( 'ht_ctc_chat_options', array() );
         $update_values = array_merge($values, $db_values);
@@ -671,18 +676,22 @@ class HT_CTC_DB {
      * name: ht_ctc_cs_options
      * 
      * customize styles
+     * 
+     * @uses clear cache way.. 
+     * @note dont update anything from here for not clear cache when plugin updates..
+     *  if need better to update using plugins_loaded at admin pages or so..
      */
-    public function ht_ctc_cs_options() {
+    // public function ht_ctc_cs_options() {
         
-        $values = array(
-            'hello' => 'world',
-        );
+    //     $values = array(
+    //         'hello' => 'world',
+    //     );
 
-        $db_values = get_option( 'ht_ctc_cs_options', array() );
-        $update_values = array_merge($values, $db_values);
-        update_option('ht_ctc_cs_options', $update_values);
+    //     $db_values = get_option( 'ht_ctc_cs_options', array() );
+    //     $update_values = array_merge($values, $db_values);
+    //     update_option('ht_ctc_cs_options', $update_values);
 
-    }
+    // }
 
 
     /**
