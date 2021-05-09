@@ -4,8 +4,7 @@ Plugin : Epeken-All-Kurir
 File Name : shipping.php
 writer : epeken.com
 */
-    class WC_Shipping_Tikijne extends WC_Shipping_Method
-	{	
+class WC_Shipping_Tikijne extends WC_Shipping_Method{	
 		public  $jneclass;
 		public  $shipping_cost;
  		public  $shipping_address;
@@ -288,6 +287,17 @@ writer : epeken.com
 					$this -> activate();
 		}
 
+		public function render_admin_notices(){
+		 $is_anteraja = in_array('anteraja/epeken-anteraja.php', apply_filters( 'active_plugins', get_option( 'active_plugins'))) || array_key_exists( 'anteraja/epeken-anteraja.php', maybe_unserialize( get_site_option( 'active_sitewide_plugins') ) );
+		 if(is_admin() && !$is_anteraja && !epeken_is_multi_vendor_mode()) {
+		   echo '<div class="notice notice-warning">
+                   <p><strong>Baru dari Epeken</strong>
+                    Tersedia plugin <strong>Anteraja</strong> yang dapat diinstal bersama dengan plugin Epeken All Kurir. 
+		    <a href="https://wordpress.org/plugins/anteraja" target="_blank">Unduh di sini</a> dan install segera. Gratis untuk pengguna Epeken All Kurir dengan licensi yang masih berlaku.
+                   </p></div>';	
+		 } 
+		}
+
 	 /**
  		* Initialise Gateway Settings Form Fields
 	 */
@@ -458,6 +468,7 @@ writer : epeken.com
 
    			// Our hooked in function - $fields is passed via the filter!
 		public function admin_options() {
+		  $this -> render_admin_notices();
  		?>
 			<h2>
   		  <?php 

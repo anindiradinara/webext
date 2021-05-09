@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 Plugin Name: Epeken All Kurir - Full Version
 Plugin URI: https://wordpress.org/plugins/epeken-all-kurir 
 Description: Calculated Shipping Plugin for some shipping companies (JNE, JTR, JNE Trucking, TIKI, POS, RPX, JET.CO.ID, WAHANA, SICEPAT, JMX, DAKOTA CARGO) in Indonesia. It comes with bank accounts payment method with some banks in Indonesia. This is full version plugin. Hopefully you can enjoy this plugin to build your own ecommerce for Indonesia sales. International shipping cost information is also available if your license is granted with international options.
-Version: 1.1.8.6.25
+Version: 1.2.1
 Author: www.epeken.com
 Author URI: http://www.epeken.com
 */
@@ -18,7 +18,7 @@ if(!function_exists('epeken_session_destroy')) {
 
 if(!function_exists ('epeken_get_data_server')) {
  function epeken_get_data_server() {
-	$server = get_option('epeken_data_server');
+	$server = sanitize_text_field(get_option('epeken_data_server'));
 	if(empty($server))
 		$server = 'http://103.252.101.131';
 	return $server;	
@@ -26,7 +26,7 @@ if(!function_exists ('epeken_get_data_server')) {
 }
 
 $server = epeken_get_data_server();
-$epeken_err_msg = get_option('epeken_enable_error_message_setting');
+$epeken_err_msg = sanitize_text_field(get_option('epeken_enable_error_message_setting'));
 if ($epeken_err_msg === 'on')
 	error_reporting(E_WARNING | E_PARSE | E_ERROR);
 
@@ -356,7 +356,6 @@ if (in_array('woocommerce/woocommerce.php',
 		  );
 		return $fields;
      }
-
     add_filter('woocommerce_billing_fields', 'epeken_email_not_mandatory', 10, 1);
     function epeken_email_not_mandatory($billing_fields){
 	    if(!is_checkout()) return $billing_fields;
@@ -463,13 +462,13 @@ if (in_array('woocommerce/woocommerce.php',
 		 	 if ($is_auto == 'yes') {
 	 	  		$user_id = get_current_user_id();
 		  		if($user_id > 0) {
-			 	$kecamatan_shipping_pelanggan = get_user_meta($user_id, 'shipping_address_2', true);
+			 	$kecamatan_shipping_pelanggan = sanitize_text_field(get_user_meta($user_id, 'shipping_address_2', true));
 		  	  } 
 		 	 }		 
 			?>
 			<script type="text/javascript">
 				jQuery(document).ready(function($) {
-					shipping_kecamatan('<?php echo $kecamatan_shipping_pelanggan; ?>'); //this script set action on change to city dropdown.
+					shipping_kecamatan('<?php echo esc_html($kecamatan_shipping_pelanggan); ?>'); //this script set action on change to city dropdown.
 				});
 			</script>			
 			<?php	
@@ -494,13 +493,13 @@ if (in_array('woocommerce/woocommerce.php',
 		 if ($is_auto == 'yes') {
 	 	  $user_id = get_current_user_id();
 		  if($user_id > 0) {
-			 $kota_shipping_pelanggan = get_user_meta($user_id, 'shipping_city', true);
+			 $kota_shipping_pelanggan = sanitize_text_field(get_user_meta($user_id, 'shipping_city', true));
 		  } 
 		 }		 
 		?> 
 		<script type="text/javascript">
 			jQuery(document).ready(function($) {
-				shipping_kota('<?php echo $kota_shipping_pelanggan; ?>'); //this script set action on change to province dropdown.
+				shipping_kota('<?php echo esc_html($kota_shipping_pelanggan); ?>'); //this script set action on change to province dropdown.
 			});
 		</script>	
 		<?php	
@@ -530,13 +529,13 @@ if (in_array('woocommerce/woocommerce.php',
 		 if ($is_auto == 'yes') {
 	 	  $user_id = get_current_user_id();
 		  if($user_id > 0) {
-			 $kota_billing_pelanggan = get_user_meta($user_id, 'billing_city', true);
+			 $kota_billing_pelanggan = sanitize_text_field(get_user_meta($user_id, 'billing_city', true));
 		  } 
 		 }		 
 		?> 
 		<script type="text/javascript">
 			jQuery(document).ready(function($) {
-				billing_kota('<?php echo $kota_billing_pelanggan; ?>'); //this script set action on change to province dropdown.
+				billing_kota('<?php echo esc_html($kota_billing_pelanggan); ?>'); //this script set action on change to province dropdown.
 			});
 		</script>	
 		<?php	
@@ -644,8 +643,8 @@ function epeken_billing_field_display_admin_order_meta($order){
     else
 	$order_id = $order->id;
 
-    echo '<p><strong>'.__('Kelurahan').':</strong> ' . get_post_meta( $order_id, 'billing_kelurahan', true ) . '</p>';
-    echo '<p><strong>'.__('Kecamatan').':</strong> ' . get_post_meta( $order_id, 'billing_kecamatan', true ) . '</p>';
+    echo '<p><strong>'.__('Kelurahan').':</strong> ' . esc_html(sanitize_text_field(get_post_meta( $order_id, 'billing_kelurahan', true ))) . '</p>';
+    echo '<p><strong>'.__('Kecamatan').':</strong> ' . esc_html(sanitize_text_field(get_post_meta( $order_id, 'billing_kecamatan', true ))) . '</p>';
 }
 
 add_action( 'woocommerce_admin_order_data_after_shipping_address', 'epeken_shipping_field_display_admin_order_meta', 10, 1 );
@@ -658,15 +657,11 @@ function epeken_shipping_field_display_admin_order_meta($order){
     else
         $order_id = $order->id;
 
-    echo '<p><strong>'.__('Kelurahan').':</strong> ' . get_post_meta( $order_id, 'shipping_kelurahan', true ) . '</p>';
-    echo '<p><strong>'.__('Kecamatan').':</strong> ' . get_post_meta( $order_id, 'shipping_kecamatan', true ) . '</p>';
+    echo '<p><strong>'.__('Kelurahan').':</strong> ' . esc_html(sanitize_text_field(get_post_meta( $order_id, 'shipping_kelurahan', true ))) . '</p>';
+    echo '<p><strong>'.__('Kecamatan').':</strong> ' . esc_html(sanitize_text_field(get_post_meta( $order_id, 'shipping_kecamatan', true ))) . '</p>';
 }
 
 } // End checking if woocommerce is installed.
-
-function epeken_is_marketplace () {
-	
-}
 
 add_action("template_redirect", 'epeken_theme_redirect');
 
@@ -715,41 +710,29 @@ if (!function_exists('epeken_activate_license')) {
 function epeken_activate_license($server, $port, $api_params) {
 	global $api_end_point;
 	$url = 'http://'.$server.':'.$port.'/api/'.$api_end_point.'/api/license/activate/'.$api_params['license_key'].'/'.$api_params['registered_domain'].'/'.$api_params['item_reference'];
-  	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_PORT, $port);
-	curl_setopt($ch, CURLOPT_HTTP_VERSION,CURL_HTTP_VERSION_1_1);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_USERAGENT , "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)");
-	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT , 7); 
-	$result = curl_exec($ch);
-	if(curl_errno($ch)) {
+	$response = wp_remote_get($url);
+	$result = wp_remote_retrieve_body($response);
+	if(is_wp_error($response)) {
 		$emergency_url = 'http://www.epeken.com/?slm_action='.$api_params['slm_action'].'&license_key='.$api_params['license_key'].'&registered_domain='.$api_params['registered_domain'].'&item_reference='.$api_params['item_reference'];
-		license_activation_error_message('Activation Fatal Error (CURL): '.curl_error($ch).
+		license_activation_error_message('Activation Fatal Error (CURL): '. $response -> get_error_message() .
 		'<br>Harap tekan tombol <strong>Emergency Activation</strong> berikut ini untuk aktivasi darurat !!!<br><a href="'.$emergency_url.'" class="btn button" target="_blank">Emergency Activation</a>');
-		update_option('epeken_wcjne_license_key', trim($api_params['license_key']));
+		update_option('epeken_wcjne_license_key', sanitize_text_field($api_params['license_key']));
 	}
-	curl_close($ch);
 	return $result;
  }
 }
 
 if (!function_exists('epeken_license_info')){
-	function epeken_license_info($server, $port, $license_key) {
-		global $api_end_point;
-		$url = 'http://'.$server.':'.$port.'/api/'.$api_end_point.'/api/license/info/'.$license_key;
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_PORT, $port);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array("cache-control: no-cache","content-type: application/x-www-form-urlencoded"));
-		$result = curl_exec($ch);
-		if(curl_errno($ch)) {
-			echo curl_error($ch);
-		}
-		curl_close($ch);
-		return $result;
+function epeken_license_info($server, $port, $license_key) {
+	global $api_end_point;
+	$url = 'http://'.$server.':'.$port.'/api/'.$api_end_point.'/api/license/info/'.$license_key;
+	$response = wp_remote_get($url);
+ 	$result = wp_remote_retrieve_body($response);
+	if(is_wp_error($response)) {
+		echo esc_html($response -> get_error_message());
 	}
+	return $result;
+ }
 }
 
 function epeken_license_management_page() {
@@ -785,7 +768,8 @@ function epeken_license_management_page() {
     }
     /*** License activate button was clicked ***/
     ?>
-    <p>Masukkan license dan klik activate untuk menggunakan plugin Epeken All Kurir. Belum punya license ? <a href="http://www.epeken.com/shop/epeken-all-kurir-license/">Beli Di Sini</a></p>
+    <p>Masukkan license dan klik activate untuk menggunakan plugin Epeken All Kurir. 
+       Belum punya license ? <a href="https://www.epeken.com/shop/epeken-all-kurir-license/" target="_blank">Beli Di Sini</a></p>
     <form action="" method="post">
         <table class="form-table">
             <tr>
@@ -798,28 +782,31 @@ function epeken_license_management_page() {
         </p>
     </form>
 <?php
-    $lic = get_option('epeken_wcjne_license_key');
+    $lic = sanitize_text_field(get_option('epeken_wcjne_license_key'));
     if( !empty($lic) ) {
 	    $server = epeken_get_data_server();
 	    $server = str_replace('http://','',$server);
 	    $license_info = epeken_license_info($server,'80',$lic);
 	    $license_info = json_decode($license_info, true);
 	    if($license_info['status'] === 200){
-		    echo "<h2>Informasi License Anda</h2>"
+		    echo "<h2>Informasi License Epeken All Kurir</h2>"
 		?>
-		<table class="wp-list-table widefat fixed striped table-view-list posts"> <tbody>
+		<table class="wp-list-table widefat fixed striped table-view-list posts"> 
+			<thead><tr>
+			<th scope="col"><strong>License Key</strong></th>
+			<th scope="col"><strong>Aktif Pada Domain</strong></th>
+			<th scope="col"><strong>Tanggal Berakhir<strong></th>
+			</tr></thead>
+			<tbody>
 			<tr>
-			<th><strong>License Key</strong></th>
-			<th><strong>Aktif Pada Domain</strong></th>
-			<th><strong>Tanggal Berakhir<strong></th>
-			</tr>
-			<tr>
-			<td><?php echo $license_info['license_key'];?></td>
-			<td><?php echo $license_info['website'];?></td>
-			<td><?php echo $license_info['dateexpiry'];?></td>
+			<td scope="col"><?php echo esc_html($license_info['license_key']);?></td>
+			<td scope="col"><?php echo esc_html($license_info['website']);?></td>
+			<td scope="col"><?php echo esc_html($license_info['dateexpiry']);?></td>
 			</tr></tbody>
 		</table>
 		<?php
+                echo '<p><a href="admin.php?page=wc-settings&tab=shipping&section=epeken_courier">
+		      Settings Plugin Ongkos Kirim Epeken All Kurir</a></p>';
 	    }
     }
     echo '</div>';
@@ -1239,8 +1226,7 @@ add_action ('woocommerce_single_product_summary', 'epeken_display_kota_asal_peng
 		$license = get_option('epeken_wcjne_license_key');
 		$activation_menu = get_admin_url(null, 'options-general.php?page=epeken-all-kurir/epeken_courier.php', null);
 		if(empty($license)) {
-		 ?> <div class="error notice"><p><strong>Plugin Epeken All Kurir Anda belum berlisensi. Tanpa lisensi, plugin Epeken All Kurir tidak akan berfungsi.</strong> Jika Anda belum punya license, silakan <a href="http://www.epeken.com/shop/epeken-all-kurir-license/" target="_blank">beli di sini</a>. 
-		 Jika Anda sudah memiliki nomor license, silakan langsung saja aktivasi <a href="<?php echo $activation_menu; ?>">di sini</a>.</p></div> <?php
+		 ?> <div class="error notice"><p><strong>Plugin Epeken All Kurir Kakak belum berlisensi. Tanpa lisensi, plugin Epeken All Kurir tidak akan berfungsi.</strong> Jika Kakak belum punya license, silakan <a href="http://www.epeken.com/shop/epeken-all-kurir-license/" target="_blank">beli di sini</a>. Jika Kakak sudah membeli license tapi belum menerimanya, silakan menunggu email pengiriman License dengan sabar. Jika Kakak sudah memiliki nomor license, silakan langsung saja mengaktifkan licensi <a href="<?php echo $activation_menu; ?>">di sini</a>.</p></div> <?php
 		}
   }
   add_action('admin_notices', 'epeken_check_license');
@@ -1373,8 +1359,8 @@ function epeken_is_checkout_auto_select_address () {
 	}	
 }
   
-  /* functions to support collaboration between epeken and wc-vendors and other marketplace plugin */
-  include_once('includes/epeken_multi_vendors.php');
+/* functions to support collaboration between epeken and wc-vendors and other marketplace plugin */
+include_once('includes/epeken_multi_vendors.php');
 
 add_filter('woocommerce_no_shipping_available_html','epeken_no_shipping_available_html');
 function epeken_no_shipping_available_html() {
@@ -1395,26 +1381,20 @@ if(!function_exists('epeken_check_timed_out')) {
 add_action('admin_notices','epeken_check_timed_out');
 function epeken_check_timed_out() {
  $url = epeken_get_data_server();
- $ch = curl_init();
- curl_setopt($ch, CURLOPT_URL, $url);
- curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
- curl_setopt($ch, CURLOPT_TIMEOUT, 10);
- $content = curl_exec($ch); 
- $error = curl_errno($ch);
+ $response = wp_remote_get($url);
+ $content = wp_remote_retrieve_body($response);
  $server_data = 'http://103.252.101.131';
  if($url === $server_data) {
   $server_data = '<STRONG>data server Indonesia</STRONG>';
  }else{
   $server_data = '<em>'.$url.'</em>';
  } 
- if($error == 28 && is_epeken_all_kurir_setting_page()) {
+ if(is_wp_error($response) && is_epeken_all_kurir_setting_page()) {
    echo '<div class="notice notice-error">
           <p>Terjadi kendala pada Plugin Epeken All Kurir saat membuat koneksi ke '.$server_data.'. 
    	  Troubleshoot: Silakan mencoba mengubah koneksi ke server data yang lain atau hubungi tim support kami.</p>
          </div>';
  }
- $content = curl_exec($ch);
- curl_close($ch);  
  }
 }
 

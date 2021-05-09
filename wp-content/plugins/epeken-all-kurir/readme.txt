@@ -4,7 +4,7 @@ Tags: JNE, TIKI, POS, J&T, WAHANA, SICEPAT, SAP, RPX, ecommerce, e-commerce, com
 Donate link: http://www.epeken.com/shop/epeken-all-kurir-license/
 Requires at least:4.0 
 Tested up to: 5.7
-Stable tag: 1.1.8.6.25
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -24,7 +24,11 @@ This plugin is developed by epeken. copyright (c) 2015 by [epeken](http://www.ep
 
 = Supporting Expeditions =
 
-JNE, TIKI, POS, NSS, J&T, RPX, SICEPAT, WAHANA, SAP Express, JMX, LION PARCEL, NINJA EXPRESS, JNE TRUCKING, DAKOTA CARGO. [Anteraja](https://wordpress.org/plugins/anteraja/) plugin is also fully compatible with Epeken All Kurir. 
+JNE, TIKI, POS, NSS, J&T, RPX, SICEPAT, WAHANA, SAP Express, JMX, LION PARCEL, NINJA EXPRESS, JNE TRUCKING, DAKOTA CARGO
+
+= Ekspedisi Anteraja =
+
+Epeken in collaboration with Anterja has released Anteraja plugin for WooCommerce. [Check this out](https://wordpress.org/plugins/anteraja).
 
 = Strength & flexibility =
 
