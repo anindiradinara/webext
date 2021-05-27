@@ -27,7 +27,7 @@ if ( function_exists('is_rtl') && is_rtl() ) {
 }
 
 $s3_cta_order = "1";
-if ('right' == $side_2) {
+if ( isset($side_2) && 'right' == $side_2) {
     // if side_2 is right then cta is left
     $s3_cta_order = "0";
 }

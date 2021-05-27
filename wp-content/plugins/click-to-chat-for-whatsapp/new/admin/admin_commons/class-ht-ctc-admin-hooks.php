@@ -23,17 +23,55 @@ class HT_CTC_Admin_Others {
 
     function admin_hooks() {
         
+        // if its a click to chat admin page
+        add_action( 'load-toplevel_page_click-to-chat', array( $this, 'ctc_admin_pages') );
+        add_action( 'load-click-to-chat_page_click-to-chat-customize-styles', array( $this, 'ctc_admin_pages') );
+        add_action( 'load-click-to-chat_page_click-to-chat-other-settings', array( $this, 'ctc_admin_pages') );
+        add_action( 'load-click-to-chat_page_click-to-chat-woocommerce', array( $this, 'ctc_admin_pages') );
+
         // admin notices
         $this->admin_notice();
 
         // ht_ctc_ah_admin
         add_action( 'ht_ctc_ah_admin_after_sanitize', array( $this, 'after_sanitize') );
 
-
         // clear cache
         add_action( 'update_option_ht_ctc_admin_pages', array( $this, 'clear_cache') );
         // clear cache - customize styles
         add_action( 'update_option_ht_ctc_cs_options', array( $this, 'clear_cache') );
+
+    }
+
+
+    // its Click to Chat - admin page
+    function ctc_admin_pages() {
+
+        do_action('ht_ctc_ah_admin_its_ctc_admin_page' );
+
+        /**
+         * when user enters any of the click to chat admin page
+         * and if options are not set the it will set.
+         * 
+         * db: group, share, styles(style-2 adds while active)
+         * loads only if styles are not defined. checked using s1
+         * 
+         * (db, db2 will also run when version changes from class-ht-ctc-register.php -> version_changed() )
+         */
+        $s1 = get_option('ht_ctc_s1');
+
+        if ( !isset($s1['s1_text_color']) ) {
+            include_once HT_CTC_PLUGIN_DIR . '/new/admin/db/class-ht-ctc-db2.php';
+        }
+
+
+        // if need to run the updater backup
+        $chat = get_option('ht_ctc_chat_options');
+        if ( !isset($chat['display_mobile']) ) {
+            include_once HT_CTC_PLUGIN_DIR . '/new/admin/db/class-ht-ctc-update-db-backup.php';
+        }
+
+
+
 
     }
 

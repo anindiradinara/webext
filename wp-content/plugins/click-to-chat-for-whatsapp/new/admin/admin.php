@@ -28,6 +28,8 @@ include_once HT_CTC_PLUGIN_DIR .'new/admin/class-ht-ctc-admin-scripts.php';
 // Main, Chat admin page
 include_once HT_CTC_PLUGIN_DIR .'new/admin/class-ht-ctc-admin-main-page.php';
 
+do_action('ht_ctc_ah_admin_includes_after_main_page' );
+
 // group admin page
 if ( isset ( $ht_ctc_othersettings['enable_group'] ) ) { 
     include_once HT_CTC_PLUGIN_DIR .'new/admin/class-ht-ctc-admin-group-page.php';

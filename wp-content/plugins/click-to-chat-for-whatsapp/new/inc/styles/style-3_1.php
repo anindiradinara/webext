@@ -18,7 +18,7 @@ if ( '' == $img_size ) {
 $s3_1_cta_type = (isset( $s3_1_options['cta_type'])) ? esc_attr( $s3_1_options['cta_type'] ) : 'hover';
 
 $s3_1_cta_order = "1";
-if ('right' == $side_2) {
+if ( isset($side_2) && 'right' == $side_2) {
     // if side_2 is right then cta is left
     $s3_1_cta_order = "0";
 }

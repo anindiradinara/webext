@@ -1,9 +1,9 @@
 === Click to Chat ===
 Requires at least: 4.6
-Tested up to: 5.7.1
+Tested up to: 5.7.2
 Requires PHP: 5.6
 Contributors: holithemes
-Stable tag: 3.3.2
+Stable tag: 3.3.4
 Tags: whatsapp, whatsapp business, click to chat, whatsapp chat, whatsapp support, whatsapp group, whatsapp message, social chat, whatsapp wordpress, whatsapp floating button, whatsapp icon, holithemes
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -117,7 +117,7 @@ Creates an Event when the user clicks on the WhatsApp Icon/button.
 
 = Webhooks =
 
-Connect other applications using Integarate, Automation tools like Zapier, IFTTT
+Connect other applications using Integarate, Automation tools like Zapier, IFTTT, Pipedream
 
 [Webhooks](https://holithemes.com/plugins/click-to-chat/webhooks)
 
@@ -198,19 +198,19 @@ i.e. if position is set to right: 10px then plugin will display at left: 10px
 
 1. 8 Styles, 1 Add own image / GIF Style
 1. Chat Settings - Enter WhatsApp Number, prefilled message, call to action, desktop: web view / desktop app view
-1. Desktop settings - style, position to place (at any position of the screen)
-1. Mobile settings - style, position to place (at any position of the screen)
+1. Style, position to place (at any position of the screen) - Desktop, Mobile
+1. Add WhatsApp Menu item (Custom Element)
 1. Change Values at page level: 'WhatsApp Number', 'Call to action', 'Group ID'
 1. Shortcodes - add style with inline the content
 1. Style - 5 - Image with content box
 1. Style - 8 - Materialize button
 1. Style - 99 - Add your own Image / GIF(Animated Image)
 1. Customize Styles
-1. Enable Chat, Group, Share Settings
+1. Enable Group, Share Settings
 1. Group settings page
 1. Share settings page
-1. Hide on Selected pages
-1. Show on Selected pages
+1. Display settings
+1. Webhooks
 1. prefilled, call to action for WooCommerce single product pages
 1. Animations
 1. Analytics - Google analytics, Facebook Pixel, Google Ads Conversations
@@ -398,7 +398,7 @@ For any issues with the plugin / suggestions:
 
 * WordPress [new topic](https://wordpress.org/support/plugin/click-to-chat-for-whatsapp/) 
 
-* GitHub [Discussions](https://github.com/holithemes/ctc/discussions)  
+* GitHub [Discussions](https://github.com/holithemes/click-to-chat/discussions)  
 
 = ⭐️ Give Support =
 
@@ -424,6 +424,16 @@ plugin will update automatically when new version is released
 After Activate the plugin, add WhatsApp Number at plugin settings.
 
 == Changelog ==
+
+= 3.3.4 =
+* Display Settings for WooCommerce Cart, Checkout, Account, Shop page
+* Enchantment: WhatsApp Number field
+
+= 3.3.3 =
+* User Interface: Display settings
+* New: Display settings for custom post types
+* User Interface: same_settings for mobile, desktop
+* User Interface: WooCommerce related settings now in seperate page
 
 = 3.3.2 =
 * Enchantment: Google Analytics

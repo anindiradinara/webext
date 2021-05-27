@@ -1,4 +1,4 @@
-// Click to Chat v3.2.9
+// Click to Chat
 document.addEventListener('DOMContentLoaded', function () {
 
     // M.AutoInit();
@@ -28,33 +28,61 @@ document.addEventListener('DOMContentLoaded', function () {
         $('.tooltipped').tooltip();
         $('.ht-ctc-color').wpColorPicker();
 
+        // var toast = false;
+        // if (typeof M !== "undefined" && M.toast) {
+        //     toast = true;
+        // }
+
+        // if (toast) {
+        //     M.toast({ html: 'Hided on Mobile devices', classes: 'rounded' });
+        // }
+
         // show/hide settings
-        function ht_ctc_show_hide_options() {
+        function show_hide_options() {
 
             // default display
-            var val = $('.select_show_or_hide').find(":selected").val();
+            var val = $('.global_display:checked').val();
+
+            $('.global_show_or_hide_label').html('('+val+')');
+
             if (val == 'show') {
-                $(".showbased").show();
+                $(".hide_settings").show();
+                $(".show_hide_types .show_btn").attr('disabled', 'disabled');
+                $(".show_hide_types .show_box").hide();
             } else if (val == 'hide') {
-                $(".hidebased").show();
+                $(".show_settings").show();
+                $(".show_hide_types .hide_btn").attr('disabled', 'disabled');
+                $(".show_hide_types .hide_box").hide();
             }
 
             // on change
-            $(".select_show_or_hide").on("change", function (e) {
+            $(".global_display").on("change", function (e) {
 
                 var change_val = e.target.value;
-                $(".showbased").hide();
-                $(".hidebased").hide();
+                $('.global_show_or_hide_label').html('('+change_val+')');
+
+                $(".hide_settings").hide();
+                $(".show_settings").hide();
+                $(".show_hide_types .show_btn").removeAttr('disabled');
+                $(".show_hide_types .hide_btn").removeAttr('disabled');
+                $(".show_hide_types .show_box").hide();
+                $(".show_hide_types .hide_box").hide();
 
                 if (change_val == 'show') {
-                    $(".showbased").show(500);
+                    $(".hide_settings").show(500);
+                    $(".show_hide_types .show_btn").attr('disabled', 'disabled');
+                    $(".show_hide_types .hide_box").show();
                 } else if (change_val == 'hide') {
-                    $(".hidebased").show(500);
+                    $(".show_settings").show(500);
+                    $(".show_hide_types .hide_btn").attr('disabled', 'disabled');
+                    $(".show_hide_types .show_box").show();
                 }
             });
 
         }
-        ht_ctc_show_hide_options();
+        show_hide_options();
+
+
 
         // call to action
         var cta_styles = ['.ht_ctc_s2', '.ht_ctc_s3', '.ht_ctc_s3_1', '.ht_ctc_s7'];
@@ -107,39 +135,36 @@ document.addEventListener('DOMContentLoaded', function () {
             $(".customize_styles_link").animate({ fontSize: '1.2em' }, "slow");
         });
 
-        // Deskop, Mobile
-        if ($('#hideon_desktop').is(':checked')) {
-            $(".ht_ctc_admin_desktop").hide();
-        }
+        // Deskop, Mobile - same settings
+        function desktop_mobile() {
 
-        if ($('#hideon_mobile').is(':checked')) {
-            $(".ht_ctc_admin_mobile").hide();
-        }
-
-        $(".hidebasedondevice").on("change", function (e) {
-            if ($('#hideon_desktop').is(':checked')) {
-                $(".ht_ctc_admin_desktop").hide();
+            // same setting
+            if ($('.same_settings').is(':checked')) {
+                $(".not_samesettings").hide();
             } else {
-                $(".ht_ctc_admin_desktop").show();
+                $(".not_samesettings").show();
             }
 
-            if ($('#hideon_mobile').is(':checked')) {
-                $(".ht_ctc_admin_mobile").hide();
-            } else {
-                $(".ht_ctc_admin_mobile").show();
-            }
-        });
+            $(".same_settings").on("change", function (e) {
 
-        // hide nothing or hide only on one device.
-        $(document).on('click', '.hidebasedondevice', function () {
-            $('.hidebasedondevice').not(this).prop('checked', false);
-        });
+                if ($('.same_settings').is(':checked')) {
+                    $(".not_samesettings").hide(900);
+                } else {
+                    $(".not_samesettings").show(900);
+                }
+
+            });
+
+        }
+        desktop_mobile()
 
         // WhatsApp number  
         function wn() {
 
             var cc = $("#whatsapp_cc").val();
             var num = $("#whatsapp_number").val();
+            var num2 = num;
+
 
             $("#whatsapp_cc").on("change paste keyup", function (e) {
                 cc = $("#whatsapp_cc").val();
@@ -148,12 +173,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             $("#whatsapp_number").on("change paste keyup", function (e) {
                 num = $("#whatsapp_number").val();
+                num2 = num.replace(/^0+/, '');
                 call();
             });
 
             function call() {
                 $(".ht_ctc_wn").html(cc + '' + num);
-                $("#ctc_whatsapp_number").val(cc + '' + num);
+                $("#ctc_whatsapp_number").val(cc + '' + num2);
             }
 
         }

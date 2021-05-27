@@ -29,9 +29,9 @@ if ( function_exists('is_rtl') && is_rtl() ) {
 $s7_n1_styles = "display:flex;justify-content:center;align-items:center;$rtl_css ";
 $s7_icon_css = "font-size: $s7_icon_size; color: $s7_icon_color; padding: $s7_border_size; background-color: $s7_border_color; border-radius: $s7_border_radius;";
 
-// Call to action 
+// Call to action - order
 $s7_cta_order = "1";
-if ('right' == $side_2) {
+if ( isset($side_2) && 'right' == $side_2) {
     // if side_2 is right then cta is left
     $s7_cta_order = "0";
 }
@@ -57,14 +57,6 @@ $s7_svg_attrs = array(
     'type' => "$type",
     'ht_ctc_svg_css' => "$ht_ctc_svg_css",
 );
-
-// cta order
-$s7_cta_order = "1";
-if ('right' == $side_2) {
-    // if side_2 is right then cta is left
-    $s7_cta_order = "0";
-}
-
 
 // hover
 $s7_hover_icon_styles = ".ht-ctc.style-7:hover .ctc_s_7_icon_padding{background-color:$s7_border_color_hover !important;}.ht-ctc.style-7:hover svg g path{fill:$s7_icon_color_hover !important;}";

@@ -96,7 +96,7 @@ class HT_CTC_Admin_Other_Settings {
         ?>
         <ul class="collapsible" data-collapsible="accordion" id="ht_ctc_analytics">
         <li class="active">
-        <div class="collapsible-header"><?php _e( 'Google Analytics, Facebook Pixel', 'click-to-chat-for-whatsapp' ); ?></div>
+        <div class="collapsible-header"><?php _e( 'Google Analytics, Facebook Pixel, Google Ads Conversion', 'click-to-chat-for-whatsapp' ); ?></div>
         <div class="collapsible-body">
         
         <?php
@@ -143,9 +143,6 @@ class HT_CTC_Admin_Other_Settings {
             <?php
             }
         ?>
-        <!-- todo link ga4 -->
-        <!-- <p class="description ctc_ga4" style="margin-left:40px;"> <a target="_blank" href="https://holithemes.com/plugins/click-to-chat/google-analytics-4/"><?php _e( 'Google Analytics 4', 'click-to-chat-for-whatsapp' ); ?></a> </p> -->
-
         <p class="description"><?php _e( 'If Google Analytics installed creates an Event there', 'click-to-chat-for-whatsapp' ); ?> - <a target="_blank" href="https://holithemes.com/plugins/click-to-chat/google-analytics/"><?php _e( 'more info', 'click-to-chat-for-whatsapp' ); ?></a> </p>
         <br>
 
@@ -227,9 +224,7 @@ class HT_CTC_Admin_Other_Settings {
         <div class="collapsible-header"><?php _e( 'Webhooks', 'click-to-chat-for-whatsapp' ); ?></div>
         <div class="collapsible-body">
         
-        <p class="description" style="margin-bottom: 20px;">Integarte, Automation using Webhooks.</p>
-        <p class="description"><a target="_blank" href="https://holithemes.com/plugins/click-to-chat/webhooks/"><?php _e( 'Webhooks', 'click-to-chat-for-whatsapp' ); ?></a></p>
-        <br><br><br>
+        <p class="description" style="margin-bottom: 40px;"><?php _e( 'Integarte, Automation', 'click-to-chat-for-whatsapp' ); ?> <?php _e( 'using', 'click-to-chat-for-whatsapp' ); ?> <a target="_blank" href="https://holithemes.com/plugins/click-to-chat/webhooks/"><?php _e( 'Webhooks', 'click-to-chat-for-whatsapp' ); ?></a></p>
 
         <!-- Webhook URL -->
         <div class="row">

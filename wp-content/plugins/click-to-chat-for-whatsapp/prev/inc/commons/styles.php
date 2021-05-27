@@ -49,10 +49,10 @@ if( 1 == $is_mobile ) {
 
     
     if ( 'group_chat' == $return_type ) {
-        $redirect = "window.open('https://chat.whatsapp.com/$group_id', '_blank')";
+        $redirect = "window.open('https://chat.whatsapp.com/$group_id', '_blank', 'noopener')";
         $redirect_a = "https://chat.whatsapp.com/$group_id";
     } else {
-        $redirect = "window.open('https://api.whatsapp.com/send?phone=$num&text=$initial_text', '_blank')";
+        $redirect = "window.open('https://api.whatsapp.com/send?phone=$num&text=$initial_text', '_blank', 'noopener')";
         $redirect_a = "https://api.whatsapp.com/send?phone=$num&text=$initial_text";
     }
 } else {
@@ -65,10 +65,10 @@ if( 1 == $is_mobile ) {
 
         // App First - so mobile based url
         if ( 'group_chat' == $return_type ) {
-            $redirect = "window.open('https://chat.whatsapp.com/$group_id', '_blank')";
+            $redirect = "window.open('https://chat.whatsapp.com/$group_id', '_blank', 'noreferrer')";
             $redirect_a = "https://chat.whatsapp.com/$group_id";
         } else {
-            $redirect = "window.open('https://api.whatsapp.com/send?phone=$num&text=$initial_text', '_blank')";
+            $redirect = "window.open('https://api.whatsapp.com/send?phone=$num&text=$initial_text', '_blank', 'noreferrer')";
             $redirect_a = "https://api.whatsapp.com/send?phone=$num&text=$initial_text";
         }
 
@@ -77,10 +77,10 @@ if( 1 == $is_mobile ) {
 
         // General - Desktop url
         if ( 'group_chat' == $return_type ) {
-            $redirect = "window.open('https://chat.whatsapp.com/$group_id', '_blank')";
+            $redirect = "window.open('https://chat.whatsapp.com/$group_id', '_blank', 'noreferrer')";
             $redirect_a = "https://chat.whatsapp.com/$group_id";
         } else {
-            $redirect = "window.open('https://web.whatsapp.com/send?phone=$num&text=$initial_text', '_blank')";
+            $redirect = "window.open('https://web.whatsapp.com/send?phone=$num&text=$initial_text', '_blank', 'noreferrer')";
             $redirect_a = "https://web.whatsapp.com/send?phone=$num&text=$initial_text";
         }
 

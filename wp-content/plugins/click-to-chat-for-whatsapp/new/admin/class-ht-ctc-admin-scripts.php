@@ -21,10 +21,10 @@ class HT_CTC_Admin_Scripts {
         $load_js_bottom = apply_filters( 'ht_ctc_fh_load_admin_js_bottom', true );
 
         // $admin_js = 'admin.js';
-        $admin_js = '331.admin.js';
+        $admin_js = '333.admin.js';
         
         // hook .. 
-        if( 'toplevel_page_click-to-chat' == $hook || 'click-to-chat_page_click-to-chat-chat-feature' == $hook || 'click-to-chat_page_click-to-chat-group-feature' == $hook || 'click-to-chat_page_click-to-chat-share-feature' == $hook || 'click-to-chat_page_click-to-chat-customize-styles' == $hook || 'click-to-chat_page_click-to-chat-other-settings' == $hook ) {
+        if( 'toplevel_page_click-to-chat' == $hook || 'click-to-chat_page_click-to-chat-chat-feature' == $hook || 'click-to-chat_page_click-to-chat-group-feature' == $hook || 'click-to-chat_page_click-to-chat-share-feature' == $hook || 'click-to-chat_page_click-to-chat-customize-styles' == $hook || 'click-to-chat_page_click-to-chat-other-settings' == $hook || 'click-to-chat_page_click-to-chat-woocommerce' == $hook ) {
 
             do_action('ht_ctc_ah_admin_scripts_start');
 

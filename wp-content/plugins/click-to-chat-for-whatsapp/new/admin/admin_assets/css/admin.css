@@ -1,12 +1,18 @@
 /* Admin CSS */
 
-.show-hide_display-none {
+.show-hide_display-none,
+.not_samesettings {
     display: none; 
 }
   
-.show-hide_display-block {
-    display: block; 
+.show_settings,
+.hide_settings {
+    display: none; 
 }
+
+/* .show_hide_types .ctc_radio_text {
+    padding-left: 28px !important;
+} */
 
 .options .submit {
     position: sticky !important;

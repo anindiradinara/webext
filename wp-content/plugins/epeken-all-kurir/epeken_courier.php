@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 Plugin Name: Epeken All Kurir - Full Version
 Plugin URI: https://wordpress.org/plugins/epeken-all-kurir 
 Description: Calculated Shipping Plugin for some shipping companies (JNE, JTR, JNE Trucking, TIKI, POS, RPX, JET.CO.ID, WAHANA, SICEPAT, JMX, DAKOTA CARGO) in Indonesia. It comes with bank accounts payment method with some banks in Indonesia. This is full version plugin. Hopefully you can enjoy this plugin to build your own ecommerce for Indonesia sales. International shipping cost information is also available if your license is granted with international options.
-Version: 1.2.1
+Version: 1.2.2
 Author: www.epeken.com
 Author URI: http://www.epeken.com
 */

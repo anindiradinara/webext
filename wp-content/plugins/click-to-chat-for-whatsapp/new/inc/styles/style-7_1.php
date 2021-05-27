@@ -35,7 +35,7 @@ $s7_cta_type = (isset( $s7_1_options['cta_type'])) ? esc_attr( $s7_1_options['ct
 $s7_cta_order = "1";
 $s7_hover_cta_padding_css = "padding-right: 21px;";
 $s7_show_cta_padding_css = "padding:5px 5px 5px 20px;";
-if ('right' == $side_2) {
+if ( isset($side_2) && 'right' == $side_2) {
     // if side_2 is right then cta is left
     $s7_cta_order = "0";
     $s7_hover_cta_padding_css = "padding-left: 21px;";
@@ -81,12 +81,6 @@ $s7_svg_attrs = array(
     'ht_ctc_svg_css' => "$ht_ctc_svg_css",
 );
 
-// cta order
-$s7_cta_order = "1";
-if ('right' == $side_2) {
-    // if side_2 is right then cta is left
-    $s7_cta_order = "0";
-}
 
 include_once HT_CTC_PLUGIN_DIR .'new/inc/assets/img/ht-ctc-svg-images.php';
 ?>

@@ -34,7 +34,7 @@ class CCW_Admin_Menu {
             return;
         }
 
-        include_once('settings_page.php'); 
+        include_once 'settings_page.php'; 
     }
 
 
@@ -58,7 +58,7 @@ class CCW_Admin_Menu {
             return;
         }
 
-        include_once('sp_customize_styles.php'); 
+        include_once 'sp_customize_styles.php'; 
     }
     
 

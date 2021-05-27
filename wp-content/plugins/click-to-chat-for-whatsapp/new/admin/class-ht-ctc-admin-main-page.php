@@ -6,8 +6,6 @@
  * 
  * enable options .. like chat default enabled, group, share, woocommerce
  * 
- * switch option
- * 
  * @package ctc
  * @subpackage admin
  * @since 2.0 
@@ -91,14 +89,9 @@ class HT_CTC_Admin_Main_Page {
         add_settings_field( 'prefilled', __( 'Pre-Filled Message', 'click-to-chat-for-whatsapp'), array( $this, 'prefilled_cb' ), 'ht_ctc_main_page_settings_sections_do', 'ht_ctc_chat_page_settings_sections_add' );
         add_settings_field( 'cta', __( 'Call to Action', 'click-to-chat-for-whatsapp'), array( $this, 'cta_cb' ), 'ht_ctc_main_page_settings_sections_do', 'ht_ctc_chat_page_settings_sections_add' );
         add_settings_field( 'ctc_webandapi', __( 'Web WhatsApp', 'click-to-chat-for-whatsapp'), array( $this, 'ctc_webandapi_cb' ), 'ht_ctc_main_page_settings_sections_do', 'ht_ctc_chat_page_settings_sections_add' );
-        add_settings_field( 'ctc_desktop', __( 'Dekstop', 'click-to-chat-for-whatsapp'), array( $this, 'ctc_desktop_cb' ), 'ht_ctc_main_page_settings_sections_do', 'ht_ctc_chat_page_settings_sections_add' );
-        add_settings_field( 'ctc_mobile', __( 'Mobile', 'click-to-chat-for-whatsapp'), array( $this, 'ctc_mobile_cb' ), 'ht_ctc_main_page_settings_sections_do', 'ht_ctc_chat_page_settings_sections_add' );
+        add_settings_field( 'ctc_desktop', __( 'Style, Position', 'click-to-chat-for-whatsapp'), array( $this, 'ctc_device_cb' ), 'ht_ctc_main_page_settings_sections_do', 'ht_ctc_chat_page_settings_sections_add' );
         add_settings_field( 'ctc_show_hide', __( 'Display Settings', 'click-to-chat-for-whatsapp'), array( $this, 'ctc_show_hide_cb' ), 'ht_ctc_main_page_settings_sections_do', 'ht_ctc_chat_page_settings_sections_add' );
         
-        if ( class_exists( 'WooCommerce' ) ) {
-            add_settings_field( 'ctc_woo', 'WooCommerce', array( $this, 'ctc_woo_cb' ), 'ht_ctc_main_page_settings_sections_do', 'ht_ctc_chat_page_settings_sections_add' );
-        }
-
         add_settings_field( 'options', '', array( $this, 'options_cb' ), 'ht_ctc_main_page_settings_sections_do', 'ht_ctc_chat_page_settings_sections_add' );
 
         add_settings_field( 'ctc_notes', '', array( $this, 'ctc_notes_cb' ), 'ht_ctc_main_page_settings_sections_do', 'ht_ctc_chat_page_settings_sections_add' );
@@ -132,7 +125,6 @@ class HT_CTC_Admin_Main_Page {
 
         include_once HT_CTC_PLUGIN_DIR .'new/admin/admin_commons/class-ht-ctc-static.php';
         $cc_list = HT_CTC_Static::$cc;
-
         ?>
 
         <style>
@@ -268,23 +260,13 @@ class HT_CTC_Admin_Main_Page {
     }
 
 
-    // Dekstop
-    function ctc_desktop_cb() {
+    // device based settings - style, position
+    function ctc_device_cb() {
         $options = get_option('ht_ctc_chat_options');
         $dbrow = 'ht_ctc_chat_options';
         $type = 'chat';
 
-        include_once HT_CTC_PLUGIN_DIR .'new/admin/admin_commons/admin-desktop.php';
-    }
-
-
-    // Mobile
-    function ctc_mobile_cb() {
-        $options = get_option('ht_ctc_chat_options');
-        $dbrow = 'ht_ctc_chat_options';
-        $type = 'chat';
-
-        include_once HT_CTC_PLUGIN_DIR .'new/admin/admin_commons/admin-mobile.php';
+        include_once HT_CTC_PLUGIN_DIR .'new/admin/admin_commons/admin-device-settings.php';
     }
 
 
@@ -295,12 +277,6 @@ class HT_CTC_Admin_Main_Page {
         $type = 'chat';
 
         include_once HT_CTC_PLUGIN_DIR .'new/admin/admin_commons/admin-show-hide.php';
-    }
-
-
-    // WooCommerce related settings
-    public function ctc_woo_cb() {
-        do_action('ht_ctc_ah_admin_chat_woo_settings');
     }
 
 
@@ -356,6 +332,9 @@ class HT_CTC_Admin_Main_Page {
 
                 if ( 'pre_filled' == $key || 'woo_pre_filled' == $key ) {
                     // $new_input[$key] = esc_textarea( $input[$key] );
+                    // if (function_exists('wp_encode_emoji')) {
+                    //     $input[$key] = wp_encode_emoji( $input[$key] );
+                    // }
                     $new_input[$key] = sanitize_textarea_field( $input[$key] );
                 } elseif ( 'side_1_value' == $key || 'side_2_value' == $key || 'mobile_side_1_value' == $key || 'mobile_side_2_value' == $key ) {
                     $input[$key] = str_replace( ' ', '', $input[$key] );
@@ -366,7 +345,7 @@ class HT_CTC_Admin_Main_Page {
                         $input[$key] = '0px';
                     }
                     $new_input[$key] = sanitize_text_field( $input[$key] );
-                } elseif ( 'r_nums' == $key ) {
+                } elseif ( 'display' == $key || 'r_nums' == $key ) {
                     $new_input[$key] = array_map( 'sanitize_text_field', $input[$key] );
                 } else {
                     $new_input[$key] = sanitize_text_field( $input[$key] );

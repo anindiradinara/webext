@@ -70,8 +70,7 @@ class HT_CTC_Admin_Share_Page {
         add_settings_field( 'share_cta', __( 'Call to Action', 'click-to-chat-for-whatsapp'), array( $this, 'share_cta_cb' ), 'ht_ctc_share_page_settings_sections_do', 'ht_ctc_main_page_settings_sections_add' );
         add_settings_field( 'share_ctc_webandapi', __( 'Web WhatsApp', 'click-to-chat-for-whatsapp'), array( $this, 'share_ctc_webandapi_cb' ), 'ht_ctc_share_page_settings_sections_do', 'ht_ctc_main_page_settings_sections_add' );
 
-        add_settings_field( 'share_ctc_desktop', __( 'Desktop', 'click-to-chat-for-whatsapp'), array( $this, 'share_ctc_desktop_cb' ), 'ht_ctc_share_page_settings_sections_do', 'ht_ctc_main_page_settings_sections_add' );
-        add_settings_field( 'share_ctc_mobile', __( 'Mobile', 'click-to-chat-for-whatsapp'), array( $this, 'share_ctc_mobile_cb' ), 'ht_ctc_share_page_settings_sections_do', 'ht_ctc_main_page_settings_sections_add' );
+        add_settings_field( 'share_ctc_desktop', __( 'Style, Position', 'click-to-chat-for-whatsapp'), array( $this, 'share_ctc_device_cb' ), 'ht_ctc_share_page_settings_sections_do', 'ht_ctc_main_page_settings_sections_add' );
 
         add_settings_field( 'share_show_hide', __( 'Show/Hide', 'click-to-chat-for-whatsapp'), array( $this, 'share_show_hide_cb' ), 'ht_ctc_share_page_settings_sections_do', 'ht_ctc_main_page_settings_sections_add' );
         add_settings_field( 'share_shortcode', '', array( $this, 'share_shortcode_cb' ), 'ht_ctc_share_page_settings_sections_do', 'ht_ctc_main_page_settings_sections_add' );
@@ -149,23 +148,13 @@ class HT_CTC_Admin_Share_Page {
     }
 
 
-    // Desktop
-    function share_ctc_desktop_cb() {
+    // device based settings - style, position
+    function share_ctc_device_cb() {
         $options = get_option('ht_ctc_share');
         $dbrow = 'ht_ctc_share';
         $type = 'share';
         
-        include_once HT_CTC_PLUGIN_DIR .'new/admin/admin_commons/admin-desktop.php';
-    }
-
-
-    // Mobile
-    function share_ctc_mobile_cb() {
-        $options = get_option('ht_ctc_share');
-        $dbrow = 'ht_ctc_share';
-        $type = 'share';
-        
-        include_once HT_CTC_PLUGIN_DIR .'new/admin/admin_commons/admin-mobile.php';
+        include_once HT_CTC_PLUGIN_DIR .'new/admin/admin_commons/admin-device-settings.php';
     }
 
 
@@ -215,6 +204,8 @@ class HT_CTC_Admin_Share_Page {
                     $input[$key] = '0px';
                 }
                 $new_input[$key] = sanitize_text_field( $input[$key] );
+            } elseif ( 'display' == $key ) {
+                $new_input[$key] = array_map( 'sanitize_text_field', $input[$key] );
             } else {
                 $new_input[$key] = sanitize_text_field( $input[$key] );
             }

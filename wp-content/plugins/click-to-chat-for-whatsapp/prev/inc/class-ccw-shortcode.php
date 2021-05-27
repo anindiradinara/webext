@@ -174,10 +174,10 @@ class CCW_Shortcode {
             }
 
             if ( 'group_chat' == $is_group ) {
-                $img_click_link = "window.open('https://chat.whatsapp.com/$group_id', '_blank')";
+                $img_click_link = "window.open('https://chat.whatsapp.com/$group_id', '_blank', 'noreferrer')";
                 $redirect_a = "https://chat.whatsapp.com/$group_id";
             } else {
-                $img_click_link = "window.open('https://api.whatsapp.com/send?phone=$num&text=$initial_text', '_blank')";
+                $img_click_link = "window.open('https://api.whatsapp.com/send?phone=$num&text=$initial_text', '_blank', 'noreferrer')";
                 $redirect_a = "https://api.whatsapp.com/send?phone=$num&text=$initial_text";
             }
         } else {
@@ -190,10 +190,10 @@ class CCW_Shortcode {
 
                 // App First - so mobile based url
                 if ( 'group_chat' == $is_group ) {
-                    $img_click_link = "window.open('https://chat.whatsapp.com/$group_id', '_blank')";
+                    $img_click_link = "window.open('https://chat.whatsapp.com/$group_id', '_blank', 'noreferrer')";
                     $redirect_a = "https://chat.whatsapp.com/$group_id";
                 } else {
-                    $img_click_link = "window.open('https://api.whatsapp.com/send?phone=$num&text=$initial_text', '_blank')";
+                    $img_click_link = "window.open('https://api.whatsapp.com/send?phone=$num&text=$initial_text', '_blank', 'noreferrer')";
                     $redirect_a = "https://api.whatsapp.com/send?phone=$num&text=$initial_text";
                 }
 
@@ -201,10 +201,10 @@ class CCW_Shortcode {
                 
                 // General - Desktop url
                 if ( 'group_chat' == $is_group ) {
-                    $img_click_link = "window.open('https://chat.whatsapp.com/$group_id', '_blank')";
+                    $img_click_link = "window.open('https://chat.whatsapp.com/$group_id', '_blank', 'noreferrer')";
                     $redirect_a = "https://chat.whatsapp.com/$group_id";
                 } else {
-                    $img_click_link = "window.open('https://web.whatsapp.com/send?phone=$num&text=$initial_text', '_blank')";
+                    $img_click_link = "window.open('https://web.whatsapp.com/send?phone=$num&text=$initial_text', '_blank', 'noreferrer')";
                     $redirect_a = "https://web.whatsapp.com/send?phone=$num&text=$initial_text";
                 }
             }

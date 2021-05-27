@@ -31,12 +31,16 @@ class HT_CTC_Group_Shortcode {
         $group_id = __( $group_id , 'click-to-chat-for-whatsapp' );
         $call_to_action = __( $call_to_action_db , 'click-to-chat-for-whatsapp' );
 
-        $style_desktop = esc_attr( $options['style_desktop'] );
-        $style_mobile = esc_attr( $options['style_mobile'] );
+        $style_desktop = (isset($options['style_desktop'])) ? esc_attr($options['style_desktop']) : '2';
+        if (isset($options['same_settings'])) {
+            $style_mobile = $style_desktop;
+        } else {
+            $style_mobile = (isset($options['style_mobile'])) ? esc_attr($options['style_mobile']) : '2';
+        }
 
         $is_mobile = ht_ctc()->device_type->is_mobile();
 
-        $style = $style_desktop;;
+        $style = $style_desktop;
         if ( 'yes' == $is_mobile ) {
             $style = $style_mobile;
         }

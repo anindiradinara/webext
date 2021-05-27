@@ -619,8 +619,9 @@ class WC_Shipping_Tikijne extends WC_Shipping_Method{
 
 	   public function generate_enable_cod_html() {
 		   ob_start();
-		   $enable_cod = get_option("epeken_enable_cod");
-		   $cod_label = get_option("epeken_cod_label");
+		   $enable_cod = sanitize_text_field(get_option("epeken_enable_cod"));
+		   $cod_label = sanitize_text_field(get_option("epeken_cod_label"));
+		   $cod_payment = sanitize_text_field(get_option("epeken_cod_payment"));
 		   if(empty($cod_label))
 			   $cod_label = "Cash On Delivery (COD)";
 		   ?>
@@ -633,6 +634,9 @@ class WC_Shipping_Tikijne extends WC_Shipping_Method{
 				id = "woocommerce_epeken_enable_cod" /> Enable COD
 				<p valign="middle">COD Label: <input type="text" name="woocommerce_epeken_cod_label" style="width: 250px; height: 25px"
 				id="woocommerce_epeken_cod_label" value="<?php echo $cod_label; ?>"></input></p>
+				<p valign="middle" <?php if($enable_cod === 'on'){echo "style='display: block;'";}else{echo "style='display: none;'";}?>><input type="checkbox" 
+			      	  <?php if($cod_payment === 'on'){echo "checked";}?> name="woocommerce_epeken_cod_payment" id="woocommerce_epeken_cod_payment"/>
+				Enable COD Payment Method</p>
 			<td>
 			</tr>
 		   <?php
@@ -1795,7 +1799,11 @@ class WC_Shipping_Tikijne extends WC_Shipping_Method{
 			 if(!empty($_SESSION[$cache_input_key])) {
 				$content_pos = $_SESSION[$cache_input_key];
 			 }else{
-			 	$content_pos = epeken_get_tarif_pt_pos_v3($this -> shipping_city,$this -> shipping_kecamatan, $weight, $price, $length, $width, $height, $this -> origin_city );
+			 	$content_pos = epeken_get_tarif_pt_pos_v3(
+			  	$this -> shipping_city,
+				$this -> shipping_kecamatan, 
+				$weight, $price, $length, $width, $height, 
+				$this -> origin_city );
 				$_SESSION[$cache_input_key] = $content_pos;
 			 }
 			 
@@ -2852,7 +2860,8 @@ class WC_Shipping_Tikijne extends WC_Shipping_Method{
 			 $this -> add_rate ($rate);
 		 }}
 		$this -> cod_tarif(); 
-		if($this -> chosen_shipping_method === 'epeken_cod') {
+		if($this -> chosen_shipping_method === 'epeken_cod' 
+			&& sanitize_text_field(get_option('epeken_cod_payment')) === 'on') {
 		   add_filter('woocommerce_available_payment_gateways','set_payment_cod',1);
 		}
 		add_action('woocommerce_cart_calculate_fees',array($this,'calculate_rpx_insurance'));

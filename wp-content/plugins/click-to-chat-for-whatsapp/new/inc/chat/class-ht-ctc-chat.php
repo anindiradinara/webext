@@ -11,6 +11,11 @@ if ( ! class_exists( 'HT_CTC_Chat' ) ) :
 
 class HT_CTC_Chat {
 
+    /**
+     * Chat
+     * 
+     * @var $display - changes at show-hide.php
+     */
     public function chat() {
         
         $options = get_option('ht_ctc_chat_options');
@@ -57,7 +62,11 @@ class HT_CTC_Chat {
         $is_mobile = ht_ctc()->device_type->is_mobile();
         // style
         $ht_ctc_chat['style_desktop'] = (isset($options['style_desktop'])) ? esc_attr($options['style_desktop']) : '2';
-        $ht_ctc_chat['style_mobile'] = (isset($options['style_mobile'])) ? esc_attr($options['style_mobile']) : '2';
+        if (isset($options['same_settings'])) {
+            $ht_ctc_chat['style_mobile'] = $ht_ctc_chat['style_desktop'];
+        } else {
+            $ht_ctc_chat['style_mobile'] = (isset($options['style_mobile'])) ? esc_attr($options['style_mobile']) : '2';
+        }
 
         // position
         // default position override at js, but useful in amp pages
@@ -93,8 +102,13 @@ class HT_CTC_Chat {
             $ht_ctc_chat['webandapi'] = 'web';
         }
 
-        $ht_ctc_chat['display_mobile'] = (isset($options['hideon_mobile'])) ? 'hide' : 'show';
-        $ht_ctc_chat['display_desktop'] = (isset($options['hideon_desktop'])) ? 'hide' : 'show';
+        // need to run the updater backup
+        if ( !isset($options['display_mobile']) ) {
+            include_once HT_CTC_PLUGIN_DIR . '/new/admin/db/class-ht-ctc-update-db-backup.php';
+        }
+
+        $ht_ctc_chat['display_mobile'] = (isset($options['display_mobile'])) ? esc_attr($options['display_mobile']) : 'show';
+        $ht_ctc_chat['display_desktop'] = (isset($options['display_desktop'])) ? esc_attr($options['display_desktop']) : 'show';
 
         // number not added and is administrator
         $no_number = '';
@@ -293,9 +307,7 @@ class HT_CTC_Chat {
             do_action('ht_ctc_ah_before_fixed_position');
             ?>  
             <div class="<?= $ht_ctc_chat['class_names'] ?>" id="<?= $ht_ctc_chat['id'] ?>"  
-                style="<?= $display_css ?> <?= $default_position ?>"  
-                <?= $on ?>  
-                >
+                style="<?= $display_css ?> <?= $default_position ?>" <?= $on ?> >
                 <?php
                 if ( isset( $othersettings['select_styles_issue'] ) ) {
                     ?>

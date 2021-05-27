@@ -4,7 +4,7 @@ Tags: JNE, TIKI, POS, J&T, WAHANA, SICEPAT, SAP, RPX, ecommerce, e-commerce, com
 Donate link: http://www.epeken.com/shop/epeken-all-kurir-license/
 Requires at least:4.0 
 Tested up to: 5.7
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -337,3 +337,5 @@ Once plugin is installed please activate it from activate link in the wordpress 
 * bug fix, billing kecamatan and kelurahan fixed on dokan sub order in marketplace concept.
 = 1.1.8.6.25 = 
 * bug fix, JNE and TIKI disable/enable services.
+= 1.2.2 = 
+* bug fix and code improvements. 

@@ -51,11 +51,14 @@ $(function () {
         // fixed position
         ht_ctc();
 
+        // woo positions
+        woo();
+
         // shortcode
         shortcode();
 
         // custom element
-        link();
+        custom_link();
 
     }
 
@@ -308,7 +311,7 @@ $(function () {
     }
 
     // custom element
-    function link() {
+    function custom_link() {
 
         $(document).on('click', '.ctc_chat, #ctc_chat', function () {
             console.log('class/Id: ctc_chat');
@@ -322,7 +325,13 @@ $(function () {
         });
     }
 
+    // woo positions
+    function woo() {
+        console.log('woo');
+    }
 
+
+    // webhooks
     function hook(number) {
 
         console.log('hook');

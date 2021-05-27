@@ -37,6 +37,7 @@ if(!empty (sanitize_text_field($_POST['save'])) && sanitize_text_field($_POST['s
  update_option('epeken_data_server', sanitize_text_field($_POST['data_server']));
  update_option('epeken_enable_cod',sanitize_text_field($_POST['woocommerce_epeken_enable_cod']));
  update_option('epeken_cod_label', sanitize_text_field($_POST['woocommerce_epeken_cod_label']));
+ update_option('epeken_cod_payment', sanitize_text_field($_POST['woocommerce_epeken_cod_payment']));
  update_option('epeken_subsidi_min_purchase', sanitize_text_field($_POST['txt_subsidi_min_purchase']));
  update_option('epeken_free_pc', sanitize_text_field($_POST['woocommerce_epeken_free_pc']));
  update_option('epeken_free_pc_q', sanitize_text_field($_POST['woocommerce_epeken_free_pc_q']));

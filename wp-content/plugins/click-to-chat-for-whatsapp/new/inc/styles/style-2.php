@@ -4,6 +4,15 @@
  * 
  * Andriod like - WhatsApp icon
  * 
+ * 
+ * @included from
+ *  class-ht-ctc-chat.php (class-ht-ctc- chat/group/share .php)
+ *  class-ht-ctc-woo.php
+ * 
+ * External variable are from included files:
+ *  $call_to_action
+ *  $type
+ *  $side_2 (sub file: position-to-place.php is included in some of the files that included this file )
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -21,7 +30,7 @@ if ( '' == $img_size ) {
 $s2_cta_type = (isset( $s2_options['cta_type'])) ? esc_attr( $s2_options['cta_type'] ) : 'hover';
 
 $s2_cta_order = "1";
-if ('right' == $side_2) {
+if ( isset($side_2) && 'right' == $side_2) {
     // if side_2 is right then cta is left
     $s2_cta_order = "0";
 }

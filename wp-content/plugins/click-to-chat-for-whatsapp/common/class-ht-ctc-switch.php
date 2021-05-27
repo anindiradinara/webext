@@ -74,7 +74,7 @@ class HT_CTC_Swift {
 
 			$ht_ctc_switch = get_option('ht_ctc_switch');
 
-			if ( 'yes' == $ht_ctc_switch['interface'] ) {
+			if ( isset($ht_ctc_switch['interface']) && 'yes' == $ht_ctc_switch['interface'] ) {
 				$is_new = 'yes';
 			}
 		} 

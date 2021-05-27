@@ -114,10 +114,7 @@ function epeken_city_to_code($city) {
 }
 
 function epeken_get_tarif($kotakab, $kecamatan, $product_origin = false) {		
-	$logger = new WC_Logger();
- 	$logger -> add('epeken-all-kurir', 'epeken_get_tarif is invoked');
 	$kotakab = sanitize_text_field(urldecode($kotakab));
-	$logger -> add('epeken-all-kurir', $kotakab);
 	$kecamatan = sanitize_text_field(urldecode($kecamatan));
 	$license_key = get_option('epeken_wcjne_license_key');
 	$options = get_option('woocommerce_epeken_courier_settings');
@@ -142,7 +139,6 @@ function epeken_get_tarif($kotakab, $kecamatan, $product_origin = false) {
 	  	$url = EPEKEN_API_DIR_URL.$license_key."/".$origin_code."/".$destination_code."/".urlencode($kotakab)."/".urlencode($kecamatan);
 		$response = wp_remote_get($url);
 		$content = wp_remote_retrieve_body($response);
-		$logger -> add('epeken-all-kurir', $content);
 		if(strpos($content,'404 Page Not Found') !== FALSE) {
 		 $content = '';
 		}
@@ -161,6 +157,8 @@ function epeken_get_valid_origin($license) {
 
 function epeken_get_tarif_pt_pos_v3($kotakab,$kecamatan,$weight, $price, $length, $width, $height, $product_origin=false ){
 	//weight is in gram	
+	$kotakab = urldecode($kotakab);
+	$kecamatan = urldecode($kecamatan);
 	$license_key = sanitize_text_field(get_option('epeken_wcjne_license_key'));
         $kecamatan = str_replace("/","{slash}",$kecamatan);
 	$kecamatan = urlencode($kecamatan);
@@ -180,6 +178,7 @@ function epeken_get_tarif_pt_pos_v3($kotakab,$kecamatan,$weight, $price, $length
 	$url = "";
         if ($product_origin != false)
            $origin_code = epeken_city_to_code(sanitize_text_field($product_origin));
+
 	if ($destination_code !=="") {
            $url = EPEKEN_API_POS_URL_V3.$license_key."/".$origin_code."/".$destination_code."/".$kecamatan."/".
 		  sanitize_text_field($weight)."/".sanitize_text_field($price)."/".sanitize_text_field($length)."/".

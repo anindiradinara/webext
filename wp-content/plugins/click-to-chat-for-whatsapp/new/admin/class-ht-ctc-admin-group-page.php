@@ -69,8 +69,7 @@ class HT_CTC_Admin_Group_Page {
         add_settings_field( 'group_id', __( 'WhatsApp Group ID', 'click-to-chat-for-whatsapp'), array( $this, 'group_id_cb' ), 'ht_ctc_group_page_settings_sections_do', 'ht_ctc_main_page_settings_sections_add' );
         add_settings_field( 'group_cta', __( 'Call to Action', 'click-to-chat-for-whatsapp'), array( $this, 'group_cta_cb' ), 'ht_ctc_group_page_settings_sections_do', 'ht_ctc_main_page_settings_sections_add' );
         
-        add_settings_field( 'group_ctc_desktop', __( 'Desktop', 'click-to-chat-for-whatsapp'), array( $this, 'group_ctc_desktop_cb' ), 'ht_ctc_group_page_settings_sections_do', 'ht_ctc_main_page_settings_sections_add' );
-        add_settings_field( 'group_ctc_mobile', __( 'Mobile', 'click-to-chat-for-whatsapp'), array( $this, 'group_ctc_mobile_cb' ), 'ht_ctc_group_page_settings_sections_do', 'ht_ctc_main_page_settings_sections_add' );
+        add_settings_field( 'group_ctc_desktop', __( 'Style, Position', 'click-to-chat-for-whatsapp'), array( $this, 'group_ctc_device_cb' ), 'ht_ctc_group_page_settings_sections_do', 'ht_ctc_main_page_settings_sections_add' );
 
         add_settings_field( 'group_show_hide', __( 'Show/Hide', 'click-to-chat-for-whatsapp'), array( $this, 'group_show_hide_cb' ), 'ht_ctc_group_page_settings_sections_do', 'ht_ctc_main_page_settings_sections_add' );
         add_settings_field( 'group_shortcode_cb', '', array( $this, 'group_shortcode_cb' ), 'ht_ctc_group_page_settings_sections_do', 'ht_ctc_main_page_settings_sections_add' );
@@ -117,23 +116,13 @@ class HT_CTC_Admin_Group_Page {
     }
     
 
-    // Desktop
-    function group_ctc_desktop_cb() {
+    // device based settings - style, position
+    function group_ctc_device_cb() {
         $options = get_option('ht_ctc_group');
         $dbrow = 'ht_ctc_group';
         $type = 'group';
         
-        include_once HT_CTC_PLUGIN_DIR .'new/admin/admin_commons/admin-desktop.php';
-    }
-
-
-    // Mobile
-    function group_ctc_mobile_cb() {
-        $options = get_option('ht_ctc_group');
-        $dbrow = 'ht_ctc_group';
-        $type = 'group';
-        
-        include_once HT_CTC_PLUGIN_DIR .'new/admin/admin_commons/admin-mobile.php';
+        include_once HT_CTC_PLUGIN_DIR .'new/admin/admin_commons/admin-device-settings.php';
     }
 
 
@@ -180,6 +169,8 @@ class HT_CTC_Admin_Group_Page {
                     $input[$key] = '0px';
                 }
                 $new_input[$key] = sanitize_text_field( $input[$key] );
+            } elseif ( 'display' == $key ) {
+                $new_input[$key] = array_map( 'sanitize_text_field', $input[$key] );
             } else {
                 $new_input[$key] = sanitize_text_field( $input[$key] );
             }

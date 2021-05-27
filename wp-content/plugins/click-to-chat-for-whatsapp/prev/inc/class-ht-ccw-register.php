@@ -25,7 +25,7 @@ class HT_CCW_Register {
         }
 
         // add default values to options db 
-        include_once( HT_CTC_PLUGIN_DIR . '/prev/admin/default-values.php' );
+        include_once HT_CTC_PLUGIN_DIR . '/prev/admin/default-values.php';
     }
     
     // when plugin deactivate

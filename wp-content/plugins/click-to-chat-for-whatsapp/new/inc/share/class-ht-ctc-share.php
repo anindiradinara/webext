@@ -59,8 +59,12 @@ class HT_CTC_Share {
         $is_mobile = ht_ctc()->device_type->is_mobile();
 
         // style
-        $ht_ctc_share['style_desktop'] = esc_attr( $options['style_desktop'] );
-        $ht_ctc_share['style_mobile'] = esc_attr( $options['style_mobile'] );
+        $ht_ctc_share['style_desktop'] = (isset($options['style_desktop'])) ? esc_attr($options['style_desktop']) : '2';
+        if (isset($options['same_settings'])) {
+            $ht_ctc_share['style_mobile'] = $ht_ctc_share['style_desktop'];
+        } else {
+            $ht_ctc_share['style_mobile'] = (isset($options['style_mobile'])) ? esc_attr($options['style_mobile']) : '2';
+        }
 
         // position
         include HT_CTC_PLUGIN_DIR .'new/inc/commons/position-to-place.php';
@@ -91,8 +95,8 @@ class HT_CTC_Share {
             $ht_ctc_share['webandapi'] = 'webapi';
         }
 
-        $ht_ctc_share['display_mobile'] = (isset($options['hideon_mobile'])) ? 'hide' : 'show';
-        $ht_ctc_share['display_desktop'] = (isset($options['hideon_desktop'])) ? 'hide' : 'show';
+        $ht_ctc_share['display_mobile'] = (isset($options['display_mobile'])) ? esc_attr($options['display_mobile']) : 'show';
+        $ht_ctc_share['display_desktop'] = (isset($options['display_desktop'])) ? esc_attr($options['display_desktop']) : 'show';
 
         $ht_ctc_share['css'] = "display: none; cursor: pointer; z-index: 99999999;";
 

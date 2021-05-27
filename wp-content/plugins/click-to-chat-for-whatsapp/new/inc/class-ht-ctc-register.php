@@ -22,7 +22,16 @@ class HT_CTC_Register {
         }
 
         // add default values to options db 
-        include_once( HT_CTC_PLUGIN_DIR . '/new/admin/class-ht-ctc-db.php' );
+            // class-ht-ctc-db2.php - will call add ctc admin pages.
+        include_once HT_CTC_PLUGIN_DIR . '/new/admin/db/class-ht-ctc-db.php';
+    }
+
+    // version_changed
+    public static function version_changed() {
+
+        // add default values to options db 
+        include_once HT_CTC_PLUGIN_DIR . '/new/admin/db/class-ht-ctc-db.php';
+        include_once HT_CTC_PLUGIN_DIR . '/new/admin/db/class-ht-ctc-db2.php';
     }
     
     // when plugin deactivate
@@ -49,8 +58,10 @@ class HT_CTC_Register {
             delete_option( 'ccw_options_cs' );
             delete_option( 'ht_ccw_ga' );
             delete_option( 'ht_ccw_fb' );
+            delete_option( 'ht_ctc_admin_pages' );
+            delete_option( 'ht_ctc_cs_options' );
 
-            // deletes custom styles, share, switch
+            // deletes custom styles, ht_ctc_share, ht_ctc_switch
             $wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'ht\_ctc\_s%';" );
 
             // deletes page level settings
@@ -71,7 +82,8 @@ class HT_CTC_Register {
 
         if ( !isset($ht_ctc_plugin_details['version']) || HT_CTC_VERSION !== $ht_ctc_plugin_details['version'] ) {
             //  to update the plugin - just like activate plugin
-            self::activate();
+            // self::activate();
+            self::version_changed();
 
         }
     }
