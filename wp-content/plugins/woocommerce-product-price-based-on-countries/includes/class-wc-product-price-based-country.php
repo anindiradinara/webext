@@ -18,7 +18,7 @@ class WC_Product_Price_Based_Country {
 	 *
 	 * @var string
 	 */
-	public $version = '2.0.18';
+	public $version = '2.0.20';
 
 	/**
 	 * The front-end pricing zone
@@ -53,7 +53,7 @@ class WC_Product_Price_Based_Country {
 	 *
 	 * @var WC_Product_Price_Based_Country
 	 */
-	protected static $_instance = null;
+	protected static $_instance = null; // phpcs:ignore
 
 	/**
 	 * Main WC_Product_Price_Based_Country Instance
@@ -246,10 +246,7 @@ class WC_Product_Price_Based_Country {
 		WCPBC_Frontend::init();
 		WCPBC_Ajax_Geolocation::init();
 		WCPBC_Product_Sync::init();
-
-		if ( $this->is_rest_api( 'wc-analytics' ) ) {
-			WCPBC_Admin_Analytics::init();
-		}
+		WCPBC_Admin_Analytics::init();
 
 		if ( version_compare( WC_VERSION, '3.4', '>=' ) && version_compare( WC_VERSION, '3.9', '<' ) ) {
 			WCPBC_Update_GeoIP_DB::init();

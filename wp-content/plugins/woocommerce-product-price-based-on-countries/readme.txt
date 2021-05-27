@@ -3,7 +3,7 @@ Contributors: oscargare
 Tags: price based country, dynamic price based country, price by country, dynamic price, woocommerce, geoip, country-targeted pricing
 Requires at least: 3.8
 Tested up to: 5.7
-Stable tag: 2.0.18
+Stable tag: 2.0.20
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -111,6 +111,14 @@ You should do the test in a private browsing window to prevent data stored in th
 5. /assets/screenshot-6.png
 
 == Changelog ==
+
+= 2.0.20 (2021-05-18) =
+* Fixed: Bug on the filter by price widget.
+* Fixed: Duplicate field on the country switcher widget.
+
+= 2.0.19 (2021-05-13) =
+* Added: Tested up WooCommerce 5.3.
+* Fixed: The WooCommerce status dashboard widget is not converted to the shop base currency when WC Analytics is active.
 
 = 2.0.18 (2021-04-02) =
 * Fixed: Compatibility issue with WooCommerce EU VAT Assistant.
