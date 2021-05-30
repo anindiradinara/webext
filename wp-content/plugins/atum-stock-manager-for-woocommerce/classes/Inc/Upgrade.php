@@ -15,6 +15,7 @@ namespace Atum\Inc;
 defined( 'ABSPATH' ) || die;
 
 use Atum\Components\AtumCache;
+use Atum\Components\AtumCalculatedProps;
 use Atum\Components\AtumQueues;
 use Atum\InventoryLogs\Models\Log;
 use Atum\InventoryLogs\InventoryLogs;
@@ -130,6 +131,11 @@ class Upgrade {
 		// ** version 1.7.8 ** Add the is_bom column
 		if ( version_compare( $db_version, '1.7.8', '<' ) ) {
 			$this->create_is_bom_column();
+		}
+
+		// ** version 1.8.9.2 ** Update in variation products the atum_stock_status column
+		if ( version_compare( $db_version, '1.8.9.2', '<' ) ) {
+			$this->update_atum_stock_status();
 		}
 
 		/**********************
@@ -730,7 +736,7 @@ class Upgrade {
 					] as $prop
 				) {
 
-					Helpers::maybe_update_variable_calc_prop( $variation_product, $prop, call_user_func( array( $variation_product, "get_$prop" ) ) );
+					AtumCalculatedProps::maybe_update_variable_calc_prop( $variation_product, $prop, call_user_func( array( $variation_product, "get_$prop" ) ) );
 
 				}
 
@@ -762,6 +768,32 @@ class Upgrade {
 		if ( ! $wpdb->get_var( $column_exist ) ) {
 			$wpdb->query( "ALTER TABLE $atum_data_table ADD `is_bom` TINYINT(1) NULL DEFAULT 0;" ); // phpcs:ignore WordPress.DB.PreparedSQL
 		}
+
+	}
+
+	/**
+	 * Update atum_stock_status for managed variations product.
+	 *
+	 * @since 1.8.9.1
+	 */
+	private function update_atum_stock_status() {
+
+		global $wpdb;
+
+		$atum_data_table = $wpdb->prefix . Globals::ATUM_PRODUCT_DATA_TABLE;
+
+		$sql = "
+			UPDATE $atum_data_table apd
+			INNER JOIN $wpdb->posts p ON apd.product_id = p.ID
+			INNER JOIN $wpdb->postmeta pm ON p.ID = pm.post_id
+			INNER JOIN $wpdb->postmeta mpm ON p.ID = mpm.post_id
+			SET apd.atum_stock_status = pm.meta_value
+			WHERE p.post_type = 'product_variation' AND
+			pm.meta_key = '_stock_status' AND mpm.meta_key = '_manage_stock' AND
+	      	mpm.meta_value = 'yes' AND pm.meta_value <> apd.atum_stock_status
+		";
+
+		$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 	}
 

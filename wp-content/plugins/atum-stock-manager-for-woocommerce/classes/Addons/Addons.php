@@ -249,9 +249,17 @@ class Addons {
 		$license_keys = self::get_keys();
 
 		if ( ! empty( $license_keys ) ) {
-			foreach ( $license_keys as $addon_name => $license_key ) {
 
-				if ( $license_key && is_array( $license_key ) && ! empty( $license_key['key'] ) ) {
+			foreach ( $license_keys as $addon_name => $license_key ) {
+				$addon_slug = '';
+
+				foreach ( self::get_installed_addons() as $slug => $addon_data ) {
+					if ( $addon_data['name'] === $addon_name ) {
+						$addon_slug = $slug;
+					}
+				}
+
+				if ( self::is_addon_active( $addon_slug ) && $license_key && is_array( $license_key ) && ! empty( $license_key['key'] ) ) {
 
 					if ( 'valid' === $license_key['status'] ) {
 
@@ -275,7 +283,7 @@ class Addons {
 					}
 					elseif ( in_array( $license_key['status'], [ 'disabled', 'expired', 'invalid' ] ) ) {
 						/* translators: the add-on name */
-						AtumAdminNotices::add_notice( sprintf( __( "Your ATUM %1\$s add-on's license has expired, %2\$splease renew it asap%3\$s or you won't receive updates anymore.", ATUM_TEXT_DOMAIN ), $addon_name, '<a href="https://www.stockmanagementlabs.com/login" target="_blank">', '</a>' ), 'warning', TRUE, TRUE );
+						AtumAdminNotices::add_notice( sprintf( __( "Your ATUM %1\$s add-on's license has expired or is invalid, %2\$splease renew it asap%3\$s or you won't receive updates anymore.", ATUM_TEXT_DOMAIN ), $addon_name, '<a href="https://www.stockmanagementlabs.com/login" target="_blank">', '</a>' ), 'warning', TRUE, TRUE );
 					}
 
 				}
