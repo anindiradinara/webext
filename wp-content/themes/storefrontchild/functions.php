@@ -30,3 +30,29 @@ if ( ! function_exists( 'storefront_credit' ) ) {
 		<?php
 	}
 }
+
+function my_custom_discount_percentage_sale_badge( $html, $post, $product ) {
+    /*
+    if( $product->is_type('variable')) {
+        $percentages = array();
+
+        $prices = $product->get_variation_prices();
+
+        foreach( $prices['price'] as $key => $price ) {
+            if( $prices['regular_price'][$key] !== $price ) {
+                $percentages[] = round(100 - ($prices['sale_price'][$key] / $prices['regular_price'][$key] * 100));
+            }
+        }
+        $percentage = "up to " . round(max($percentages)) . '%';
+    } else {
+        $regular_price = (float) $product->get_regular_price();
+        $sale_price    = (float) $product->get_sale_price();
+
+        $percentage    = round(100 - ($sale_price / $regular_price * 100)) . '%';
+    }
+    return '' . esc_html__( 'SALE', 'woocommerce' ) . ' ' . $percentage . '';
+    */
+    return false;
+}
+
+add_filter( 'woocommerce_sale_flash', 'my_custom_discount_percentage_sale_badge', 20, 3 );
