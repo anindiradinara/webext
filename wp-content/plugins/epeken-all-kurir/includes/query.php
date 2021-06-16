@@ -136,7 +136,8 @@ function epeken_get_tarif($kotakab, $kecamatan, $product_origin = false) {
 	if ($destination_code !=="") {	
 		$kotakab = str_replace("/","{slash}",$kotakab);
                 $kecamatan = str_replace("/","{slash}",$kecamatan);
-	  	$url = EPEKEN_API_DIR_URL.$license_key."/".$origin_code."/".$destination_code."/".urlencode($kotakab)."/".urlencode($kecamatan);
+	  	$url = EPEKEN_API_DIR_URL.$license_key."/".$origin_code.
+			"/".$destination_code."/".urlencode($kotakab)."/".urlencode($kecamatan);
 		$response = wp_remote_get($url);
 		$content = wp_remote_retrieve_body($response);
 		if(strpos($content,'404 Page Not Found') !== FALSE) {
@@ -368,6 +369,37 @@ function epeken_get_jet_ongkir($kotakab, $kecamatan, $weight, $product_origin=fa
 	$content = wp_remote_retrieve_body($response);
         return $content;
 } 
+
+function epeken_get_atlas_ongkir($kotakab, $weight, $product_origin=false) {
+	$kotakab = epeken_sanitize_atlas_city(sanitize_text_field(urldecode($kotakab)));
+	if(empty($weight) || $weight < 1)
+		$weight = 1;
+	$license_key = sanitize_text_field(get_option('epeken_wcjne_license_key'));
+	$options = get_option('woocommerce_epeken_courier_settings');
+        $origin_code = sanitize_text_field($options['data_kota_asal']);    
+        $origin_city = epeken_sanitize_atlas_city(sanitize_text_field(epeken_code_to_city($origin_code)));
+	if ($product_origin != false)
+           $origin_city = epeken_sanitize_atlas_city($product_origin);
+	$origin_city = str_replace("Kota ","",$origin_city);
+ 	$origin_city = str_replace("Kabupaten ","",$origin_city);
+	$kotakab = str_replace("Kota ", "", $kotakab);
+	$kotakab = str_replace("Kabupaten ", "", $kotakab);
+   	$kotakab = strtoupper(urlencode($kotakab));
+	$origin_city = strtoupper(urlencode($origin_city));
+	$url = EPEKEN_API_ATLAS.$license_key."/".$origin_city."/".$kotakab."/".$weight;
+	$response = wp_remote_get($url);
+	$content = wp_remote_retrieve_body($response);
+ 	return $content;	 
+}
+
+function epeken_sanitize_atlas_city($city){
+       if(strpos($city,'Jakarta') !== false)
+		$city = 'Jakarta';
+       else if(strpos($city,'Banyumas') !== false)
+  		$city = 'Purwokerto';
+       return $city;
+}
+
 function epeken_get_sicepat_ongkir($kotakab, $kecamatan, $weight, $product_origin=false) {
                                               //weight in kg
 	$kotakab = sanitize_text_field(urldecode($kotakab));

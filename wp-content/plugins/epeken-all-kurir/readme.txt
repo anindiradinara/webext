@@ -4,7 +4,7 @@ Tags: JNE, TIKI, POS, J&T, WAHANA, SICEPAT, SAP, RPX, ecommerce, e-commerce, com
 Donate link: http://www.epeken.com/shop/epeken-all-kurir-license/
 Requires at least:4.0 
 Tested up to: 5.7
-Stable tag: 1.2.2
+Stable tag: 1.2.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -339,3 +339,7 @@ Once plugin is installed please activate it from activate link in the wordpress 
 * bug fix, JNE and TIKI disable/enable services.
 = 1.2.2 = 
 * bug fix and code improvements. 
+= 1.2.3 = 
+* bug fix on session management.
+= 1.2.4 = 
+* added atlas express.

@@ -4,11 +4,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 Plugin Name: Epeken All Kurir - Full Version
 Plugin URI: https://wordpress.org/plugins/epeken-all-kurir 
 Description: Calculated Shipping Plugin for some shipping companies (JNE, JTR, JNE Trucking, TIKI, POS, RPX, JET.CO.ID, WAHANA, SICEPAT, JMX, DAKOTA CARGO) in Indonesia. It comes with bank accounts payment method with some banks in Indonesia. This is full version plugin. Hopefully you can enjoy this plugin to build your own ecommerce for Indonesia sales. International shipping cost information is also available if your license is granted with international options.
-Version: 1.2.2
+Version: 1.2.5
 Author: www.epeken.com
 Author URI: http://www.epeken.com
 */
 $api_end_point = 'index.php';
+
+#if(!session_id())
+#    session_start();
 
 if(!function_exists('epeken_session_destroy')) {
  function epeken_session_destroy() {
@@ -51,6 +54,7 @@ $api_wahana_v2=EPEKEN_SERVER_URL.'/api/'.$api_end_point.'/epeken_get_wahana_ongk
 $api_custom_tarif=EPEKEN_SERVER_URL.'/api/'.$api_end_point.'/epeken_get_custom_tarif/';
 $api_jet=EPEKEN_SERVER_URL.'/api/'.$api_end_point.'/epeken_get_jnt_ongkir/';
 $api_sicepat=EPEKEN_SERVER_URL.'/api/'.$api_end_point.'/epeken_get_sicepat_ongkir/';
+$api_atlas=EPEKEN_SERVER_URL.'/api/atlas.php'.'/rate/';
 $api_get_currency_rate=EPEKEN_SERVER_URL.'/api/'.$api_end_point.'/getcurrencytoidr/';
 $tracking_end_point=EPEKEN_SERVER_URL.'/api/'.$api_end_point.'/tracks/';
 $api_get_jne_trucking=EPEKEN_SERVER_URL.'/api/'.$api_end_point.'/epeken_get_jne_trucking_tarif/';
@@ -72,6 +76,7 @@ define('EPEKEN_API_POS_URL_V3',$api_pos_url_v3);
 define('EPEKEN_API_WAHANA',$api_wahana_v2);
 define('EPEKEN_API_CUSTOM_TARIF' , $api_custom_tarif);
 define('EPEKEN_API_SICEPAT', $api_sicepat);
+define('EPEKEN_API_ATLAS', $api_atlas);
 define('EPEKEN_API_JET',$api_jet);
 define('EPEKEN_API_GET_PRV',$api_get_provinces);
 define('EPEKEN_API_GET_CURRENCY_RATE', $api_get_currency_rate);
@@ -85,11 +90,25 @@ define('EPEKEN_API_NINJA', $api_get_ninja_express);
 define('EPEKEN_GET_USDRATE_API', $api_getusdamount);
 
 if (in_array('woocommerce/woocommerce.php', 
-	apply_filters( 'active_plugins', get_option( 'active_plugins'))) || array_key_exists( 'woocommerce/woocommerce.php', maybe_unserialize( get_site_option( 'active_sitewide_plugins') ) )) {
+	apply_filters( 'active_plugins', get_option( 'active_plugins'))) 
+   ) {
 	function epeken_all_kurir_init() {
 		if(!class_exists('WC_Shipping_Tikijne'))
  		{
     			include_once('class/shipping.php');   
+			include_once('class/companies/lion.php');
+			include_once('class/companies/jmx.php');
+			include_once('class/companies/jnt.php');
+			include_once('class/companies/sicepat.php');
+			include_once('class/companies/pos.php');
+			include_once('class/companies/wahana.php');
+			include_once('class/companies/sap.php');
+			include_once('class/companies/ninja.php');
+			include_once('class/companies/jtr.php');
+			include_once('class/companies/dakota.php');
+			include_once('class/companies/nss.php');
+			include_once('class/companies/atlas.php');
+			include_once('class/companies/custom.php');
  		}
 	}
 	add_action( 'woocommerce_shipping_init', 'epeken_all_kurir_init' );
@@ -709,7 +728,7 @@ function license_activation_success_message($msg) {
 if (!function_exists('epeken_activate_license')) {
 function epeken_activate_license($server, $port, $api_params) {
 	global $api_end_point;
-	$url = 'http://'.$server.':'.$port.'/api/'.$api_end_point.'/api/license/activate/'.$api_params['license_key'].'/'.$api_params['registered_domain'].'/'.$api_params['item_reference'];
+	$url = 'http://'.$server.':'.$port.'/api/'.$api_end_point.'/api/license/activate/'.$api_params['license_key'].'/'.urlencode($api_params['registered_domain']).'/'.$api_params['item_reference'];
 	$response = wp_remote_get($url);
 	$result = wp_remote_retrieve_body($response);
 	if(is_wp_error($response)) {

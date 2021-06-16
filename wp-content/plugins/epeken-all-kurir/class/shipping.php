@@ -5,51 +5,51 @@ File Name : shipping.php
 writer : epeken.com
 */
 class WC_Shipping_Tikijne extends WC_Shipping_Method{	
-		public  $jneclass;
-		public  $shipping_cost;
- 		public  $shipping_address;
-	  	public  $shipping_kecamatan;	
-		public  $shipping_city;
-		public  $shipping_country;
-		public  $popup_message;
-		public  $shipping_total_weight;
-		public  $shipping_total_length;
-		public  $shipping_total_width;
-		public  $shipping_total_height;
-	        public  $shipping_metric_dimension;
-		public  $min_allow_fs;
-		public  $total_cart;
-		public  $is_free_shipping;
-		public  $free_ongkir_criteria;
-		public  $insurance_premium;	
-		public  $array_of_tarif;
-		public  $additionalLabel;
-		public  $destination_province;
-		public  $origin_city;
-		public  $valid_origins;
-		public  $chosen_shipping_method;
-		public  $is_packing_kayu_valid;
-		public  $current_currency;
-		public  $current_currency_rate;
-		public  $is_subsidi_applied;
-		public  $vendor_id;
-		public function __construct(){
-			ini_set('display_errors','Off');
-			if(!session_id())
-				session_start();
-			$this -> id = 'epeken_courier';
-			$this -> current_currency_rate = 1;
-			$this -> current_currency = 'IDR';
-			$this -> method_title = __('Epeken All Kurir');
-			$this -> method_description = __('Shipping Method using JNE TIKI RPX POS JMX J&T SICEPAT for Indonesia e-commerce market developed by Epeken');
-			$this -> enabled = 'yes';
-			$this -> title = 'Epeken All Kurir';
-			$this -> is_free_shipping = false;
-			$this -> init();			
-			$this -> array_of_tarif = array();
-			$this -> initiate_epeken_options();
-		}
-		public function refresh_usd_rate() {
+	public  $jneclass;
+	public  $shipping_cost;
+ 	public  $shipping_address;
+  	public  $shipping_kecamatan;	
+	public  $shipping_city;
+	public  $shipping_country;
+	public  $popup_message;
+	public  $shipping_total_weight;
+	public  $shipping_total_length;
+	public  $shipping_total_width;
+	public  $shipping_total_height;
+        public  $shipping_metric_dimension;
+	public  $min_allow_fs;
+	public  $total_cart;
+	public  $is_free_shipping;
+	public  $free_ongkir_criteria;
+	public  $insurance_premium;	
+	public  $array_of_tarif;
+	public  $additionalLabel;
+	public  $destination_province;
+	public  $origin_city;
+	public  $valid_origins;
+	public  $chosen_shipping_method;
+	public  $is_packing_kayu_valid;
+	public  $current_currency;
+	public  $current_currency_rate;
+	public  $is_subsidi_applied;
+	public  $vendor_id;
+	public function __construct(){
+		ini_set('display_errors','Off');
+		if(!session_id())
+			session_start();
+		$this -> id = 'epeken_courier';
+		$this -> current_currency_rate = 1;
+		$this -> current_currency = 'IDR';
+		$this -> method_title = __('Epeken All Kurir');
+		$this -> method_description = __('Shipping Method using JNE TIKI RPX POS JMX J&T SICEPAT for Indonesia e-commerce market developed by Epeken');
+		$this -> enabled = 'yes';
+		$this -> title = 'Epeken All Kurir';
+		$this -> is_free_shipping = false;
+		$this -> init();			
+		$this -> array_of_tarif = array();
+		$this -> initiate_epeken_options();
+	}
+	public function refresh_usd_rate() {
                 /* Get USD to IDR */
                 if($this -> settings['mata_uang'] === "1"  && empty($_SESSION['EPEKEN_USD_RATE'])) {  //settings['mata_uang'] === "1" ~ USD
                         $json_usd_rate = epeken_get_usd_rate('BI');
@@ -288,7 +288,7 @@ class WC_Shipping_Tikijne extends WC_Shipping_Method{
 		}
 
 		public function render_admin_notices(){
-		 $is_anteraja = in_array('anteraja/epeken-anteraja.php', apply_filters( 'active_plugins', get_option( 'active_plugins'))) || array_key_exists( 'anteraja/epeken-anteraja.php', maybe_unserialize( get_site_option( 'active_sitewide_plugins') ) );
+		 $is_anteraja = in_array('anteraja/epeken-anteraja.php', apply_filters( 'active_plugins', get_option( 'active_plugins'))) ; 
 		 if(is_admin() && !$is_anteraja && !epeken_is_multi_vendor_mode()) {
 		   echo '<div class="notice notice-warning">
                    <p><strong>Baru dari Epeken</strong>
@@ -963,61 +963,62 @@ class WC_Shipping_Tikijne extends WC_Shipping_Method{
 		<th scope="row" class="titledesc">Pilih Kurir Yang di-enable</th>	
 		<td style="height: 100px;">
 			<?php 
-			$en_jne = get_option('epeken_enabled_jne');
-			$en_tiki = get_option('epeken_enabled_tiki'); 
-			$en_rpx_sdp = get_option('epeken_enabled_rpx_sdp');
-			$en_rpx_mdp = get_option('epeken_enabled_rpx_mdp');
-			$en_rpx_ndp = get_option('epeken_enabled_rpx_ndp');
-			$en_rpx_rgp = get_option('epeken_enabled_rpx_rgp');
-			$en_rpx_insurance = get_option('epeken_enabled_rpx_insurance');
-			$en_esl = get_option('epeken_enabled_esl'); 
-			$en_jne_reg = get_option('epeken_enabled_jne_reg'); 
-			$en_jne_oke = get_option('epeken_enabled_jne_oke'); 
-			$en_jne_yes = get_option('epeken_enabled_jne_yes'); 
-			$en_tiki_hds = get_option('epeken_enabled_tiki_hds'); 
-			$en_tiki_ons = get_option('epeken_enabled_tiki_ons'); 
-			$en_tiki_reg = get_option('epeken_enabled_tiki_reg'); 
-			$en_tiki_eco = get_option('epeken_enabled_tiki_eco'); 
-			$en_wahana = get_option('epeken_enabled_wahana'); 
-			$en_jetez = get_option('epeken_enabled_jetez');
-			$en_sicepat_reg = get_option('epeken_enabled_sicepat_reg');
-			$en_sicepat_best = get_option('epeken_enabled_sicepat_best'); 
-			$en_enabled_custom = get_option('epeken_enabled_custom_tarif'); 
-			$en_enabled_jne_trucking = get_option('epeken_enabled_jne_trucking_tarif'); 
-			$en_enabled_dakota = get_option('epeken_enabled_dakota_tarif');
-			$en_pos_bi = get_option('epeken_enabled_pos_biasa'); 
-			$en_pos_kk = get_option('epeken_enabled_pos_kilat_khusus'); 
-			$en_pos_end = get_option('epeken_enabled_pos_express_nextday'); 
-			$en_pos_vg = get_option('epeken_enabled_pos_val_good'); 
-			$en_pos_kprt = get_option('epeken_enabled_pos_kprt');
-			$en_pos_kpru = get_option('epeken_enabled_pos_kpru');
+			$en_jne = sanitize_text_field(get_option('epeken_enabled_jne'));
+			$en_tiki = sanitize_text_field(get_option('epeken_enabled_tiki')); 
+			$en_rpx_sdp = sanitize_text_field(get_option('epeken_enabled_rpx_sdp'));
+			$en_rpx_mdp = sanitize_text_field(get_option('epeken_enabled_rpx_mdp'));
+			$en_rpx_ndp = sanitize_text_field(get_option('epeken_enabled_rpx_ndp'));
+			$en_rpx_rgp = sanitize_text_field(get_option('epeken_enabled_rpx_rgp'));
+			$en_rpx_insurance = sanitize_text_field(get_option('epeken_enabled_rpx_insurance'));
+			$en_esl = sanitize_text_field(get_option('epeken_enabled_esl')); 
+			$en_jne_reg = sanitize_text_field(get_option('epeken_enabled_jne_reg')); 
+			$en_jne_oke = sanitize_text_field(get_option('epeken_enabled_jne_oke')); 
+			$en_jne_yes = sanitize_text_field(get_option('epeken_enabled_jne_yes')); 
+			$en_tiki_hds = sanitize_text_field(get_option('epeken_enabled_tiki_hds')); 
+			$en_tiki_ons = sanitize_text_field(get_option('epeken_enabled_tiki_ons')); 
+			$en_tiki_reg = sanitize_text_field(get_option('epeken_enabled_tiki_reg')); 
+			$en_tiki_eco = sanitize_text_field(get_option('epeken_enabled_tiki_eco')); 
+			$en_wahana = sanitize_text_field(get_option('epeken_enabled_wahana')); 
+			$en_jetez = sanitize_text_field(get_option('epeken_enabled_jetez'));
+			$en_sicepat_reg = sanitize_text_field(get_option('epeken_enabled_sicepat_reg'));
+			$en_sicepat_best = sanitize_text_field(get_option('epeken_enabled_sicepat_best')); 
+			$en_enabled_custom =sanitize_text_field(get_option('epeken_enabled_custom_tarif')); 
+			$en_enabled_jne_trucking = sanitize_text_field(get_option('epeken_enabled_jne_trucking_tarif')); 
+			$en_enabled_dakota = sanitize_text_field(get_option('epeken_enabled_dakota_tarif'));
+			$en_pos_bi = sanitize_text_field(get_option('epeken_enabled_pos_biasa')); 
+			$en_pos_kk = sanitize_text_field(get_option('epeken_enabled_pos_kilat_khusus')); 
+			$en_pos_end = sanitize_text_field(get_option('epeken_enabled_pos_express_nextday')); 
+			$en_pos_vg = sanitize_text_field(get_option('epeken_enabled_pos_val_good')); 
+			$en_pos_kprt = sanitize_text_field(get_option('epeken_enabled_pos_kprt'));
+			$en_pos_kpru = sanitize_text_field(get_option('epeken_enabled_pos_kpru'));
 			
-			$en_sap_sds = get_option('epeken_enabled_sap_sds');
-			$en_sap_ods = get_option('epeken_enabled_sap_ods');
-			$en_sap_reg = get_option('epeken_enabled_sap_reg');
-			$en_nss_sds = get_option('epeken_enabled_nss_sds');
-			$en_nss_ods = get_option('epeken_enabled_nss_ods');
-			$en_nss_reg = get_option('epeken_enabled_nss_reg');
+			$en_sap_sds = sanitize_text_field(get_option('epeken_enabled_sap_sds'));
+			$en_sap_ods = sanitize_text_field(get_option('epeken_enabled_sap_ods'));
+			$en_sap_reg = sanitize_text_field(get_option('epeken_enabled_sap_reg'));
+			$en_nss_sds = sanitize_text_field(get_option('epeken_enabled_nss_sds'));
+			$en_nss_ods = sanitize_text_field(get_option('epeken_enabled_nss_ods'));
+			$en_nss_reg = sanitize_text_field(get_option('epeken_enabled_nss_reg'));
 			
-			$enabled_pos_ems_priority_doc=get_option('epeken_enabled_pos_ems_priority_doc'); 
-			$enabled_pos_ems_priority_mar = get_option('epeken_enabled_pos_ems_priority_mar'); 
-			$enabled_pos_ems_doc = get_option('epeken_enabled_pos_ems_doc'); 
-			$enabled_pos_ems_mar = get_option('epeken_enabled_pos_ems_mar'); 
-			$enabled_pos_ems_epacket_lx = get_option('epeken_enabled_pos_ems_epacket_lx');
-			$enabled_pos_rln = get_option('epeken_enabled_pos_rln'); 
+			$enabled_pos_ems_priority_doc= sanitize_text_field(get_option('epeken_enabled_pos_ems_priority_doc')); 
+			$enabled_pos_ems_priority_mar = sanitize_text_field(get_option('epeken_enabled_pos_ems_priority_mar')); 
+			$enabled_pos_ems_doc = sanitize_text_field(get_option('epeken_enabled_pos_ems_doc')); 
+			$enabled_pos_ems_mar = sanitize_text_field(get_option('epeken_enabled_pos_ems_mar')); 
+			$enabled_pos_ems_epacket_lx = sanitize_text_field(get_option('epeken_enabled_pos_ems_epacket_lx'));
+			$enabled_pos_rln = sanitize_text_field(get_option('epeken_enabled_pos_rln')); 
 			
-			$en_jmx_cos = get_option('epeken_enabled_jmx_cos');
-			$en_jmx_lts = get_option('epeken_enabled_jmx_lts');
-			$en_jmx_sms = get_option('epeken_enabled_jmx_sms');
-			$en_jmx_sos = get_option('epeken_enabled_jmx_sos');
+			$en_jmx_cos = sanitize_text_field(get_option('epeken_enabled_jmx_cos'));
+			$en_jmx_lts = sanitize_text_field(get_option('epeken_enabled_jmx_lts'));
+			$en_jmx_sms = sanitize_text_field(get_option('epeken_enabled_jmx_sms'));
+			$en_jmx_sos = sanitize_text_field(get_option('epeken_enabled_jmx_sos'));
 			
-			$en_lion_onepack = get_option('epeken_enabled_lion_onepack');
-			$en_lion_regpack = get_option('epeken_enabled_lion_regpack');
+			$en_lion_onepack = sanitize_text_field(get_option('epeken_enabled_lion_onepack'));
+			$en_lion_regpack = sanitize_text_field(get_option('epeken_enabled_lion_regpack'));
 
-			$en_ninja_next_day = get_option('epeken_enabled_ninja_next_day');
-			$en_ninja_standard = get_option('epeken_enabled_ninja_standard');
+			$en_ninja_next_day = sanitize_text_field(get_option('epeken_enabled_ninja_next_day'));
+			$en_ninja_standard = sanitize_text_field(get_option('epeken_enabled_ninja_standard'));
 
-			$en_flat = get_option('epeken_enabled_flat');
+			$en_flat = sanitize_text_field(get_option('epeken_enabled_flat'));
+  			$en_enabled_atlas = sanitize_text_field(get_option('epeken_enabled_atlas_express'));
 ?>
 			<div style="clear: left;">
 			<p><div class="pilihan_kurir_div"><input name="enabled_jne" id = "enabled_jne" type="checkbox" <?php if ($en_jne === "on"){echo "checked";} ?>><strong>JNE</strong></input></div></p>
@@ -1229,12 +1230,17 @@ class WC_Shipping_Tikijne extends WC_Shipping_Method{
                         <div class="pilihan_kurir_div"><input name="enabled_dakota_tarif" id = "enabled_dakota_tarif" type="checkbox" <?php if ($en_enabled_dakota === "on"){echo "checked";} ?>>DAKOTA CARGO</input></div>
                         </p>
                         </div>
-
 			<div style="clear: left;">
 			<p>
 			<div class="pilihan_kurir_div"><input name="enabled_custom_tarif" id = "enabled_custom_tarif" type="checkbox" <?php if ($en_enabled_custom === "on"){echo "checked";} ?>>CUSTOM TARIFF (Hubungi Kami)</input></div>
 			</p>	
+			</div><div style="clear: left;">
+			<p>
+			<div class="pilihan_kurir_div">
+			<input name="enabled_atlas" id="enabled_atlas" type="checkbox" <?php if($en_enabled_atlas === 'on') {echo "checked";} ?> ><a href="https://www.myatlasexpress.com/" target="_blank">ATLAS Express</a></input>
 			</div>
+			</p>
+</div>
  <div style="clear: left;">
 <div style="float: left;width: 100%; margin-bottom: 5px;"><hr></div><div style="clear: left;"/>
 				<p><i>Kurir Internasional (Bisa dipakai jika license Anda dilengkapi dengan opsi Shipping Internasional)</i></p>
@@ -1255,7 +1261,7 @@ class WC_Shipping_Tikijne extends WC_Shipping_Method{
 				<div style="clear: left;">
                                 <p><div class="pilihan_kurir_div"><input name="enabled_pos_ems_epacket_lx" id = "enabled_pos_ems_epacket_lx" type="checkbox" <?php if ($enabled_pos_ems_epacket_lx === "on"){echo "checked";} ?>>ePacket LX Prime</input></div></p>
                                 </div>
-<div class="pilihan_kurir_div"><hr></div>
+	    	 	<div class="pilihan_kurir_div"><hr></div>
 			<div style="float: left;width: 100%; margin-bottom: 5px;"><hr></div>
 			<div style="clear: left;">
 						<?php $epeken_subsidi_ongkir =  get_option('epeken_subsidi_ongkir'); $epeken_subsidi_min_purchase = get_option('epeken_subsidi_min_purchase'); ?> 
@@ -1552,32 +1558,39 @@ class WC_Shipping_Tikijne extends WC_Shipping_Method{
 			$this -> origin_city = $this -> get_origin_kurir($vid); //city_name
 			do_action('epeken_set_origin_city', $this);
 			unset($this -> array_of_tarif);
-				$this -> array_of_tarif = array();
-				$cache_input_key = $this->shipping_city.'-'.$this->shipping_kecamatan.'-'.$this->origin_city.'_ro';
-				$cache_input_key = preg_replace( '/[^\da-z]/i', '_', $cache_input_key );
-				$content_tarif = '';
-				if(!empty($_SESSION[$cache_input_key])) {
-						$content_tarif = $_SESSION[$cache_input_key];
-				}else{
-					$content_tarif = epeken_get_tarif($this -> shipping_city,$this -> shipping_kecamatan, $this -> origin_city);
-					$_SESSION[$cache_input_key] = $content_tarif;				
-				}
-			  if($content_tarif === "")
+			$this -> array_of_tarif = array();
+			$cache_input_key = $this->shipping_city.'-'.$this->shipping_kecamatan.'-'.$this->origin_city.'_ro';
+			$cache_input_key = preg_replace( '/[^\da-z]/i', '_', $cache_input_key );
+			$content_tarif = '';
+			if(!empty($_SESSION[$cache_input_key])) {
+				$content_tarif = $_SESSION[$cache_input_key];
+			}else{
+				$content_tarif = epeken_get_tarif($this -> shipping_city,$this -> shipping_kecamatan, $this -> origin_city);
+				$_SESSION[$cache_input_key] = $content_tarif;				
+			}
+
+		    	if($content_tarif === "")
 				return;
 			
-			  $json = json_decode($content_tarif);
-			  $status = $json -> {'status'} -> {'code'};
+			$json = json_decode($content_tarif);
+			$status = $json -> {'status'} -> {'code'};
 			  
-			  if(empty($status))
-				return;
+			if(empty($status))
+			  return;
 			  
-			  if ($status != 200){
-				array_push($this -> array_of_tarif, array('id' => 'Epeken-Courier','label' => 'Error '.$status.':'.$json -> {'status'} -> {'description'}.' atau silakan menghubungi Administrator.', 'cost' => '0'));	
+			if ($status != 200){
+				unset($_SESSION[$cache_input_key]);
+				array_push($this -> array_of_tarif, 
+					array('id' => 'Epeken-Courier',
+					'label' => 'Error '.
+					  $status.':'.$json -> {'status'} -> {'description'}.
+				   	  ' atau silakan menghubungi Administrator.', 
+					'cost' => '0'));	
 				return;
-			  }
+			 }
 
- 			 $this -> destination_province = $json -> {'destination_details'} -> {'province'};
-                         $this -> map_destination_province();
+ 			$this -> destination_province = $json -> {'destination_details'} -> {'province'};
+                        $this -> map_destination_province();
 
 			 $isshippedifadr = $_SESSION['isshippedifadr'];
                          if($isshippedifadr === '1'){
@@ -1698,473 +1711,7 @@ class WC_Shipping_Tikijne extends WC_Shipping_Method{
 				 array_push($this -> array_of_tarif, array('id' => $id,'label' => $label, 'cost' => $cost));
 			 }
 			}
-			/* SICEPAT */
-			$en_sicepat_reg = get_option('epeken_enabled_sicepat_reg');
-			$en_sicepat_best = get_option('epeken_enabled_sicepat_best');
 
-			if(epeken_is_multi_vendor_mode() && epeken_is_vendor_id($this -> vendor_id)) {
-				$en_sicepat_reg_v = get_user_meta($this -> vendor_id, 'vendor_sicepat_reg', true);
-				if($en_sicepat_reg_v !== 'on' || $en_sicepat_reg !== 'on') {
-					$en_sicepat_reg = '';
-				}
-				$en_sicepat_best_v = get_user_meta($this -> vendor_id, 'vendor_sicepat_best', true);
-				if($en_sicepat_best_v !== 'on' || $en_sicepat_best !== 'on') {
-					$en_sicepat_best = '';
-				}
-
-			}
-			if($en_sicepat_reg === "on" || $en_sicepat_best === "on") {
-					$content_sicepat = epeken_get_sicepat_ongkir($this -> shipping_city, $this -> shipping_kecamatan, $this->bulatkan_berat($this->shipping_total_weight), $this -> origin_city);
-					$content_sicepat_decoded = json_decode($content_sicepat);
-					$content_sicepat_decoded = $content_sicepat_decoded -> {'tarifsicepat'};
-					if(!empty($content_sicepat_decoded)) {
-					foreach($content_sicepat_decoded as $element) {
-					    $package_name = $element -> {'class'}; 
-					    if($package_name === "REGULAR" && $en_sicepat_reg !== "on") continue; 
-					    if($package_name === "BEST" && $en_sicepat_best !== "on") continue; 
-					    $cost_value = $element -> {'cost'}; 
-					    $etd = $element -> {'etd'};
-					    $label = 'SICEPAT '.$package_name;
-					    $is_eta = get_option('epeken_setting_eta');
-					    if($is_eta === 'on')
-						    $label .= ' ('.$etd.')';
-					    if ($cost_value !== "0") 
-						    array_push($this -> array_of_tarif, 
-						    array('id' => 'sicepat_'.$package_name,
-						          'label' => $label, 
-							  'cost' => $cost_value));
-					 }
-					}
-			}
-
-			/* POS */
-			$en_pos_bi = get_option('epeken_enabled_pos_biasa');
-			$en_pos_kk = get_option('epeken_enabled_pos_kilat_khusus');
-			$en_pos_end = get_option('epeken_enabled_pos_express_nextday');
-			$en_pos_vg = get_option('epeken_enabled_pos_val_good');
-			$en_pos_kprt = get_option('epeken_enabled_pos_kprt');
-			$en_pos_kpru = get_option('epeken_enabled_pos_kpru');
-
-			if(epeken_is_multi_vendor_mode()  && epeken_is_vendor_id($this -> vendor_id))
-			{
-				$en_pos_bi_v = get_user_meta($this->vendor_id, 'vendor_pos_biasa', true);
-				if($en_pos_bi_v !== 'on' || $en_pos_bi !== 'on')
-					$en_pos_bi = '';
-
-				$en_pos_kk_v = get_user_meta($this->vendor_id, 'vendor_pos_kilat_khusus', true);
-				if($en_pos_kk_v !== 'on' || $en_pos_kk !== 'on')
-					$en_pos_kk = '';
-
-				$en_pos_end_v = get_user_meta($this->vendor_id, 'vendor_pos_express_next_day', true);
-				if($en_pos_end_v !== 'on' || $en_pos_end !== 'on')
-					$en_pos_end = '';
-
-				$en_pos_vg_v = get_user_meta($this->vendor_id, 'vendor_pos_valuable_goods', true);
-				if($en_pos_vg_v !== 'on' || $en_pos_vg !== 'on')
-					$en_pos_vg = '';
-
-				$en_pos_kprt_v = get_user_meta($this->vendor_id, 'vendor_pos_kprt', true);
-				if($en_pos_kprt_v !== 'on' || $en_pos_kprt !== 'on')
-					$en_pos_kprt = '';
-				
-				$en_pos_kpru_v = get_user_meta($this->vendor_id, 'vendor_pos_kpru', true);
-				if($en_pos_kpru_v !== 'on' || $en_pos_kpru !== 'on')
-					$en_pos_kpru = '';
-
-			}	
-
-			if ($en_pos_bi === "on" || $en_pos_kk === "on" || $en_pos_end === "on" || $en_pos_vg === "on" || $en_pos_kprt === "on" || $en_pos_kpru === "on") {
-			 $weight = 1000;
-			 $length = 0;
-			 $width = 0;
-			 $height = 0;
-			 $price = 0;
-
-			 if ($opt_vol_matrix === "yes") {
-			  $this -> count_cart_weight_and_dimension($package);
-			  $weight = $this -> shipping_total_weight*1000;
-			  $length = $this -> shipping_total_length;
-			  $width = $this -> shipping_total_width;
-			  $height = $this -> shipping_total_height;
-			  $price = $this -> get_cart_total() - $this -> get_discount();
-			 }
-
-			 if($this -> current_currency !== "IDR") {
-				$price = $price * ($this -> current_currency_rate);
-			 }
-
-			 $cache_input_key = $this->shipping_city.'-'.$this->shipping_kecamatan.'-'.$this->origin_city.'-'.$weight.'-'.$price.'-'.$length.'-'.$width.'-'.$height.'_pos';
-			 $cache_input_key = preg_replace( '/[^\da-z]/i', '_', $cache_input_key );
-			 $content_pos = '';
-			 if(!empty($_SESSION[$cache_input_key])) {
-				$content_pos = $_SESSION[$cache_input_key];
-			 }else{
-			 	$content_pos = epeken_get_tarif_pt_pos_v3(
-			  	$this -> shipping_city,
-				$this -> shipping_kecamatan, 
-				$weight, $price, $length, $width, $height, 
-				$this -> origin_city );
-				$_SESSION[$cache_input_key] = $content_pos;
-			 }
-			 
-			 if(!empty($content_pos)) {
-			  $content_pos_json_decode = json_decode($content_pos);
-			  $content_pos_json_decode = $content_pos_json_decode -> {'tarifpos'};
-			  $is_eta = get_option('epeken_setting_eta');
-			  if(!empty($content_pos_json_decode)) {
-			   foreach($content_pos_json_decode as $element){
-				   $package_name = $element -> {'class'};
-				   $label = "PT POS - ". $package_name;
-				$cost_value = $element -> {'cost'};
-				   $etd = $element -> {'etd'};
-				   if($is_eta === 'on' && !empty($etd)) {
-					   $etd = str_replace(' HARI','',$etd);
-					   $label .= ' ('.$etd.' hari)';
-				   }
-				$markup = $this->additional_mark_up('pos',$this -> shipping_total_weight);
-                                $cost_value = $cost_value + $markup;
-				if((trim($package_name) === "PAKET KILAT KHUSUS" && $en_pos_kk === "on") ||
-					 (trim($package_name) === "EXPRESS NEXT DAY BARANG" && $en_pos_end === "on") ||
-					 (trim($package_name) === "PAKETPOS VALUABLE GOODS" && $en_pos_vg === "on") ||
-					 (trim($package_name) === "PAKETPOS BIASA" && $en_pos_bi === "on") || 
-					 (trim($package_name) === "KARGOPOS RITEL TRAIN" && $en_pos_kprt === "on") || 
-					 (trim($package_name) === "KARGOPOS RITEL UDARA DN" && $en_pos_kpru === "on")
-				  )
-				  array_push($this -> array_of_tarif, array(
-					  'id' => $package_name,
-					  'label' => $label, 
-					  'cost' => $cost_value));
-			   }
-			  } 
-			 }
-			}
-
-			/* WAHANA */
-			$en_wahana = get_option('epeken_enabled_wahana');
-			if(epeken_is_multi_vendor_mode()  && epeken_is_vendor_id($this -> vendor_id)) {
-				$en_wahana_v = get_user_meta($this->vendor_id, 'vendor_wahana', true);
-				if($en_wahana_v !== 'on' || $en_wahana !== 'on')
-					$en_wahana = '';
-			}
-			if ($en_wahana === "on") {
-			 $content_wahana = epeken_get_wahana_ongkir($this->shipping_city,$this-> shipping_kecamatan,$this->bulatkan_berat($this->shipping_total_weight), $this->origin_city);	
-
-			 $content_wahana_decoded = json_decode($content_wahana);
-			 if (!empty($content_wahana_decoded)) {
-			 $content_wahana_decoded = $content_wahana_decoded -> {'tarifwahana'};
-				if(!empty($content_wahana_decoded)) {
-				foreach($content_wahana_decoded as $element) {
-				 $package_name = $element -> {'class'};
-				 $cost_value = $element -> {'cost'};
-				 if ($cost_value !== "0")
-				 array_push($this -> array_of_tarif, array('id' => $package_name,'label' => $package_name, 'cost' => $cost_value));
-				}}
-			 }
-			}
-
-			/* SAP */
-			
-			$en_sap_sds = get_option('epeken_enabled_sap_sds');
-			$en_sap_ods = get_option('epeken_enabled_sap_ods');
-			$en_sap_reg = get_option('epeken_enabled_sap_reg');
-
-			if(epeken_is_multi_vendor_mode() && epeken_is_vendor_id($this -> vendor_id)) {
-				$en_sap_sds_v = get_user_meta($this -> vendor_id,  'vendor_sap_sds', true);
-				if ($en_sap_sds_v !== 'on' || $en_sap_sds !== 'on')
-					$en_sap_sds = '';
-
-				$en_sap_ods_v = get_user_meta($this -> vendor_id,  'vendor_sap_ods', true);
-				if ($en_sap_ods_v !== 'on' || $en_sap_ods !== 'on')
-					$en_sap_ods = '';
-
-				$en_sap_reg_v = get_user_meta($this -> vendor_id,  'vendor_sap_reg', true);
-				if($en_sap_reg_v !== 'on' || $en_sap_reg !== 'on')
-					$en_sap_reg = '';
-			}
-				
-			if($en_sap_sds === "on" || $en_sap_ods === "on" || $en_sap_reg === "on") {
-				$content_sap = epeken_get_sap_express_tariff($this->shipping_city, $this->shipping_kecamatan,
-				$this->bulatkan_berat($this->shipping_total_weight), $this-> origin_city);
-				$content_sap_decoded = json_decode($content_sap, true);
-				if(!empty($content_sap_decoded)){
-				foreach($content_sap_decoded as $element){
-				 if($en_sap_sds === "on") {	
-					$package_name = "SAP SDS";
-					$cost_value = $element["SDS"];
-					if (!empty($cost_value))
-					array_push($this -> array_of_tarif, array('id' => $package_name,'label' => $package_name, 'cost' => $cost_value));
-				 } 
-				 if($en_sap_ods === "on") {	
-					$package_name = "SAP ODS";
-					$cost_value = $element["ODS"];
-					if (!empty($cost_value))
-					array_push($this -> array_of_tarif, array('id' => $package_name,'label' => $package_name, 'cost' => $cost_value));
-				 }
-				 if($en_sap_reg === "on") {	
-					$package_name = "SAP REG";
-					$cost_value = $element["REG"];
-					if (!empty($cost_value))
-					array_push($this -> array_of_tarif, array('id' => $package_name,'label' => $package_name, 'cost' => $cost_value));
-				 }
-				}}
-			}
-
-			/* NINJA */
-			$en_ninja_next_day = get_option('epeken_enabled_ninja_next_day'); $en_ninja_standard = get_option('epeken_enabled_ninja_standard');
-			if(epeken_is_multi_vendor_mode() && epeken_is_vendor_id($this -> vendor_id)){
-				$en_ninja_next_day_v = get_user_meta($this -> vendor_id, 'vendor_ninja_next_day', true);
-				if ($en_ninja_next_day_v !== 'on' || $en_ninja_next_day !== 'on')
-					$en_ninja_next_day = '';
-
-				$en_ninja_standard_v = get_user_meta($this -> vendor_id, 'vendor_ninja_standard', true);
-				if ($en_ninja_standard_v !== 'on' || $en_ninja_standard !== 'on')
-				       $en_ninja_standard = '';	
-			}
-			if($en_ninja_next_day === 'on' || $en_ninja_standard === 'on') {
-				$weight = $this -> bulatkan_berat($this -> shipping_total_weight);
-				$cache_input_key = $this->shipping_city.'-'.$this->shipping_kecamatan.'-'.$this->origin_city.'-'.$weight.'_ninja';
-                         	$cache_input_key = preg_replace( '/[^\da-z]/i', '_', $cache_input_key );
-                         	$content_ninja = '';
-                         	if(!empty($_SESSION[$cache_input_key])) {
-                                	$content_ninja = $_SESSION[$cache_input_key];
-                         	}else{
-                                 	$content_ninja = epeken_get_ninja_express_tariff($this -> shipping_city, $this -> shipping_kecamatan, 
-                                                $this -> bulatkan_berat($this -> shipping_total_weight), $this -> origin_city);
-					$_SESSION[$cache_input_key] = $content_ninja;
-                         	}	
-				$content_ninja_decode = json_decode($content_ninja, true);
-				if(!empty($content_ninja_decode)) {
-					foreach($content_ninja_decode['tarifninja'] as $rate){
-						$class = $rate['class']; $cost = $rate['cost'];
-						if($class === 'NEXT_DAY') {$class = 'NEXT DAY';}
-						if(($en_ninja_next_day === 'on' && $class === 'NEXT DAY') || ($en_ninja_standard === 'on' && $class === 'STANDARD')) {
-						 array_push($this -> array_of_tarif, array('id' => 'ninja_'.strtolower($class),
-								'label' => 'NINJA '.$class,'cost' => $cost));
-						}
-					}
-				}
-			}
-			
-			/* JTR */
-			$en_jtr_tarif = get_option('epeken_enabled_jne_trucking_tarif');
-			if(epeken_is_multi_vendor_mode() && epeken_is_vendor_id($this -> vendor_id)){
-				$en_jtr_tarif_v = get_user_meta($this -> vendor_id, 'vendor_jtr', true);
-				if ($en_jtr_tarif_v !== 'on' || $en_jtr_tarif !== 'on')
-					$en_jtr_tarif = '';
-			}
-			if($en_jtr_tarif === 'on') {
-				$content_jtr_tarif = epeken_get_jne_trucking_tarif($this->shipping_city, $this -> shipping_kecamatan, $this -> bulatkan_berat($this -> shipping_total_weight), $this->origin_city );	
-				$content_jtr_tarif_decoded = json_decode($content_jtr_tarif);
-				if(!empty($content_jtr_tarif_decoded)){
-					$content_jtr_tarif_decoded = $content_jtr_tarif_decoded -> {'tarifcustom'};		
-			 	 for($i=0; $i <= sizeof($content_jtr_tarif_decoded); $i++) {
-                                        $package_name = $content_jtr_tarif_decoded[$i]->{'class'};
-                                        $cost_value = $content_jtr_tarif_decoded[$i]->{'cost'};
-                                        if ($cost_value !== "0") 
-                                        array_push($this -> array_of_tarif, array('id' => $package_name,'label' => $package_name, 'cost' => $cost_value));
-                                 }    
-				}		
-			}
-
-			/* DAKOTA */
-			$en_dakota_tarif = get_option('epeken_enabled_dakota_tarif');
-                        if(epeken_is_multi_vendor_mode() && epeken_is_vendor_id($this -> vendor_id)){
-				$en_dakota_tarif_v = get_user_meta($this -> vendor_id, 'vendor_dakota', true);
-				if ($en_dakota_tarif_v !== 'on' || $en_dakota_tarif !== 'on')
-					$en_dakota_tarif = '';
-                        }
-                        if($en_dakota_tarif === 'on') {
-                                $content_dakota_tarif = epeken_get_dakota_tarif($this->shipping_city, $this -> shipping_kecamatan, $this -> bulatkan_berat($this -> shipping_total_weight), $this->origin_city );
-                                $content_dakota_decoded = json_decode($content_dakota_tarif);
-                                if(!empty($content_dakota_decoded)){
-                                        $content_dakota_decoded = $content_dakota_decoded -> {'tarifcustom'};
-                                 for($i=0; $i <= sizeof($content_dakota_decoded); $i++) {
-                                        $package_name = $content_dakota_decoded[$i]->{'class'};
-                                        $cost_value = $content_dakota_decoded[$i]->{'cost'};
-                                        if ($cost_value !== "0")
-                                        array_push($this -> array_of_tarif, array('id' => $package_name,'label' => $package_name, 'cost' => $cost_value));
-                                 }
-                                }
-                        }
-		
-			
-			/* NSS */
-			$en_nss_sds = get_option('epeken_enabled_nss_sds');
-			$en_nss_ods = get_option('epeken_enabled_nss_ods');
-			$en_nss_reg = get_option('epeken_enabled_nss_reg');
-			
-			if(epeken_is_multi_vendor_mode() && epeken_is_vendor_id($this -> vendor_id)) {
-				$en_nss_sds = '';
-				$en_nss_ods = '';
-				$en_nss_reg = '';
-			}
-			
-			if($en_nss_sds === "on" || $en_nss_ods === "on" || $en_nss_reg === "on") { 
-					$content_nss_tariff = epeken_get_nss_tariff($this->shipping_city, $this->shipping_kecamatan,
-									$this -> bulatkan_berat($this -> shipping_total_weight), $this->origin_city);
-					$content_nss_decoded = json_decode($content_nss_tariff, true);
-					$content_nss_decoded = $content_nss_decoded['results'][0]['costs'];
-				for($i=0;$i<sizeof($content_nss_decoded);$i++){
-					$element = $content_nss_decoded[$i];
-				 if($en_nss_sds === 'on' && $element['service'] === 'SDS') {	
-					$package_name = 'NSS SDS';
-					$cost_value = $element['cost'][0]['value'];
-					if (!empty($cost_value))
-					array_push($this -> array_of_tarif, array('id' => $package_name,'label' => $package_name, 'cost' => $cost_value));
-				 } 
-				 if($en_nss_ods === "on" && $element['service'] === 'ODS') {	
-					$package_name = "NSS ODS";
-					$cost_value = $element['cost'][0]['value'];
-					if (!empty($cost_value))
-					array_push($this -> array_of_tarif, array('id' => $package_name,'label' => $package_name, 'cost' => $cost_value));
-				 }
-				 if($en_nss_reg === "on" && $element['service'] === 'REG') {	
-					$package_name = "NSS REG";
-					$cost_value = $element['cost'][0]['value'];
-					if (!empty($cost_value))
-					array_push($this -> array_of_tarif, array('id' => $package_name,'label' => $package_name, 'cost' => $cost_value));
-				 }
-				}	
-			}
-			
-			/* CUSTOM TARIF */
-
-			$en_custom_tarif = get_option('epeken_enabled_custom_tarif');
-			if(epeken_is_multi_vendor_mode() && epeken_is_vendor_id($this -> vendor_id)) {
-				$en_custom_tarif_v = get_user_meta($this->vendor_id, 'vendor_custom', true);
-				if ($en_custom_tarif_v !== 'on' || $en_custom_tarif !== 'on')
-					$en_custom_tarif = '';
-                         }
-			
-			if($en_custom_tarif === 'on') {
-				$content_custom_tarif = epeken_get_custom_tarif($this -> shipping_city, $this -> bulatkan_berat($this -> shipping_total_weight), $this->origin_city, $this->shipping_kecamatan) ;
-			$content_custom_tarif_decoded = json_decode($content_custom_tarif);
-			 if(!empty($content_custom_tarif_decoded)) {
-				$content_custom_tarif_decoded = $content_custom_tarif_decoded -> {'tarifcustom'};
-				if(!empty($content_custom_tarif_decoded)) {
-				foreach($content_custom_tarif_decoded as $elem) {
-					$package_name = $elem->{'class'};
-					$cost_value = $elem->{'cost'};
-					if ($cost_value !== "0") 
-                         	        array_push($this -> array_of_tarif, array('id' => $package_name,'label' => $package_name, 'cost' => $cost_value));
-				}}
-			 }		
-			}
-
-			/* J&T */
-
-			$en_jetez = get_option('epeken_enabled_jetez');
-			 if(epeken_is_multi_vendor_mode() && epeken_is_vendor_id($this -> vendor_id)) {
-				 $en_jetez_v = get_user_meta($this->vendor_id, 'vendor_jnt_ez', true);
-				 if($en_jetez_v !== 'on' || $en_jetez !== 'on')
-					 $en_jetez = '';
-			 }
-                         if($en_jetez === "on") {
-                                $content_jet = epeken_get_jet_ongkir($this -> shipping_city, $this -> shipping_kecamatan, $this->bulatkan_berat($this->shipping_total_weight), $this -> origin_city);
-                                $content_jet_decoded = json_decode($content_jet);
-                                if(!empty($content_jet_decoded)) {
-                                        $content_jet_decoded = $content_jet_decoded -> {'tarifjnt'};
-					if(!empty($content_jet_decoded)) {
-					$is_eta = get_option('epeken_setting_eta');
-                                       foreach($content_jet_decoded as $element) {
-					       $package_name = $element -> {'class'}; 
-					       $cost_value = $element -> {'cost'};
-					       $etd = $element -> {'etd'};	
-					       $markup = $this -> additional_mark_up('jnt',$this -> shipping_total_weight);
-					       $cost_value = $cost_value + $markup;
-					       $label = 'J&T '.$package_name;
-					       if($is_eta === 'on' && !empty($etd))
-						       $label .= '('.$etd.' hari)';
-					       if ($cost_value !== "0") 
-						       array_push($this -> array_of_tarif, 
-						       array('id' => 'jet.co.id_'.$package_name,
-						             'label' => $label, 
-							     'cost' => $cost_value));
-                                        }    }
-                                }    
-     
-                         } 	
-				
-			 /* JMX */
-			 $en_jmx_cos = get_option('epeken_enabled_jmx_cos'); $en_jmx_sms = get_option('epeken_enabled_jmx_sms');
-			 $en_jmx_lts = get_option('epeken_enabled_jmx_lts'); $en_jmx_sos = get_option('epeken_enabled_jmx_sos');
-			if(epeken_is_multi_vendor_mode() && epeken_is_vendor_id($this -> vendor_id)) {
-				$en_jmx_cos_v = get_user_meta($this->vendor_id, 'vendor_jmx_cos', true);
-				if ($en_jmx_cos_v !== 'on' || $en_jmx_cos !== 'on')
-					$en_jmx_cos = '';
-				$en_jmx_sms_v = get_user_meta($this->vendor_id, 'vendor_jmx_sms', true);
-				if ($en_jmx_sms_v !== 'on' || $en_jmx_sms !== 'on')
-					$en_jmx_sms = '';
-				$en_jmx_lts_v = get_user_meta($this->vendor_id, 'vendor_jmx_lts', true);
-				if ($en_jmx_lts_v !== 'on' || $en_jmx_lts !== 'on')
-					$en_jmx_lts = '';
-				$en_jmx_sos_v = get_user_meta($this->vendor_id, 'vendor_jmx_sos', true);
-				if ($en_jmx_sos_v !== 'on' || $en_jmx_sos !== 'on')
-					$en_jmx_sos = '';
-			}
-			if($en_jmx_cos === "on" || $en_jmx_sms === "on" || $en_jmx_lts === "on" || $en_jmx_sos === "on") { 
-				$content_jmx_tariff = epeken_get_jmx_tariff($this->shipping_city, $this->shipping_kecamatan,
-									$this -> bulatkan_berat($this -> shipping_total_weight), $this->origin_city);
-				$arr = json_decode($content_jmx_tariff, true);
-				$arr = $arr['results'];
-				if(!empty($arr)) {
-				foreach($arr as $ar) {
-					$service = $ar['service'];
-					$service = strtolower($service);
-					$cost = $ar['biayaKirim'];
-					$eta = $ar['estimasiHari'];
-					if($en_jmx_cos === "on" && $service === "cos" && $cost > 0) {
-						 array_push($this -> array_of_tarif, array('id' => "jmx_".$service,'label' => "JMX COS (ETA ".$eta." hari)", 'cost' => $cost));
-					}
-					if($en_jmx_sms === "on" && $service === "sms" && $cost > 0) {
-						 array_push($this -> array_of_tarif, array('id' => "jmx_".$service,'label' => "JMX SMS (ETA ".$eta." hari)", 'cost' => $cost));
-					}
-					if($en_jmx_lts === "on" && $service === "lts" && $cost > 0) {
-						 array_push($this -> array_of_tarif, array('id' => "jmx_".$service,'label' => "JMX LTS (ETA ".$eta." hari)", 'cost' => $cost));
-					}
-					if($en_jmx_sms === "on" && $service === "sos" && $cost > 0) {
-						 array_push($this -> array_of_tarif, array('id' => "jmx_".$service,'label' => "JMX SOS (ETA ".$eta." hari)", 'cost' => $cost));
-					}
-				}}
-				
-			}
-			/* Lion */
-			$en_lion_onepack = get_option('epeken_enabled_lion_onepack');
-			$en_lion_regpack = get_option('epeken_enabled_lion_regpack');
-			if(epeken_is_multi_vendor_mode() && epeken_is_vendor_id($this -> vendor_id)) {
-				$en_lion_regpack_v = get_user_meta($this->vendor_id, 'vendor_lion_regpack', true);
-				if($en_lion_regpack_v !== 'on' || $en_lion_regpack !== 'on')
-					$en_lion_regpack = '';
-				$en_lion_onepack_v = get_user_meta($this->vendor_id, 'vendor_lion_onepack', true);
-				if($en_lion_onepack_v !== 'on' || $en_lion_onepack !== 'on')
-					$en_lion_onepack = '';
-			}
-			if($en_lion_regpack === "on" || $en_lion_onepack === "on") {
-				$content_lion_tarif = epeken_get_tarif_lion($this->shipping_city, $this->shipping_kecamatan,
-									$this -> bulatkan_berat($this -> shipping_total_weight), $this->origin_city);
-				
-				$content_lion_decoded = json_decode($content_lion_tarif);
-				if (!empty($content_lion_decoded)) {
-				$content_lion_decoded = $content_lion_decoded -> {'tariflion'};
-				if(!empty($content_lion_decoded)) {
-				foreach($content_lion_decoded as $element) {
-				 				 				 
-				 $package_name = $element -> {'class'};
-				 if($package_name === 'ONEPACK' && $en_lion_onepack !== 'on')
-					 continue;
-				 if($package_name === 'REGPACK' && $en_lion_regpack !== 'on')
-					 continue;
-				 
-				 
-				 $cost_value = $element -> {'cost'};
-				 if ($cost_value > 0) {
-				  $markup = $this -> additional_mark_up('lion',$this -> shipping_total_weight);
-				  $cost_value = $cost_value + $markup;
-				  array_push($this -> array_of_tarif, array('id' => 'LION_'.$package_name,'label' => 'Lion Parcel '.$package_name, 'cost' => $cost_value));
-				 }
-				}}
-			 }
-			}
 			/* Flat Tarif */
 			if(!epeken_is_multi_vendor_mode())
 				$this -> add_flat_tariff();

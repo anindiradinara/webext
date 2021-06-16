@@ -1,5 +1,4 @@
 <?php
-add_action( 'wp_enqueue_scripts', 'mychildtheme_enqueue_styles' );
 function mychildtheme_enqueue_styles() {
     $parent_style = 'parent-style';
  
@@ -9,6 +8,7 @@ function mychildtheme_enqueue_styles() {
         array( $parent_style )
     );
 }
+add_action( 'wp_enqueue_scripts', 'mychildtheme_enqueue_styles' );
 
 if ( ! function_exists( 'storefront_credit' ) ) {
 	/**
@@ -31,7 +31,7 @@ if ( ! function_exists( 'storefront_credit' ) ) {
 	}
 }
 
-function my_custom_discount_percentage_sale_badge( $html, $post, $product ) {
+function anin_sale_badge( $html, $post, $product ) {
     /*
     if( $product->is_type('variable')) {
         $percentages = array();
@@ -54,5 +54,4 @@ function my_custom_discount_percentage_sale_badge( $html, $post, $product ) {
     */
     return false;
 }
-
-add_filter( 'woocommerce_sale_flash', 'my_custom_discount_percentage_sale_badge', 20, 3 );
+add_action( 'woocommerce_sale_flash', 'anin_sale_badge', 20, 3 );

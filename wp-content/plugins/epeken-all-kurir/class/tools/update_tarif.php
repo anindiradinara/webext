@@ -42,10 +42,11 @@ if(!empty (sanitize_text_field($_POST['save'])) && sanitize_text_field($_POST['s
  update_option('epeken_free_pc', sanitize_text_field($_POST['woocommerce_epeken_free_pc']));
  update_option('epeken_free_pc_q', sanitize_text_field($_POST['woocommerce_epeken_free_pc_q']));
  update_option('epeken_is_provinsi_free' , sanitize_text_field($_POST['epeken_is_provinsi_free']));
- update_option('epeken_province_for_free_shipping',sanitize_text_field($_POST['woocommerce_wc_shipping_tikijne_province_for_free_shipping']));
+ update_option('epeken_province_for_free_shipping',$_POST['woocommerce_wc_shipping_tikijne_province_for_free_shipping']);
  update_option('epeken_mode_kode_pembayaran', sanitize_text_field($_POST['mode_kode_pembayaran']));
  update_option('epeken_freeship_n_province_for_free_shipping' , sanitize_text_field($_POST['freeship_n_province_for_free_shipping']));
  update_option('epeken_multiple_rate_setting', sanitize_text_field($_POST['epeken_multiple_rate_setting']));
+
  if(empty(sanitize_text_field($_POST['epeken_multiple_rate_setting'])))
   update_option('epeken_multiple_rate_setting', 'manual');
 
@@ -115,6 +116,7 @@ if(!empty (sanitize_text_field($_POST['save'])) && sanitize_text_field($_POST['s
  update_option('epeken_enabled_jmx_sos', sanitize_text_field($_POST['enabled_jmx_sos']));
  update_option('epeken_enabled_lion_regpack', sanitize_text_field($_POST['enabled_lion_regpack']));
  update_option('epeken_enabled_lion_onepack', sanitize_text_field($_POST['enabled_lion_onepack']));
+ update_option('epeken_enabled_atlas_express', sanitize_text_field($_POST['enabled_atlas']));
  update_option('epeken_enable_error_message_setting', sanitize_text_field($_POST['epeken_en_er_msg']));
  update_option('epeken_email_korespondensi', sanitize_text_field($_POST['email_korespondensi']));
  update_option('epeken_setting_eta', sanitize_text_field($_POST['epeken_setting_eta']));
