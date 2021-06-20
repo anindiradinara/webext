@@ -54,4 +54,5 @@ function anin_sale_badge( $html, $post, $product ) {
     */
     return false;
 }
-add_action( 'woocommerce_sale_flash', 'anin_sale_badge', 20, 3 );
+//add_action( 'woocommerce_sale_flash', 'anin_sale_badge', 20, 3 );
+add_filter( 'woocommerce_sale_flash', '__return_null' );
